@@ -3,166 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HrExtraControle</title>
+<title>Meu Controle de HE</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f3f6fb;color:#1f2937}
-.wrap{max-width:1250px;margin:auto;padding:24px}.hero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:24px;border-radius:22px;margin-bottom:20px}
-.hero h1{margin:0 0 8px}.heroTop{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,.07)}
-.metric .label{font-size:13px;color:#64748b}.metric .value{font-size:25px;font-weight:800;margin-top:6px}.good{color:#15803d}.bad{color:#b91c1c}.blue{color:#1d4ed8}
-.section{margin-top:18px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#475569}input,select{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
-button{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}.btn-primary{background:#2563eb;color:white}.btn-dark{background:#0f172a;color:white}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-light{background:#e2e8f0;color:#0f172a}.btn-success{background:#15803d;color:white}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{padding:11px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px}th{background:#f8fafc;color:#475569}
-.small{font-size:12px;color:#64748b}.progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:6px}.bar{height:100%;background:#2563eb;width:0}.rowline{display:flex;justify-content:space-between;gap:12px;margin:8px 0}
-.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:700}.footer-note{font-size:12px;color:#64748b;margin-top:10px}
-.status{font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.15)}
-#app{display:none}.authWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0f172a,#1d4ed8)}
-.authCard{width:min(440px,100%);background:white;border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}.authCard h1{margin:0 0 8px}.authCard p{color:#64748b}
-.authMsg{min-height:20px;margin-top:10px;font-size:13px}.hidden{display:none!important}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}@media(max-width:520px){.grid{grid-template-columns:1fr}.wrap{padding:12px}table{display:block;overflow:auto}}
+:root{
+  --bg:#f4f7fb;--surface:#ffffff;--surface2:#f8fafc;--text:#172033;--muted:#64748b;
+  --line:#e5eaf1;--primary:#1d4ed8;--primary2:#2563eb;--dark:#0f172a;--green:#15803d;
+  --red:#b91c1c;--amber:#b45309;--shadow:0 12px 35px rgba(15,23,42,.08)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+#app{display:none}
+.wrap{max-width:1320px;margin:auto;padding:26px}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  background:linear-gradient(135deg,#0f172a 0%,#17346f 48%,#2563eb 100%);
+  color:#fff;border-radius:26px;padding:28px 30px;box-shadow:var(--shadow);margin-bottom:20px
+}
+.topbar h1{margin:0;font-size:30px;letter-spacing:-.5px}
+.topbar p{margin:7px 0 0;color:#dbeafe}
+.topActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.status{font-size:12px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:700}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+.sidebar{
+  position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:20px;padding:12px;box-shadow:var(--shadow)
+}
+.navbtn{
+  width:100%;border:0;background:transparent;color:#475569;border-radius:12px;
+  padding:12px 13px;text-align:left;font-weight:800;margin:3px 0
+}
+.navbtn:hover,.navbtn.active{background:#eaf1ff;color:var(--primary)}
+.content{min-width:0}
+.view{display:none}.view.active{display:block}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:20px;box-shadow:var(--shadow)
+}
+.card + .card{margin-top:18px}
+.section{margin-top:18px}
+.card h2{margin:0 0 6px;font-size:19px}
+.card h3{margin:0 0 6px;font-size:15px}
+.sub{margin:0 0 16px;color:var(--muted);font-size:13px}
+.metric .label{font-size:12px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.metric .value{font-size:27px;font-weight:900;margin-top:8px}
+.good{color:var(--green)}.bad{color:var(--red)}.blue{color:var(--primary)}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#475569}
+input,select{
+  width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:11px;
+  background:#fff;color:#172033;outline:none
+}
+input:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+button{border:0;border-radius:11px;padding:11px 14px;font-weight:800}
+.btn-primary{background:var(--primary2);color:#fff}
+.btn-dark{background:var(--dark);color:#fff}
+.btn-danger{background:#fee2e2;color:var(--red)}
+.btn-light{background:#e9eef5;color:#0f172a}
+.btn-success{background:var(--green);color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}
+th{background:var(--surface2);color:#475569;font-size:12px}
+.small{font-size:12px;color:var(--muted)}
+.rowline{display:flex;justify-content:space-between;gap:16px;margin:9px 0;align-items:center}
+.progress{height:9px;background:#e5eaf1;border-radius:999px;overflow:hidden;margin-top:7px}
+.bar{height:100%;background:var(--primary2);width:0;transition:.25s}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#dbeafe;color:var(--primary);font-size:11px;font-weight:800}
+.info{
+  border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:14px;
+  padding:13px 14px;font-size:13px;line-height:1.45
+}
+.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.planBox{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.planBox span{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.planBox strong{display:block;margin-top:5px;font-size:15px}
+.authWrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;
+  background:radial-gradient(circle at top right,#2f6fe7 0,#193c7d 28%,#0f172a 65%)
+}
+.authCard{
+  width:min(430px,100%);background:#fff;border-radius:26px;padding:30px;
+  box-shadow:0 25px 70px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.4)
+}
+.authLogo{
+  width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#eaf1ff;
+  color:var(--primary);font-size:23px;font-weight:900;margin-bottom:17px
+}
+.authCard h1{margin:0;font-size:27px}.authCard p{color:var(--muted);line-height:1.5}
+.authMsg{min-height:20px;margin-top:10px;font-size:13px;color:var(--red)}
+.authHint{font-size:12px;color:#94a3b8;margin-top:14px;text-align:center}
+.lockBtn{background:rgba(255,255,255,.92);color:#0f172a}
+hr{border:0;border-top:1px solid var(--line)}
+@media(max-width:1020px){
+  .layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:6px}
+  .navbtn{white-space:nowrap;width:auto}.grid4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){.two,.three,.planGrid{grid-template-columns:1fr}.wrap{padding:12px}.topbar{padding:22px}.grid4{grid-template-columns:1fr}.topActions{justify-content:flex-start}}
+@media(max-width:520px){table{display:block;overflow:auto}.topbar h1{font-size:25px}}
 </style>
+
 </head>
+
 <body>
 
 <div id="authScreen" class="authWrap">
   <div class="authCard">
-    <h1>Controle Financeiro</h1>
-    <p>Entre para sincronizar seus dados entre computador e celular.</p>
-    <div><label>E-mail</label><input type="email" id="loginEmail" autocomplete="email"></div>
-    <div style="margin-top:10px"><label>Senha</label><input type="password" id="loginSenha" autocomplete="current-password"></div>
+    <div class="authLogo">HE</div>
+    <h1>Meu Controle de HE</h1>
+    <p>Acesso pessoal. Use a mesma senha em qualquer computador ou celular para abrir seus dados sincronizados.</p>
+    <div style="margin-top:18px">
+      <label>Senha de acesso</label>
+      <input type="password" id="loginSenha" inputmode="numeric" autocomplete="current-password" placeholder="Digite sua senha">
+    </div>
     <div class="actions">
-      <button class="btn-primary" id="btnEntrar">Entrar</button>
-      <button class="btn-light" id="btnCriar">Criar conta</button>
+      <button class="btn-primary" id="btnEntrar" style="width:100%">Entrar</button>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;margin:16px 0;color:#94a3b8;font-size:12px">
-      <div style="height:1px;background:#e2e8f0;flex:1"></div>
-      <span>ou</span>
-      <div style="height:1px;background:#e2e8f0;flex:1"></div>
-    </div>
-    <button id="btnGoogle" style="width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;gap:10px">
-      <span style="font-size:18px;font-weight:800;color:#4285F4">G</span>
-      Entrar com Google
-    </button>
     <div id="authMsg" class="authMsg"></div>
+    <div class="authHint">Acesso único • mesmos dados em todos os seus dispositivos</div>
   </div>
 </div>
 
 <div id="app">
-<div class="wrap">
-<div class="hero">
-  <div class="heroTop">
-    <div><h1>HrExtraControle</h1><p id="periodoAtual"></p></div>
-    <div>
-      <div id="syncStatus" class="status">Conectando…</div>
-      <div class="small" style="color:#dbeafe;margin-top:6px" id="userEmail"></div>
-      <button class="btn-light" style="margin-top:8px" id="btnSair">Sair</button>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div>
+        <h1>Meu Controle de HE</h1>
+        <p id="periodoAtual"></p>
+      </div>
+      <div class="topActions">
+        <div id="syncStatus" class="status">Conectando…</div>
+        <button class="lockBtn" id="btnSair">Bloquear</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="navbtn active" data-view="painel">Visão geral</button>
+        <button class="navbtn" data-view="lancamentos">Lançamentos</button>
+        <button class="navbtn" data-view="metas">Metas e planejamento</button>
+        <button class="navbtn" data-view="config">Configurações</button>
+        <button class="navbtn" data-view="historico">Fechamentos</button>
+      </aside>
+
+      <main class="content">
+        <section id="view-painel" class="view active">
+          <div class="grid4">
+            <div class="card metric"><div class="label">HE 50%</div><div class="value blue" id="m50">0h</div></div>
+            <div class="card metric"><div class="label">HE 100%</div><div class="value blue" id="m100">0h</div></div>
+            <div class="card metric"><div class="label">Líquido estimado</div><div class="value" id="mLiquido">R$ 0,00</div></div>
+            <div class="card metric"><div class="label">Saldo projetado</div><div class="value" id="mSaldo">R$ 0,00</div></div>
+          </div>
+
+          <div class="section two">
+            <div class="card">
+              <h2>Resumo das metas</h2>
+              <p class="sub">Veja rapidamente quanto já fez e quanto ainda falta.</p>
+              <div class="rowline"><span>HE 50%</span><strong id="meta50txt"></strong></div>
+              <div class="progress"><div class="bar" id="bar50"></div></div>
+              <div class="rowline" style="margin-top:17px"><span>HE 100%</span><strong id="meta100txt"></strong></div>
+              <div class="progress"><div class="bar" id="bar100"></div></div>
+            </div>
+
+            <div class="card">
+              <h2>Resumo financeiro</h2>
+              <p class="sub">Estimativa do fechamento atual.</p>
+              <div class="rowline"><span>Salário base</span><strong id="rBase"></strong></div>
+              <div class="rowline"><span>HE bruta</span><strong id="rHE"></strong></div>
+              <div class="rowline"><span>Bruto estimado</span><strong id="rBruto"></strong></div>
+              <div class="rowline"><span>INSS estimado</span><strong id="rINSS"></strong></div>
+              <div class="rowline"><span>Fixos</span><strong id="rFixos"></strong></div>
+              <div class="rowline"><span>Variáveis lançados</span><strong id="rVariaveis"></strong></div>
+              <hr>
+              <div class="rowline"><span><strong>Saldo projetado</strong></span><strong id="rSaldo"></strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-lancamentos" class="view">
+          <div class="two">
+            <div class="card">
+              <h2>Registrar hora extra</h2>
+              <p class="sub">Informe o dia, o adicional e a quantidade de horas feitas.</p>
+              <div class="three">
+                <div><label>Data</label><input type="date" id="heData"></div>
+                <div><label>Tipo</label><select id="heTipo"><option value="50">HE 50%</option><option value="100">HE 100%</option></select></div>
+                <div><label>Horas</label><input type="number" id="heHoras" min="0" step="0.25" placeholder="Ex.: 1,75"></div>
+              </div>
+              <div style="margin-top:10px"><label>Observação</label><input id="heObs" placeholder="Opcional"></div>
+              <div class="actions"><button class="btn-primary" id="btnAddHE">Adicionar HE</button></div>
+              <div id="heLista"></div>
+            </div>
+
+            <div class="card">
+              <h2>Registrar gasto</h2>
+              <p class="sub">Controle os gastos variáveis do período.</p>
+              <div class="three">
+                <div><label>Data</label><input type="date" id="gData"></div>
+                <div><label>Categoria</label><select id="gCat"><option>Gasolina</option><option>Alimentação</option><option>Viagem</option><option>Farmácia</option><option>Lazer</option><option>Outros</option></select></div>
+                <div><label>Valor</label><input type="number" id="gValor" min="0" step="0.01" placeholder="0,00"></div>
+              </div>
+              <div style="margin-top:10px"><label>Descrição</label><input id="gDesc" placeholder="Opcional"></div>
+              <div class="actions"><button class="btn-primary" id="btnAddGasto">Adicionar gasto</button></div>
+              <div id="gLista"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-metas" class="view">
+          <div class="card">
+            <h2>Planejamento de metas</h2>
+            <p class="sub">O sistema calcula quanto falta e distribui a HE restante conforme seus dias disponíveis.</p>
+
+            <div class="planGrid">
+              <div class="planBox"><span>Faltam HE 50%</span><strong id="falta50"></strong></div>
+              <div class="planBox"><span>Dias necessários para 50%</span><strong id="dias50"></strong></div>
+              <div class="planBox"><span>Dias úteis restantes (seg–qui)</span><strong id="diasDisponiveis"></strong></div>
+              <div class="planBox"><span>Faltam HE 100%</span><strong id="falta100"></strong></div>
+              <div class="planBox"><span>Sugestão para HE 100%</span><strong id="dias100"></strong></div>
+              <div class="planBox"><span>Fins de semana restantes</span><strong id="finsSemana"></strong></div>
+            </div>
+
+            <div class="info" style="margin-top:16px">
+              <strong>Como funciona sábado:</strong> o campo “horas por sábado” define quantas horas de HE 100% você pretende fazer em cada sábado.
+              Exemplo: se faltam 10h e você definiu 4h por sábado, o sistema usa até 4h em cada sábado e tenta completar o restante nos domingos disponíveis.
+              O domingo é calculado a partir das 06:00 até o horário final que você escolher nas configurações.
+            </div>
+
+            <div class="small" id="previsaoMeta" style="margin-top:14px"></div>
+          </div>
+        </section>
+
+        <section id="view-config" class="view">
+          <div class="card">
+            <h2>Configurações</h2>
+            <p class="sub">Defina os valores usados nos cálculos. Você pode alterar quando quiser.</p>
+            <div class="three">
+              <div><label>Salário base</label><input type="number" id="cfgSalario" step="0.01"></div>
+              <div><label>Jornada mensal</label><input type="number" id="cfgJornada"></div>
+              <div><label>Fixos mensais</label><input type="number" id="cfgFixos" step="0.01"></div>
+
+              <div><label>Meta HE 50%</label><input type="number" id="cfgMeta50" step="0.25"></div>
+              <div><label>HE 50% habitual por dia (seg–qui)</label><input type="number" id="cfgHorasDia" min="0.25" step="0.25"></div>
+              <div><label>Dia inicial do fechamento</label><input type="number" id="cfgDia" min="1" max="28"></div>
+
+              <div><label>Meta HE 100%</label><input type="number" id="cfgMeta100" step="0.25"></div>
+              <div><label>Horas que pretendo fazer por sábado</label><input type="number" id="cfgSabado100" min="0" step="0.25" placeholder="Ex.: 4"></div>
+              <div><label>Domingo: trabalhar das 06:00 até</label>
+                <select id="cfgDomingoFim">
+                  <option value="">Não usar domingo no planejamento</option>
+                  <option value="15">15:00 (até 9h)</option>
+                  <option value="17">17:00 (até 11h)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="info" style="margin-top:16px">
+              <strong>Sábado:</strong> não é um limite obrigatório do sistema; é apenas a quantidade de horas que você quer considerar em cada sábado para o planejamento automático da meta de 100%.
+            </div>
+
+            <div class="actions">
+              <button class="btn-dark" id="btnSalvarConfig">Salvar configurações</button>
+              <button class="btn-success" id="btnImportarLocal">Importar dados antigos deste navegador</button>
+            </div>
+            <div class="small" style="margin-top:10px">Os dados continuam armazenados no Firebase da versão atual.</div>
+          </div>
+        </section>
+
+        <section id="view-historico" class="view">
+          <div class="card">
+            <h2>Histórico de fechamentos</h2>
+            <p class="sub">Salve um retrato do período atual para consultar depois.</p>
+            <div class="actions"><button class="btn-primary" id="btnFechar">Salvar fechamento atual</button></div>
+            <div id="historico"></div>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
-</div>
-
-<div class="grid">
-<div class="card metric"><div class="label">HE 50%</div><div class="value blue" id="m50">0h</div></div>
-<div class="card metric"><div class="label">HE 100%</div><div class="value blue" id="m100">0h</div></div>
-<div class="card metric"><div class="label">Líquido estimado</div><div class="value" id="mLiquido">R$ 0,00</div></div>
-<div class="card metric"><div class="label">Saldo projetado</div><div class="value" id="mSaldo">R$ 0,00</div></div>
-</div>
-
-<div class="section two">
-<div class="card">
-<h2>Registrar hora extra</h2>
-<div class="three">
-<div><label>Data</label><input type="date" id="heData"></div>
-<div><label>Tipo</label><select id="heTipo"><option value="50">50%</option><option value="100">100%</option></select></div>
-<div><label>Horas</label><input type="number" id="heHoras" min="0" step="0.25" placeholder="Ex.: 1,75"></div>
-</div>
-<div style="margin-top:10px"><label>Observação</label><input id="heObs" placeholder="Opcional"></div>
-<div class="actions"><button class="btn-primary" id="btnAddHE">Adicionar HE</button></div>
-<div id="heLista"></div>
-</div>
-
-<div class="card">
-<h2>Registrar gasto</h2>
-<div class="three">
-<div><label>Data</label><input type="date" id="gData"></div>
-<div><label>Categoria</label><select id="gCat"><option>Gasolina</option><option>Alimentação</option><option>Viagem</option><option>Farmácia</option><option>Lazer</option><option>Outros</option></select></div>
-<div><label>Valor</label><input type="number" id="gValor" min="0" step="0.01" placeholder="0,00"></div>
-</div>
-<div style="margin-top:10px"><label>Descrição</label><input id="gDesc" placeholder="Opcional"></div>
-<div class="actions"><button class="btn-primary" id="btnAddGasto">Adicionar gasto</button></div>
-<div id="gLista"></div>
-</div>
-</div>
-
-<div class="section two">
-<div class="card">
-<h2>Metas de horas</h2>
-<div class="rowline"><span>HE 50%</span><strong id="meta50txt"></strong></div><div class="progress"><div class="bar" id="bar50"></div></div>
-<div class="rowline" style="margin-top:14px"><span>HE 100%</span><strong id="meta100txt"></strong></div><div class="progress"><div class="bar" id="bar100"></div></div>
-<div class="footer-note">Metas configuráveis nas opções abaixo.</div>
-<div style="margin-top:16px;padding:14px;background:#f8fafc;border-radius:12px">
-  <div class="rowline"><span>Faltam HE 50%</span><strong id="falta50"></strong></div>
-  <div class="rowline"><span>Dias necessários (50%)</span><strong id="dias50"></strong></div>
-  <div class="rowline"><span>Faltam HE 100%</span><strong id="falta100"></strong></div>
-  <div class="rowline"><span>Plano HE 100%</span><strong id="dias100"></strong></div>
-  <div class="rowline"><span>Fins de semana restantes</span><strong id="finsSemana"></strong></div>
-  <hr style="border:0;border-top:1px solid #e5e7eb">
-  <div class="rowline"><span>Dias úteis de HE 50% restantes</span><strong id="diasDisponiveis"></strong></div>
-  <div class="small" id="previsaoMeta"></div>
-</div>
-</div>
-
-<div class="card">
-<h2>Resumo financeiro</h2>
-<div class="rowline"><span>Salário base</span><strong id="rBase"></strong></div>
-<div class="rowline"><span>HE bruta</span><strong id="rHE"></strong></div>
-<div class="rowline"><span>Bruto estimado</span><strong id="rBruto"></strong></div>
-<div class="rowline"><span>INSS estimado</span><strong id="rINSS"></strong></div>
-<div class="rowline"><span>Fixos</span><strong id="rFixos"></strong></div>
-<div class="rowline"><span>Variáveis lançados</span><strong id="rVariaveis"></strong></div>
-<hr style="border:0;border-top:1px solid #e5e7eb">
-<div class="rowline"><span><strong>Saldo projetado</strong></span><strong id="rSaldo"></strong></div>
-</div>
-</div>
-
-<div class="section card">
-<h2>Configurações</h2>
-<div class="three">
-<div><label>Salário base</label><input type="number" id="cfgSalario" step="0.01"></div>
-<div><label>Jornada mensal</label><input type="number" id="cfgJornada"></div>
-<div><label>Meta HE 50%</label><input type="number" id="cfgMeta50" step="0.25"></div>
-<div><label>Meta HE 100%</label><input type="number" id="cfgMeta100" step="0.25"></div>
-<div><label>Fixos mensais</label><input type="number" id="cfgFixos" step="0.01"></div>
-<div><label>Dia inicial do fechamento</label><input type="number" id="cfgDia" min="1" max="28"></div>
-<div><label>HE 50% habitual por dia</label><input type="number" id="cfgHorasDia" min="0.25" step="0.25"></div>
-<div><label>Máximo sábado (HE 100%)</label><input type="number" id="cfgSabado100" min="0" step="0.25"></div>
-<div><label>Domingo até</label><select id="cfgDomingoFim"><option value="">Selecione</option><option value="15">15h (9h possíveis)</option><option value="17">17h (11h possíveis)</option></select></div>
-</div>
-<div class="actions">
-  <button class="btn-dark" id="btnSalvarConfig">Salvar configurações</button>
-  <button class="btn-success" id="btnImportarLocal">Importar dados antigos deste navegador</button>
-</div>
-<div class="footer-note">Seus dados são sincronizados com o Firebase e ficam disponíveis quando você entrar com a mesma conta em outro dispositivo.</div>
-</div>
-
-<div class="section card">
-<h2>Histórico de fechamentos</h2>
-<div class="actions"><button class="btn-primary" id="btnFechar">Salvar fechamento atual</button></div>
-<div id="historico"></div>
-</div>
-</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, signOut,
-  GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult
+  createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-  doc, collection, setDoc, deleteDoc, onSnapshot, getDocs, serverTimestamp
+  doc, collection, setDoc, deleteDoc, onSnapshot, getDoc, getDocs, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 /* =========================================================
@@ -184,8 +319,19 @@ const firestore = initializeFirestore(appFirebase, {
   localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
 });
 const auth = getAuth(appFirebase);
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+/*
+  ACESSO ÚNICO:
+  - A tela mostra somente a senha.
+  - Por trás, todos os aparelhos usam a MESMA conta Firebase.
+  - A senha digitada é usada diretamente no Firebase.
+  - O hash abaixo serve apenas para impedir a criação acidental da conta com outra senha
+    na primeira ativação. A senha em texto puro não fica gravada no HTML.
+*/
+const EMAIL_FIXO = 'controle.pessoal.161004@hr-extra.app';
+const HASH_SENHA_CORRETA = '6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
+let desbloqueado = sessionStorage.getItem('hrExtraDesbloqueado') === '1';
+let loginEmAndamento = false;
 
 const BRL=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const DEFAULT_CONFIG={
@@ -216,8 +362,8 @@ function finsSemanaRestantes(p){const hoje=new Date();hoje.setHours(12,0,0,0);le
 function plano100(falta,p){
   falta=Math.max(0,Number(falta)||0);
   if(falta<=0)return{texto:'Meta atingida',detalhe:'Você já atingiu a meta de HE 100%.'};
-  const fs=finsSemanaRestantes(p),maxSab=Math.max(0,Number(state.config.sabado100)||4),domHoras=(Number(state.config.domingoFim)||17)-6;
-  if(fs.dom>0&&falta<=domHoras){
+  const fs=finsSemanaRestantes(p),maxSab=Math.max(0,Number(state.config.sabado100)||0),domFim=Number(state.config.domingoFim)||0,domHoras=domFim?domFim-6:0;
+  if(domHoras>0&&fs.dom>0&&falta<=domHoras){
     const fim=6+falta,hh=Math.floor(fim),mm=Math.round((fim-hh)*60);
     return{texto:`1 domingo: 06:00 às ${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`,detalhe:`Dá para completar ${fmtHorasDecimal(falta)} em um único domingo.`};
   }
@@ -226,7 +372,8 @@ function plano100(falta,p){
     if(si<fs.sab&&restante>0){const h=Math.min(maxSab,restante);if(h>0){partes.push(`${fmtHorasDecimal(h)} sábado`);restante-=h}si++}
     if(di<fs.dom&&restante>0){const h=Math.min(domHoras,restante);if(h>0){partes.push(`${fmtHorasDecimal(h)} domingo`);restante-=h}di++}
   }
-  return{texto:partes.join(' + ')||'Sem fim de semana disponível',detalhe:restante<=0?`Sugestão para completar ${fmtHorasDecimal(falta)}.`:`Ainda faltariam ${fmtHorasDecimal(restante)}.`};
+  if(maxSab<=0&&domHoras<=0)return{texto:'Defina sábado e/ou domingo',detalhe:'Configure quantas horas pretende fazer no sábado e, se quiser, o horário final de domingo.'};
+  return{texto:partes.join(' + ')||'Sem fim de semana disponível',detalhe:restante<=0?`Sugestão para completar ${fmtHorasDecimal(falta)}.`:`Com os fins de semana restantes, ainda faltariam ${fmtHorasDecimal(restante)}.`};
 }
 function calcINSS(sal){const f=[[1621,0.075],[2902.84,0.09],[4354.27,0.12],[8475.55,0.14]];let t=0,a=0;for(const [l,q] of f){if(sal<=a)break;const b=Math.min(sal,l)-a;if(b>0)t+=b*q;a=l}return t}
 function calc(){
@@ -313,105 +460,248 @@ function startSync(user){
   unsubs.push(onSnapshot(p.fechamentos,s=>{state.fechamentos=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
 }
 
-function mensagemAuth(e){
-  console.error('Firebase Auth:', e.code, e.message);
-  const mapa={
-    'auth/invalid-email':'E-mail inválido.',
-    'auth/missing-email':'Digite seu e-mail.',
-    'auth/missing-password':'Digite uma senha.',
-    'auth/weak-password':'Senha muito fraca. Use pelo menos 6 caracteres.',
-    'auth/email-already-in-use':'Esse e-mail já possui uma conta. Clique em Entrar.',
-    'auth/invalid-credential':'E-mail ou senha incorretos.',
-    'auth/user-disabled':'Esta conta foi desativada.',
-    'auth/operation-not-allowed':'Cadastro por e-mail/senha não está ativado no Firebase. Ative Authentication > Sign-in method > Email/Password.',
-    'auth/network-request-failed':'Falha de conexão com o Firebase. Confira sua internet.',
-    'auth/too-many-requests':'Muitas tentativas. Aguarde um pouco e tente novamente.',
-    'auth/popup-closed-by-user':'A janela do Google foi fechada antes de concluir o login.',
-    'auth/popup-blocked':'O navegador bloqueou a janela de login. Vou tentar abrir pelo redirecionamento.',
-    'auth/cancelled-popup-request':'Outra tentativa de login já estava aberta.',
-    'auth/unauthorized-domain':'Este domínio ainda não está autorizado no Firebase Authentication. Adicione o domínio da Vercel em Authentication > Settings > Authorized domains.',
-    'auth/account-exists-with-different-credential':'Já existe uma conta com este e-mail usando outro método de login.'
-  };
-  return mapa[e.code] || `Erro do Firebase: ${e.code || 'desconhecido'} — ${e.message || ''}`;
+
+
+async function sha256(texto){
+  const bytes=new TextEncoder().encode(texto);
+  const hash=await crypto.subtle.digest('SHA-256',bytes);
+  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-$('btnEntrar').onclick=async()=>{
-  const email=$('loginEmail').value.trim();
-  const senha=$('loginSenha').value;
-  if(!email){$('authMsg').textContent='Digite seu e-mail.';return;}
-  if(!senha){$('authMsg').textContent='Digite sua senha.';return;}
-  try{
-    $('authMsg').textContent='Entrando…';
-    await signInWithEmailAndPassword(auth,email,senha);
-    $('authMsg').textContent='';
-  }catch(e){
-    $('authMsg').textContent=mensagemAuth(e);
+function abrirApp(){
+  $('authScreen').classList.add('hidden');
+  $('app').style.display='block';
+  render();
+}
+
+function mostrarLogin(msg=''){
+  $('app').style.display='none';
+  $('authScreen').classList.remove('hidden');
+  if(!loginEmAndamento)$('authMsg').textContent=msg;
+  setTimeout(()=>$('loginSenha').focus(),50);
+}
+
+function bloquearApp(){
+  desbloqueado=false;
+  sessionStorage.removeItem('hrExtraDesbloqueado');
+  clearListeners();
+  mostrarLogin('');
+  $('loginSenha').value='';
+}
+
+/* Lê os dados da conta antiga ANTES de trocar o login Firebase.
+   Isso permite migrar o histórico atual sem perder nada. */
+async function capturarDadosDaConta(uid){
+  const p=paths(uid);
+  const [cfgSnap,horasSnap,gastosSnap,fechSnap]=await Promise.all([
+    getDoc(p.config),
+    getDocs(p.horas),
+    getDocs(p.gastos),
+    getDocs(p.fechamentos)
+  ]);
+  return{
+    uidOrigem:uid,
+    config:cfgSnap.exists()?cfgSnap.data():null,
+    horas:horasSnap.docs.map(d=>({id:d.id,...d.data()})),
+    gastos:gastosSnap.docs.map(d=>({id:d.id,...d.data()})),
+    fechamentos:fechSnap.docs.map(d=>({id:d.id,...d.data()}))
+  };
+}
+
+/* Copia somente o que ainda não existe na conta fixa.
+   Assim a migração não apaga dados já sincronizados em outros aparelhos. */
+async function migrarDadosParaContaFixa(dados,uidDestino){
+  if(!dados || dados.uidOrigem===uidDestino)return false;
+
+  const p=paths(uidDestino);
+  const [cfgDestino,horasDestino,gastosDestino,fechDestino]=await Promise.all([
+    getDoc(p.config),
+    getDocs(p.horas),
+    getDocs(p.gastos),
+    getDocs(p.fechamentos)
+  ]);
+
+  const idsHoras=new Set(horasDestino.docs.map(d=>d.id));
+  const idsGastos=new Set(gastosDestino.docs.map(d=>d.id));
+  const idsFech=new Set(fechDestino.docs.map(d=>d.id));
+
+  const tarefas=[];
+
+  if(dados.config && (!cfgDestino.exists() || !cfgDestino.data()?.configurado)){
+    tarefas.push(setDoc(p.config,{...dados.config,updatedAt:serverTimestamp()},{merge:true}));
   }
-};
 
-$('btnCriar').onclick=async()=>{
-  const email=$('loginEmail').value.trim();
-  const senha=$('loginSenha').value;
-  if(!email){$('authMsg').textContent='Digite seu e-mail.';return;}
-  if(!senha){$('authMsg').textContent='Digite uma senha.';return;}
-  if(senha.length<6){$('authMsg').textContent='A senha precisa ter pelo menos 6 caracteres.';return;}
-  try{
-    $('authMsg').textContent='Criando conta…';
-    await createUserWithEmailAndPassword(auth,email,senha);
-    $('authMsg').textContent='Conta criada com sucesso.';
-  }catch(e){
-    $('authMsg').textContent=mensagemAuth(e);
+  for(const x of dados.horas||[]){
+    if(!idsHoras.has(x.id)){
+      const {id,...resto}=x;
+      tarefas.push(setDoc(doc(p.horas,id),resto,{merge:true}));
+    }
   }
-};
+  for(const x of dados.gastos||[]){
+    if(!idsGastos.has(x.id)){
+      const {id,...resto}=x;
+      tarefas.push(setDoc(doc(p.gastos,id),resto,{merge:true}));
+    }
+  }
+  for(const x of dados.fechamentos||[]){
+    if(!idsFech.has(x.id)){
+      const {id,...resto}=x;
+      tarefas.push(setDoc(doc(p.fechamentos,id),resto,{merge:true}));
+    }
+  }
 
-$('btnGoogle').onclick=async()=>{
+  if(tarefas.length)await Promise.all(tarefas);
+  localStorage.setItem('hrExtraMigracaoContaFixa',JSON.stringify({
+    origem:dados.uidOrigem,
+    destino:uidDestino,
+    quando:new Date().toISOString()
+  }));
+  return tarefas.length>0;
+}
+
+async function entrarComSenhaUnica(){
+  if(loginEmAndamento)return;
+
+  const senha=$('loginSenha').value.trim();
+  if(!senha){
+    $('authMsg').textContent='Digite sua senha.';
+    return;
+  }
+
+  loginEmAndamento=true;
+  $('btnEntrar').disabled=true;
+  $('authMsg').textContent='Conectando aos seus dados…';
+
   try{
-    $('authMsg').textContent='Abrindo login do Google…';
-
-    // Em celulares, o redirecionamento costuma ser mais confiável.
-    const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if(mobile){
-      await signInWithRedirect(auth,googleProvider);
+    // Confere a senha antes de permitir a criação automática da conta fixa.
+    const hash=await sha256(senha);
+    if(hash!==HASH_SENHA_CORRETA){
+      $('authMsg').textContent='Senha incorreta.';
+      $('loginSenha').select();
       return;
     }
 
-    try{
-      await signInWithPopup(auth,googleProvider);
-      $('authMsg').textContent='';
-    }catch(e){
-      if(e.code==='auth/popup-blocked'){
-        await signInWithRedirect(auth,googleProvider);
-        return;
+    // Se este navegador ainda estiver conectado na conta antiga,
+    // salva tudo em memória antes de trocar a autenticação.
+    const usuarioAnterior=auth.currentUser;
+    let dadosAntigos=null;
+
+    if(usuarioAnterior && usuarioAnterior.email!==EMAIL_FIXO){
+      $('authMsg').textContent='Preparando seus dados atuais…';
+      try{
+        dadosAntigos=await capturarDadosDaConta(usuarioAnterior.uid);
+      }catch(e){
+        console.warn('Não foi possível capturar automaticamente a conta antiga:',e);
       }
-      throw e;
     }
+
+    $('authMsg').textContent='Entrando…';
+
+    let credencial;
+    try{
+      credencial=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha);
+    }catch(e){
+      // Na primeira utilização, a conta fixa ainda não existe.
+      if(e.code==='auth/invalid-credential' || e.code==='auth/user-not-found'){
+        $('authMsg').textContent='Ativando seu acesso único pela primeira vez…';
+        try{
+          credencial=await createUserWithEmailAndPassword(auth,EMAIL_FIXO,senha);
+        }catch(criarErro){
+          // Se outro aparelho acabou de criar a conta ao mesmo tempo, tenta entrar de novo.
+          if(criarErro.code==='auth/email-already-in-use'){
+            credencial=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha);
+          }else{
+            throw criarErro;
+          }
+        }
+      }else{
+        throw e;
+      }
+    }
+
+    currentUser=credencial.user;
+
+    if(dadosAntigos && dadosAntigos.uidOrigem!==currentUser.uid){
+      $('authMsg').textContent='Migrando seu histórico para o acesso único…';
+      await migrarDadosParaContaFixa(dadosAntigos,currentUser.uid);
+    }
+
+    desbloqueado=true;
+    sessionStorage.setItem('hrExtraDesbloqueado','1');
+
+    clearListeners();
+    state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
+    startSync(currentUser);
+    $('authMsg').textContent='';
+    $('loginSenha').value='';
+    abrirApp();
+
   }catch(e){
-    $('authMsg').textContent=mensagemAuth(e);
+    console.error('Falha no acesso único:',e);
+    const mensagens={
+      'auth/operation-not-allowed':'Ative o método E-mail/Senha no Firebase Authentication.',
+      'auth/network-request-failed':'Sem conexão com o Firebase. Confira sua internet.',
+      'auth/too-many-requests':'Muitas tentativas seguidas. Tente novamente em instantes.',
+      'auth/unauthorized-domain':'Este domínio ainda não está autorizado no Firebase Authentication.',
+      'auth/invalid-credential':'Não foi possível acessar a conta fixa com essa senha.'
+    };
+    $('authMsg').textContent=mensagens[e.code]||'Não foi possível acessar seus dados agora.';
+  }finally{
+    loginEmAndamento=false;
+    $('btnEntrar').disabled=false;
   }
-};
+}
 
-// Captura o retorno do Google quando o login usa redirecionamento.
-getRedirectResult(auth).catch(e=>{
-  $('authMsg').textContent=mensagemAuth(e);
+$('btnEntrar').onclick=entrarComSenhaUnica;
+$('loginSenha').addEventListener('keydown',e=>{
+  if(e.key==='Enter')entrarComSenhaUnica();
 });
+$('btnSair').onclick=()=>bloquearApp();
 
-$('btnSair').onclick=()=>signOut(auth);
-
+/*
+  Ao abrir:
+  - se já estiver autenticado na conta fixa e a aba ainda estiver desbloqueada,
+    carrega normalmente;
+  - se estiver numa conta antiga, mantém essa sessão silenciosamente até o
+    primeiro login 161004, para que a migração automática possa copiar os dados.
+*/
 onAuthStateChanged(auth,user=>{
+  if(loginEmAndamento)return;
+
+  currentUser=user;
+
+  if(user && user.email===EMAIL_FIXO){
+    if(desbloqueado){
+      clearListeners();
+      state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
+      startSync(user);
+      abrirApp();
+    }else{
+      mostrarLogin('');
+    }
+    return;
+  }
+
   clearListeners();
   state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
-  currentUser=user;
-  if(user){
-    $('authScreen').classList.add('hidden');
-    $('app').style.display='block';
-    $('userEmail').textContent=user.email||user.displayName||'Conta Google';
-    render();
-    startSync(user);
-  }else{
-    $('app').style.display='none';
-    $('authScreen').classList.remove('hidden');
-  }
+  mostrarLogin('');
 });
+
+// Navegação lateral
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-view]');
+  if(!btn)return;
+  document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===btn));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  const alvo=document.getElementById('view-'+btn.dataset.view);
+  if(alvo)alvo.classList.add('active');
+  sessionStorage.setItem('hrExtraView',btn.dataset.view);
+});
+const viewSalva=sessionStorage.getItem('hrExtraView');
+if(viewSalva){
+  const btn=document.querySelector(`[data-view="${viewSalva}"]`);
+  if(btn)setTimeout(()=>btn.click(),0);
+}
 
 $('btnAddHE').onclick=async()=>{
   if(!currentUser)return;const data=$('heData').value,tipo=$('heTipo').value,horas=Number($('heHoras').value),obs=$('heObs').value.trim();if(!data||!horas||horas<=0)return alert('Preencha data e horas.');
