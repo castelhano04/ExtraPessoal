@@ -3,759 +3,332 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Controle de HE</title>
-
+<title>Meu Plano Financeiro 2027</title>
 <style>
 :root{
-  --bg:#f4f7fb;--surface:#ffffff;--surface2:#f8fafc;--text:#172033;--muted:#64748b;
-  --line:#e5eaf1;--primary:#1d4ed8;--primary2:#2563eb;--dark:#0f172a;--green:#15803d;
-  --red:#b91c1c;--amber:#b45309;--shadow:0 12px 35px rgba(15,23,42,.08)
+  --bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#64748b;--line:#e5eaf1;
+  --primary:#1d4ed8;--primary2:#2563eb;--dark:#0f172a;--green:#15803d;--red:#b91c1c;--amber:#b45309;
+  --blueSoft:#eff6ff;--greenSoft:#ecfdf5;--redSoft:#fef2f2;--amberSoft:#fffbeb;--shadow:0 12px 35px rgba(15,23,42,.08)
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-#app{display:none}
-.wrap{max-width:1320px;margin:auto;padding:26px}
-.topbar{
-  display:flex;justify-content:space-between;align-items:center;gap:18px;
-  background:linear-gradient(135deg,#0f172a 0%,#17346f 48%,#2563eb 100%);
-  color:#fff;border-radius:26px;padding:28px 30px;box-shadow:var(--shadow);margin-bottom:20px
-}
-.topbar h1{margin:0;font-size:30px;letter-spacing:-.5px}
-.topbar p{margin:7px 0 0;color:#dbeafe}
-.topActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.status{font-size:12px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:700}
-.layout{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
-.sidebar{
-  position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);
-  border-radius:20px;padding:12px;box-shadow:var(--shadow)
-}
-.navbtn{
-  width:100%;border:0;background:transparent;color:#475569;border-radius:12px;
-  padding:12px 13px;text-align:left;font-weight:800;margin:3px 0
-}
-.navbtn:hover,.navbtn.active{background:#eaf1ff;color:var(--primary)}
-.content{min-width:0}
-.view{display:none}.view.active{display:block}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{
-  background:var(--surface);border:1px solid var(--line);border-radius:20px;
-  padding:20px;box-shadow:var(--shadow)
-}
-.card + .card{margin-top:18px}
-.section{margin-top:18px}
-.card h2{margin:0 0 6px;font-size:19px}
-.card h3{margin:0 0 6px;font-size:15px}
-.sub{margin:0 0 16px;color:var(--muted);font-size:13px}
-.metric .label{font-size:12px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
-.metric .value{font-size:27px;font-weight:900;margin-top:8px}
-.good{color:var(--green)}.bad{color:var(--red)}.blue{color:var(--primary)}
-label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#475569}
-input,select{
-  width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:11px;
-  background:#fff;color:#172033;outline:none
-}
-input:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-button{border:0;border-radius:11px;padding:11px 14px;font-weight:800}
-.btn-primary{background:var(--primary2);color:#fff}
-.btn-dark{background:var(--dark);color:#fff}
-.btn-danger{background:#fee2e2;color:var(--red)}
-.btn-light{background:#e9eef5;color:#0f172a}
-.btn-success{background:var(--green);color:#fff}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}
-th{background:var(--surface2);color:#475569;font-size:12px}
-.small{font-size:12px;color:var(--muted)}
-.rowline{display:flex;justify-content:space-between;gap:16px;margin:9px 0;align-items:center}
-.progress{height:9px;background:#e5eaf1;border-radius:999px;overflow:hidden;margin-top:7px}
-.bar{height:100%;background:var(--primary2);width:0;transition:.25s}
-.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#dbeafe;color:var(--primary);font-size:11px;font-weight:800}
-.info{
-  border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:14px;
-  padding:13px 14px;font-size:13px;line-height:1.45
-}
-.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-.planBox{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px}
-.planBox span{display:block;color:var(--muted);font-size:12px;font-weight:700}
-.planBox strong{display:block;margin-top:5px;font-size:15px}
-.authWrap{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;
-  background:radial-gradient(circle at top right,#2f6fe7 0,#193c7d 28%,#0f172a 65%)
-}
-.authCard{
-  width:min(430px,100%);background:#fff;border-radius:26px;padding:30px;
-  box-shadow:0 25px 70px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.4)
-}
-.authLogo{
-  width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#eaf1ff;
-  color:var(--primary);font-size:23px;font-weight:900;margin-bottom:17px
-}
-.authCard h1{margin:0;font-size:27px}.authCard p{color:var(--muted);line-height:1.5}
-.authMsg{min-height:20px;margin-top:10px;font-size:13px;color:var(--red)}
-.authHint{font-size:12px;color:#94a3b8;margin-top:14px;text-align:center}
-.lockBtn{background:rgba(255,255,255,.92);color:#0f172a}
-hr{border:0;border-top:1px solid var(--line)}
-@media(max-width:1020px){
-  .layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:6px}
-  .navbtn{white-space:nowrap;width:auto}.grid4{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:720px){.two,.three,.planGrid{grid-template-columns:1fr}.wrap{padding:12px}.topbar{padding:22px}.grid4{grid-template-columns:1fr}.topActions{justify-content:flex-start}}
-@media(max-width:520px){table{display:block;overflow:auto}.topbar h1{font-size:25px}}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}#app{display:none}.wrap{max-width:1450px;margin:auto;padding:24px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,#0f172a 0%,#17346f 48%,#2563eb 100%);color:#fff;border-radius:26px;padding:28px 30px;box-shadow:var(--shadow);margin-bottom:20px}
+.topbar h1{margin:0;font-size:30px;letter-spacing:-.5px}.topbar p{margin:7px 0 0;color:#dbeafe}.topActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.status{font-size:12px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:800}
+.layout{display:grid;grid-template-columns:245px 1fr;gap:20px;align-items:start}.sidebar{position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow)}
+.navbtn{width:100%;border:0;background:transparent;color:#475569;border-radius:12px;padding:12px 13px;text-align:left;font-weight:800;margin:3px 0}.navbtn:hover,.navbtn.active{background:#eaf1ff;color:var(--primary)}
+.content{min-width:0}.view{display:none}.view.active{display:block}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.four{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}.card+.card{margin-top:18px}.section{margin-top:18px}.card h2{margin:0 0 6px;font-size:19px}.card h3{margin:0 0 6px;font-size:15px}.sub{margin:0 0 16px;color:var(--muted);font-size:13px}.metric .label{font-size:12px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.04em}.metric .value{font-size:27px;font-weight:900;margin-top:8px}.good{color:var(--green)}.bad{color:var(--red)}.blue{color:var(--primary)}.amber{color:var(--amber)}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#475569}input,select{width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#172033;outline:none}input:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}button{border:0;border-radius:11px;padding:11px 14px;font-weight:800}.btn-primary{background:var(--primary2);color:#fff}.btn-dark{background:var(--dark);color:#fff}.btn-danger{background:#fee2e2;color:var(--red)}.btn-light{background:#e9eef5;color:#0f172a}.btn-success{background:var(--green);color:#fff}.btn-amber{background:#fef3c7;color:#92400e}.btn-sm{padding:7px 9px;font-size:12px}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}th{background:var(--surface2);color:#475569;font-size:12px}.small{font-size:12px;color:var(--muted)}.rowline{display:flex;justify-content:space-between;gap:16px;margin:9px 0;align-items:center}.progress{height:9px;background:#e5eaf1;border-radius:999px;overflow:hidden;margin-top:7px}.bar{height:100%;background:var(--primary2);width:0;transition:.25s}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#dbeafe;color:var(--primary);font-size:11px;font-weight:900}.pill.green{background:#dcfce7;color:#166534}.pill.amber{background:#fef3c7;color:#92400e}.pill.red{background:#fee2e2;color:#991b1b}
+.info{border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}.warn{border:1px solid #fde68a;background:#fffbeb;color:#854d0e;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}.success{border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}
+.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.planBox{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px}.planBox span{display:block;color:var(--muted);font-size:12px;font-weight:700}.planBox strong{display:block;margin-top:5px;font-size:15px}.loanCard{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;margin-top:10px}.loanTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.loanName{font-weight:900}.loanMeta{font-size:12px;color:var(--muted);margin-top:4px}.loanNumbers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.mini{background:var(--surface2);border-radius:11px;padding:10px}.mini span{display:block;color:var(--muted);font-size:11px}.mini strong{display:block;margin-top:4px;font-size:13px}.divider{height:1px;background:var(--line);margin:14px 0}.tag{padding:5px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:11px;font-weight:900}
+.monthHeader{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.monthPicker{display:flex;gap:8px;align-items:center}.monthPicker input{width:auto;min-width:155px}.kpiNote{font-size:11px;color:var(--muted);margin-top:6px}.authWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at top right,#2f6fe7 0,#193c7d 28%,#0f172a 65%)}.authCard{width:min(430px,100%);background:#fff;border-radius:26px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.4)}.authLogo{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#eaf1ff;color:var(--primary);font-size:23px;font-weight:900;margin-bottom:17px}.authCard h1{margin:0;font-size:27px}.authCard p{color:var(--muted);line-height:1.5}.authMsg{min-height:20px;margin-top:10px;font-size:13px;color:var(--red)}.authHint{font-size:12px;color:#94a3b8;margin-top:14px;text-align:center}.lockBtn{background:rgba(255,255,255,.92);color:#0f172a}hr{border:0;border-top:1px solid var(--line)}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:6px}.navbtn{white-space:nowrap;width:auto}.grid4{grid-template-columns:repeat(2,1fr)}.loanNumbers{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.two,.three,.four,.planGrid,.grid3{grid-template-columns:1fr}.wrap{padding:12px}.topbar{padding:22px}.grid4{grid-template-columns:1fr}.topActions{justify-content:flex-start}.loanNumbers{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){table{display:block;overflow:auto}.topbar h1{font-size:25px}.loanNumbers{grid-template-columns:1fr}}
 </style>
-
 </head>
-
 <body>
-
 <div id="authScreen" class="authWrap">
   <div class="authCard">
-    <div class="authLogo">HE</div>
-    <h1>Meu Controle de HE</h1>
-    <p>Acesso pessoal. Use a mesma senha em qualquer computador ou celular para abrir seus dados sincronizados.</p>
-    <div style="margin-top:18px">
-      <label>Senha de acesso</label>
-      <input type="password" id="loginSenha" inputmode="numeric" autocomplete="current-password" placeholder="Digite sua senha">
-    </div>
-    <div class="actions">
-      <button class="btn-primary" id="btnEntrar" style="width:100%">Entrar</button>
-    </div>
+    <div class="authLogo">PF</div>
+    <h1>Meu Plano Financeiro</h1>
+    <p>Controle pessoal de renda, horas extras, dívidas, reserva e plano de independência.</p>
+    <div style="margin-top:18px"><label>Senha de acesso</label><input type="password" id="loginSenha" inputmode="numeric" autocomplete="current-password" placeholder="Digite sua senha"></div>
+    <div class="actions"><button class="btn-primary" id="btnEntrar" style="width:100%">Entrar</button></div>
     <div id="authMsg" class="authMsg"></div>
-    <div class="authHint">Acesso único • mesmos dados em todos os seus dispositivos</div>
+    <div class="authHint">Acesso único • dados sincronizados pelo Firebase</div>
   </div>
 </div>
 
-<div id="app">
-  <div class="wrap">
-
-    <div class="topbar">
-      <div>
-        <h1>Meu Controle de HE</h1>
-        <p id="periodoAtual"></p>
-      </div>
-      <div class="topActions">
-        <div id="syncStatus" class="status">Conectando…</div>
-        <button class="lockBtn" id="btnSair">Bloquear</button>
-      </div>
-    </div>
-
-    <div class="layout">
-      <aside class="sidebar">
-        <button class="navbtn active" data-view="painel">Visão geral</button>
-        <button class="navbtn" data-view="lancamentos">Lançamentos</button>
-        <button class="navbtn" data-view="metas">Metas e planejamento</button>
-        <button class="navbtn" data-view="config">Configurações</button>
-        <button class="navbtn" data-view="historico">Fechamentos</button>
-      </aside>
-
-      <main class="content">
-        <section id="view-painel" class="view active">
-          <div class="grid4">
-            <div class="card metric"><div class="label">HE 50%</div><div class="value blue" id="m50">0h</div></div>
-            <div class="card metric"><div class="label">HE 100%</div><div class="value blue" id="m100">0h</div></div>
-            <div class="card metric"><div class="label">Líquido estimado</div><div class="value" id="mLiquido">R$ 0,00</div></div>
-            <div class="card metric"><div class="label">Saldo projetado</div><div class="value" id="mSaldo">R$ 0,00</div></div>
-          </div>
-
-          <div class="section two">
-            <div class="card">
-              <h2>Resumo das metas</h2>
-              <p class="sub">Veja rapidamente quanto já fez e quanto ainda falta.</p>
-              <div class="rowline"><span>HE 50%</span><strong id="meta50txt"></strong></div>
-              <div class="progress"><div class="bar" id="bar50"></div></div>
-              <div class="rowline" style="margin-top:17px"><span>HE 100%</span><strong id="meta100txt"></strong></div>
-              <div class="progress"><div class="bar" id="bar100"></div></div>
-            </div>
-
-            <div class="card">
-              <h2>Resumo financeiro</h2>
-              <p class="sub">Estimativa do fechamento atual.</p>
-              <div class="rowline"><span>Salário base</span><strong id="rBase"></strong></div>
-              <div class="rowline"><span>HE bruta</span><strong id="rHE"></strong></div>
-              <div class="rowline"><span>Bruto estimado</span><strong id="rBruto"></strong></div>
-              <div class="rowline"><span>INSS estimado</span><strong id="rINSS"></strong></div>
-              <div class="rowline"><span>Fixos</span><strong id="rFixos"></strong></div>
-              <div class="rowline"><span>Variáveis lançados</span><strong id="rVariaveis"></strong></div>
-              <hr>
-              <div class="rowline"><span><strong>Saldo projetado</strong></span><strong id="rSaldo"></strong></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="view-lancamentos" class="view">
-          <div class="two">
-            <div class="card">
-              <h2>Registrar hora extra</h2>
-              <p class="sub">Informe o dia, o adicional e a quantidade de horas feitas.</p>
-              <div class="three">
-                <div><label>Data</label><input type="date" id="heData"></div>
-                <div><label>Tipo</label><select id="heTipo"><option value="50">HE 50%</option><option value="100">HE 100%</option></select></div>
-                <div><label>Horas</label><input type="number" id="heHoras" min="0" step="0.25" placeholder="Ex.: 1,75"></div>
-              </div>
-              <div style="margin-top:10px"><label>Observação</label><input id="heObs" placeholder="Opcional"></div>
-              <div class="actions"><button class="btn-primary" id="btnAddHE">Adicionar HE</button></div>
-              <div id="heLista"></div>
-            </div>
-
-            <div class="card">
-              <h2>Registrar gasto</h2>
-              <p class="sub">Controle os gastos variáveis do período.</p>
-              <div class="three">
-                <div><label>Data</label><input type="date" id="gData"></div>
-                <div><label>Categoria</label><select id="gCat"><option>Gasolina</option><option>Alimentação</option><option>Viagem</option><option>Farmácia</option><option>Lazer</option><option>Outros</option></select></div>
-                <div><label>Valor</label><input type="number" id="gValor" min="0" step="0.01" placeholder="0,00"></div>
-              </div>
-              <div style="margin-top:10px"><label>Descrição</label><input id="gDesc" placeholder="Opcional"></div>
-              <div class="actions"><button class="btn-primary" id="btnAddGasto">Adicionar gasto</button></div>
-              <div id="gLista"></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="view-metas" class="view">
-          <div class="card">
-            <h2>Planejamento de metas</h2>
-            <p class="sub">O sistema calcula quanto falta e distribui a HE restante conforme seus dias disponíveis.</p>
-
-            <div class="planGrid">
-              <div class="planBox"><span>Faltam HE 50%</span><strong id="falta50"></strong></div>
-              <div class="planBox"><span>Dias necessários para 50%</span><strong id="dias50"></strong></div>
-              <div class="planBox"><span>Dias úteis restantes (seg–qui)</span><strong id="diasDisponiveis"></strong></div>
-              <div class="planBox"><span>Faltam HE 100%</span><strong id="falta100"></strong></div>
-              <div class="planBox"><span>Sugestão para HE 100%</span><strong id="dias100"></strong></div>
-              <div class="planBox"><span>Fins de semana restantes</span><strong id="finsSemana"></strong></div>
-            </div>
-
-            <div class="info" style="margin-top:16px">
-              <strong>Como funciona sábado:</strong> o campo “horas por sábado” define quantas horas de HE 100% você pretende fazer em cada sábado.
-              Exemplo: se faltam 10h e você definiu 4h por sábado, o sistema usa até 4h em cada sábado e tenta completar o restante nos domingos disponíveis.
-              O domingo é calculado a partir das 06:00 até o horário final que você escolher nas configurações.
-            </div>
-
-            <div class="small" id="previsaoMeta" style="margin-top:14px"></div>
-          </div>
-        </section>
-
-        <section id="view-config" class="view">
-          <div class="card">
-            <h2>Configurações</h2>
-            <p class="sub">Defina os valores usados nos cálculos. Você pode alterar quando quiser.</p>
-            <div class="three">
-              <div><label>Salário base</label><input type="number" id="cfgSalario" step="0.01"></div>
-              <div><label>Jornada mensal</label><input type="number" id="cfgJornada"></div>
-              <div><label>Fixos mensais</label><input type="number" id="cfgFixos" step="0.01"></div>
-
-              <div><label>Meta HE 50%</label><input type="number" id="cfgMeta50" step="0.25"></div>
-              <div><label>HE 50% habitual por dia (seg–qui)</label><input type="number" id="cfgHorasDia" min="0.25" step="0.25"></div>
-              <div><label>Dia inicial do fechamento</label><input type="number" id="cfgDia" min="1" max="28"></div>
-
-              <div><label>Meta HE 100%</label><input type="number" id="cfgMeta100" step="0.25"></div>
-              <div><label>Horas que pretendo fazer por sábado</label><input type="number" id="cfgSabado100" min="0" step="0.25" placeholder="Ex.: 4"></div>
-              <div><label>Domingo: trabalhar das 06:00 até</label>
-                <select id="cfgDomingoFim">
-                  <option value="">Não usar domingo no planejamento</option>
-                  <option value="15">15:00 (até 9h)</option>
-                  <option value="17">17:00 (até 11h)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="info" style="margin-top:16px">
-              <strong>Sábado:</strong> não é um limite obrigatório do sistema; é apenas a quantidade de horas que você quer considerar em cada sábado para o planejamento automático da meta de 100%.
-            </div>
-
-            <div class="actions">
-              <button class="btn-dark" id="btnSalvarConfig">Salvar configurações</button>
-              <button class="btn-success" id="btnImportarLocal">Importar dados antigos deste navegador</button>
-            </div>
-            <div class="small" style="margin-top:10px">Os dados continuam armazenados no Firebase da versão atual.</div>
-          </div>
-        </section>
-
-        <section id="view-historico" class="view">
-          <div class="card">
-            <h2>Histórico de fechamentos</h2>
-            <p class="sub">Salve um retrato do período atual para consultar depois.</p>
-            <div class="actions"><button class="btn-primary" id="btnFechar">Salvar fechamento atual</button></div>
-            <div id="historico"></div>
-          </div>
-        </section>
-      </main>
-    </div>
+<div id="app"><div class="wrap">
+  <div class="topbar">
+    <div><h1>Meu Plano Financeiro</h1><p id="periodoAtual">Plano oficial a partir de janeiro/2027</p></div>
+    <div class="topActions"><div id="syncStatus" class="status">Conectando…</div><button class="lockBtn" id="btnSair">Bloquear</button></div>
   </div>
-</div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="navbtn active" data-view="painel">Visão geral</button>
+      <button class="navbtn" data-view="dividas">Empréstimos</button>
+      <button class="navbtn" data-view="fluxo">Fluxo do mês</button>
+      <button class="navbtn" data-view="lancamentos">HE e gastos</button>
+      <button class="navbtn" data-view="metas">Reserva e independência</button>
+      <button class="navbtn" data-view="config">Configurações</button>
+      <button class="navbtn" data-view="historico">Fechamentos</button>
+    </aside>
+
+    <main class="content">
+      <section id="view-painel" class="view active">
+        <div class="card">
+          <div class="monthHeader">
+            <div><h2>Mês de planejamento</h2><p class="sub" style="margin-bottom:0">A competência do mês já considera automaticamente as parcelas programadas.</p></div>
+            <div class="monthPicker"><input type="month" id="mesPainel"><button class="btn-light" id="btnMesAtual">Mês atual</button></div>
+          </div>
+        </div>
+        <div class="grid4 section">
+          <div class="card metric"><div class="label">Renda estimada</div><div class="value blue" id="mRenda">R$ 0,00</div><div class="kpiNote">salário + HE estimada</div></div>
+          <div class="card metric"><div class="label">Compromissos do mês</div><div class="value bad" id="mCompromissos">R$ 0,00</div><div class="kpiNote">dívidas + custos recorrentes</div></div>
+          <div class="card metric"><div class="label">Dívida nominal futura</div><div class="value" id="mDivida">R$ 0,00</div><div class="kpiNote">parcelas ainda programadas</div></div>
+          <div class="card metric"><div class="label">Livre projetado</div><div class="value" id="mLivre">R$ 0,00</div><div class="kpiNote">antes de novos gastos variáveis</div></div>
+        </div>
+
+        <div class="section two">
+          <div class="card">
+            <h2>Resumo das dívidas</h2><p class="sub">Visão simplificada, com todos os contratos preservados nos detalhes.</p>
+            <div class="rowline"><span>Empréstimos CLT</span><strong id="resCLT"></strong></div>
+            <div class="rowline"><span>Empréstimo bancário</span><strong id="resBanco"></strong></div>
+            <div class="rowline"><span>Parcela adicional</span><strong id="resOutros"></strong></div>
+            <hr><div class="rowline"><span><strong>Total nominal futuro</strong></span><strong id="resDividaTotal"></strong></div>
+            <div class="info" style="margin-top:14px">O saldo nominal é a soma das parcelas futuras. O valor real para quitar antecipadamente pode ser menor e deve ser informado quando a financeira fornecer a cotação.</div>
+          </div>
+          <div class="card">
+            <h2>Plano de independência</h2><p class="sub">Janeiro/2027 é o mês 1 do plano de 24 meses.</p>
+            <div class="rowline"><span>Mês do plano</span><strong id="planoMes"></strong></div>
+            <div class="rowline"><span>Meta final</span><strong>Dezembro/2028</strong></div>
+            <div class="rowline"><span>Reserva atual</span><strong id="reservaAtualTxt"></strong></div>
+            <div class="rowline"><span>Fundo independência</span><strong id="fundoAtualTxt"></strong></div>
+            <div class="progress"><div class="bar" id="barPlano"></div></div>
+            <div class="small" id="planoStatus" style="margin-top:9px"></div>
+          </div>
+        </div>
+
+        <div class="section card">
+          <h2>Compromissos automáticos da competência</h2><p class="sub">Esses valores já entram como comprometidos quando o mês vira.</p>
+          <div id="compromissosResumo"></div>
+        </div>
+      </section>
+
+      <section id="view-dividas" class="view">
+        <div class="card">
+          <div class="monthHeader"><div><h2>Empréstimos e parcelas</h2><p class="sub" style="margin-bottom:0">Cada contrato é calculado pela data de início, total de parcelas e antecipações registradas.</p></div><span class="tag" id="tagCompetencia"></span></div>
+          <div id="listaDividas"></div>
+        </div>
+        <div class="section card">
+          <h2>Adicionar empréstimo ou parcela</h2><p class="sub">Use para novos contratos. Para quitar mais cedo, registre uma antecipação no contrato existente.</p>
+          <div class="four">
+            <div><label>Nome</label><input id="dNome" placeholder="Ex.: Banco X"></div>
+            <div><label>Tipo</label><select id="dTipo"><option value="CLT">CLT</option><option value="BANCARIO">Bancário</option><option value="OUTRO">Outro</option></select></div>
+            <div><label>Valor da parcela</label><input type="number" id="dParcela" step="0.01"></div>
+            <div><label>Total de parcelas</label><input type="number" id="dTotal" min="1"></div>
+            <div><label>Primeira competência</label><input type="month" id="dInicio"></div>
+            <div><label>Valor para quitar hoje</label><input type="number" id="dQuitacao" step="0.01" placeholder="Opcional"></div>
+          </div>
+          <div class="actions"><button class="btn-primary" id="btnAddDivida">Adicionar</button></div>
+        </div>
+      </section>
+
+      <section id="view-fluxo" class="view">
+        <div class="two">
+          <div class="card">
+            <h2>1ª entrada — Vale</h2><p class="sub">Adiantamento de 40% do salário. Não é renda adicional: será descontado no pagamento.</p>
+            <div class="rowline"><span>Vale estimado</span><strong id="valeEstimado"></strong></div>
+            <div class="rowline"><span>Empréstimo bancário</span><strong id="valeBanco"></strong></div>
+            <hr><div class="rowline"><span><strong>Sobra estimada do vale</strong></span><strong id="valeSobra"></strong></div>
+          </div>
+          <div class="card">
+            <h2>2ª entrada — Pagamento</h2><p class="sub">O vale é abatido da folha. Aqui entram os demais descontos e compromissos.</p>
+            <div class="rowline"><span>Salário bruto base</span><strong id="pagBruto"></strong></div>
+            <div class="rowline"><span>HE bruta estimada</span><strong id="pagHE"></strong></div>
+            <div class="rowline"><span>Vale já recebido</span><strong id="pagVale"></strong></div>
+            <div class="rowline"><span>Empréstimos CLT</span><strong id="pagCLT"></strong></div>
+            <div class="rowline"><span>Cartão farmácia</span><strong id="pagFarmacia"></strong></div>
+            <div class="rowline"><span>Cesta básica</span><strong id="pagCesta"></strong></div>
+            <div class="rowline"><span>Ajuda em casa</span><strong id="pagMae"></strong></div>
+            <div class="rowline"><span>Carro / gasolina</span><strong id="pagCarro"></strong></div>
+            <div class="rowline"><span>Parcela adicional</span><strong id="pagOutro"></strong></div>
+            <div class="rowline"><span>Outros descontos da folha</span><strong id="pagDescontos"></strong></div>
+            <hr><div class="rowline"><span><strong>Disponível projetado*</strong></span><strong id="pagDisponivel"></strong></div>
+            <div class="small">*Estimativa financeira. O líquido real depende dos descontos oficiais da folha.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-lancamentos" class="view">
+        <div class="two">
+          <div class="card">
+            <h2>Registrar hora extra</h2><p class="sub">Mantém a lógica do sistema anterior.</p>
+            <div class="three"><div><label>Data</label><input type="date" id="heData"></div><div><label>Tipo</label><select id="heTipo"><option value="50">HE 50%</option><option value="100">HE 100%</option></select></div><div><label>Horas</label><input type="number" id="heHoras" min="0" step="0.25" placeholder="Ex.: 1,75"></div></div>
+            <div style="margin-top:10px"><label>Observação</label><input id="heObs" placeholder="Opcional"></div><div class="actions"><button class="btn-primary" id="btnAddHE">Adicionar HE</button></div><div id="heLista"></div>
+          </div>
+          <div class="card">
+            <h2>Registrar gasto variável</h2><p class="sub">Gastos fora dos compromissos automáticos.</p>
+            <div class="three"><div><label>Data</label><input type="date" id="gData"></div><div><label>Categoria</label><select id="gCat"><option>Alimentação</option><option>Carro extra</option><option>Farmácia extra</option><option>Lazer</option><option>Presente</option><option>Viagem</option><option>Outros</option></select></div><div><label>Valor</label><input type="number" id="gValor" min="0" step="0.01"></div></div>
+            <div style="margin-top:10px"><label>Descrição</label><input id="gDesc" placeholder="Opcional"></div><div class="actions"><button class="btn-primary" id="btnAddGasto">Adicionar gasto</button></div><div id="gLista"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-metas" class="view">
+        <div class="two">
+          <div class="card">
+            <h2>Reserva financeira</h2><p class="sub">Dinheiro de segurança. Não depende do que sobrar no fim do mês.</p>
+            <div class="rowline"><span>Guardado</span><strong id="metaReservaAtual"></strong></div><div class="rowline"><span>Meta</span><strong id="metaReservaAlvo"></strong></div><div class="progress"><div class="bar" id="barReserva"></div></div>
+            <div class="three" style="margin-top:15px"><div><label>Registrar aporte</label><input type="number" id="aporteReserva" step="0.01"></div><div><label>Data</label><input type="date" id="aporteReservaData"></div></div>
+            <div class="actions"><button class="btn-success" id="btnAporteReserva">Guardar na reserva</button></div>
+          </div>
+          <div class="card">
+            <h2>Fundo de independência</h2><p class="sub">Capital separado para construir opções fora do CLT.</p>
+            <div class="rowline"><span>Acumulado</span><strong id="metaFundoAtual"></strong></div><div class="rowline"><span>Meta</span><strong id="metaFundoAlvo"></strong></div><div class="progress"><div class="bar" id="barFundo"></div></div>
+            <div class="three" style="margin-top:15px"><div><label>Registrar aporte</label><input type="number" id="aporteFundo" step="0.01"></div><div><label>Data</label><input type="date" id="aporteFundoData"></div></div>
+            <div class="actions"><button class="btn-primary" id="btnAporteFundo">Adicionar ao fundo</button></div>
+          </div>
+        </div>
+        <div class="section card"><h2>Histórico de aportes</h2><div id="aportesLista"></div></div>
+      </section>
+
+      <section id="view-config" class="view">
+        <div class="card">
+          <h2>Configurações do plano</h2><p class="sub">Valores conhecidos já foram preenchidos. Ajuste quando sua folha mudar.</p>
+          <div class="four">
+            <div><label>Salário bruto</label><input type="number" id="cfgSalario" step="0.01"></div>
+            <div><label>Jornada mensal</label><input type="number" id="cfgJornada" placeholder="Ex.: 220"></div>
+            <div><label>Vale (%)</label><input type="number" id="cfgValePct" step="0.01"></div>
+            <div><label>Outros descontos de folha</label><input type="number" id="cfgOutrosDescontos" step="0.01" placeholder="INSS/outros conforme holerite"></div>
+            <div><label>Cartão farmácia</label><input type="number" id="cfgFarmacia" step="0.01"></div>
+            <div><label>Cesta básica</label><input type="number" id="cfgCesta" step="0.01"></div>
+            <div><label>Ajuda para mãe/casa</label><input type="number" id="cfgMae" step="0.01"></div>
+            <div><label>Carro / gasolina</label><input type="number" id="cfgCarro" step="0.01"></div>
+            <div><label>Meta HE 50%</label><input type="number" id="cfgMeta50" step="0.25"></div>
+            <div><label>Meta HE 100%</label><input type="number" id="cfgMeta100" step="0.25"></div>
+            <div><label>Meta da reserva</label><input type="number" id="cfgMetaReserva" step="0.01" placeholder="Defina quando quiser"></div>
+            <div><label>Meta fundo independência</label><input type="number" id="cfgMetaFundo" step="0.01" placeholder="Defina quando quiser"></div>
+          </div>
+          <div class="warn" style="margin-top:16px"><strong>Importante:</strong> o sistema não trata o FGTS como desconto do salário. Use “Outros descontos de folha” para o valor efetivamente descontado no holerite, como INSS e outras rubricas.</div>
+          <div class="actions"><button class="btn-dark" id="btnSalvarConfig">Salvar configurações</button></div>
+        </div>
+      </section>
+
+      <section id="view-historico" class="view">
+        <div class="card"><h2>Fechamentos mensais</h2><p class="sub">Salve uma fotografia do mês para acompanhar sua evolução.</p><div class="actions"><button class="btn-primary" id="btnFechar">Salvar fechamento da competência selecionada</button></div><div id="historico"></div></div>
+      </section>
+    </main>
+  </div>
+</div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import {
-  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-  doc, collection, setDoc, deleteDoc, onSnapshot, getDoc, getDocs, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,collection,setDoc,deleteDoc,onSnapshot,getDoc,getDocs,serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-/* =========================================================
-   COLE A CONFIGURAÇÃO DO SEU APP WEB DO FIREBASE AQUI
-   Firebase Console > Configurações do projeto > Seus apps > Web
-   ========================================================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyAUWXZ7T0wDUoCMO53lNRXVzLO68tMWAck",
-  authDomain: "controle-hr-extra.firebaseapp.com",
-  projectId: "controle-hr-extra",
-  storageBucket: "controle-hr-extra.firebasestorage.app",
-  messagingSenderId: "99291846127",
-  appId: "1:99291846127:web:5370d6a763b8db357a521a",
-  measurementId: "G-ZLK1F9F01B"
-};
-
-const appFirebase = initializeApp(firebaseConfig);
-const firestore = initializeFirestore(appFirebase, {
-  localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
-});
-const auth = getAuth(appFirebase);
-
-/*
-  ACESSO ÚNICO:
-  - A tela mostra somente a senha.
-  - Por trás, todos os aparelhos usam a MESMA conta Firebase.
-  - A senha digitada é usada diretamente no Firebase.
-  - O hash abaixo serve apenas para impedir a criação acidental da conta com outra senha
-    na primeira ativação. A senha em texto puro não fica gravada no HTML.
-*/
-const EMAIL_FIXO = 'controle.pessoal.161004@hr-extra.app';
-const HASH_SENHA_CORRETA = '6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
-let desbloqueado = sessionStorage.getItem('hrExtraDesbloqueado') === '1';
-let loginEmAndamento = false;
-
+const firebaseConfig={apiKey:"AIzaSyAUWXZ7T0wDUoCMO53lNRXVzLO68tMWAck",authDomain:"controle-hr-extra.firebaseapp.com",projectId:"controle-hr-extra",storageBucket:"controle-hr-extra.firebasestorage.app",messagingSenderId:"99291846127",appId:"1:99291846127:web:5370d6a763b8db357a521a",measurementId:"G-ZLK1F9F01B"};
+const appFirebase=initializeApp(firebaseConfig);
+const firestore=initializeFirestore(appFirebase,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
+const auth=getAuth(appFirebase);
+const EMAIL_FIXO='controle.pessoal.161004@hr-extra.app';
+const HASH_SENHA_CORRETA='6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
 const BRL=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
-const DEFAULT_CONFIG={
-  salario:0,
-  jornada:0,
-  meta50:0,
-  meta100:0,
-  fixos:0,
-  diaInicio:0,
-  horasDia:0,
-  sabado100:0,
-  domingoFim:0,
-  configurado:false
-};
-let currentUser=null, unsubs=[];
-let state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
+const $=id=>document.getElementById(id); const uuid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 
-const $=id=>document.getElementById(id);
-function uuid(){return crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2)}
-function fmtHorasDecimal(h){h=Math.max(0,Number(h)||0);let horas=Math.floor(h),min=Math.round((h-horas)*60);if(min===60){horas++;min=0}if(horas===0)return `${min}min`;if(min===0)return `${horas}h`;return `${horas}h ${String(min).padStart(2,'0')}min`}
-function parseLocal(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)}
-function fmtData(d){return d.toLocaleDateString('pt-BR')}
-function periodoDaData(data){const di=Number(state.config.diaInicio||21);const d=new Date(data.getFullYear(),data.getMonth(),data.getDate(),12);let inicio,fim;if(d.getDate()>=di){inicio=new Date(d.getFullYear(),d.getMonth(),di,12);fim=new Date(d.getFullYear(),d.getMonth()+1,di-1,12)}else{inicio=new Date(d.getFullYear(),d.getMonth()-1,di,12);fim=new Date(d.getFullYear(),d.getMonth(),di-1,12)}return{inicio,fim}}
-function atualPeriodo(){return periodoDaData(new Date())}
-function dentroPeriodo(s,p){const d=parseLocal(s);return d>=p.inicio&&d<=p.fim}
-function diasPermitidosRestantes(p){const hoje=new Date();hoje.setHours(12,0,0,0);let ini=hoje>p.inicio?new Date(hoje):new Date(p.inicio),total=0;for(let d=new Date(ini);d<=p.fim;d.setDate(d.getDate()+1)){const w=d.getDay();if(w>=1&&w<=4)total++}return total}
-function finsSemanaRestantes(p){const hoje=new Date();hoje.setHours(12,0,0,0);let ini=hoje>p.inicio?new Date(hoje):new Date(p.inicio),sab=0,dom=0;for(let d=new Date(ini);d<=p.fim;d.setDate(d.getDate()+1)){if(d.getDay()===6)sab++;if(d.getDay()===0)dom++}return{sab,dom}}
-function plano100(falta,p){
-  falta=Math.max(0,Number(falta)||0);
-  if(falta<=0)return{texto:'Meta atingida',detalhe:'Você já atingiu a meta de HE 100%.'};
-  const fs=finsSemanaRestantes(p),maxSab=Math.max(0,Number(state.config.sabado100)||0),domFim=Number(state.config.domingoFim)||0,domHoras=domFim?domFim-6:0;
-  if(domHoras>0&&fs.dom>0&&falta<=domHoras){
-    const fim=6+falta,hh=Math.floor(fim),mm=Math.round((fim-hh)*60);
-    return{texto:`1 domingo: 06:00 às ${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`,detalhe:`Dá para completar ${fmtHorasDecimal(falta)} em um único domingo.`};
-  }
-  let restante=falta,partes=[],si=0,di=0;
-  while(restante>0&&(si<fs.sab||di<fs.dom)){
-    if(si<fs.sab&&restante>0){const h=Math.min(maxSab,restante);if(h>0){partes.push(`${fmtHorasDecimal(h)} sábado`);restante-=h}si++}
-    if(di<fs.dom&&restante>0){const h=Math.min(domHoras,restante);if(h>0){partes.push(`${fmtHorasDecimal(h)} domingo`);restante-=h}di++}
-  }
-  if(maxSab<=0&&domHoras<=0)return{texto:'Defina sábado e/ou domingo',detalhe:'Configure quantas horas pretende fazer no sábado e, se quiser, o horário final de domingo.'};
-  return{texto:partes.join(' + ')||'Sem fim de semana disponível',detalhe:restante<=0?`Sugestão para completar ${fmtHorasDecimal(falta)}.`:`Com os fins de semana restantes, ainda faltariam ${fmtHorasDecimal(restante)}.`};
-}
-function calcINSS(sal){const f=[[1621,0.075],[2902.84,0.09],[4354.27,0.12],[8475.55,0.14]];let t=0,a=0;for(const [l,q] of f){if(sal<=a)break;const b=Math.min(sal,l)-a;if(b>0)t+=b*q;a=l}return t}
-function calc(){
-  const p=atualPeriodo(),
-        hes=state.hes.filter(x=>dentroPeriodo(x.data,p)),
-        gastos=state.gastos.filter(x=>dentroPeriodo(x.data,p)),
-        h50=hes.filter(x=>x.tipo==='50').reduce((a,b)=>a+Number(b.horas),0),
-        h100=hes.filter(x=>x.tipo==='100').reduce((a,b)=>a+Number(b.horas),0),
-        salario=Number(state.config.salario)||0,
-        jornada=Number(state.config.jornada)||0,
-        vh=jornada>0 ? salario/jornada : 0,
-        heBruta=vh*1.5*h50+vh*2*h100,
-        bruto=salario+heBruta,
-        inss=bruto>0 ? calcINSS(bruto) : 0,
-        liquido=bruto-inss,
-        variaveis=gastos.reduce((a,b)=>a+Number(b.valor),0),
-        saldo=liquido-(Number(state.config.fixos)||0)-variaveis;
-  return{p,hes,gastos,h50,h100,heBruta,bruto,inss,liquido,variaveis,saldo}
-}
-function render(){
-  const c=calc();
-  $('periodoAtual').textContent=`Fechamento atual: ${fmtData(c.p.inicio)} até ${fmtData(c.p.fim)}`;
-  $('m50').textContent=`${c.h50.toFixed(2).replace('.',',')}h`;$('m100').textContent=`${c.h100.toFixed(2).replace('.',',')}h`;
-  $('mLiquido').textContent=BRL.format(c.liquido);$('mSaldo').textContent=BRL.format(c.saldo);$('mSaldo').className='value '+(c.saldo>=0?'good':'bad');
-  $('rBase').textContent=BRL.format(state.config.salario);$('rHE').textContent=BRL.format(c.heBruta);$('rBruto').textContent=BRL.format(c.bruto);$('rINSS').textContent=BRL.format(c.inss);$('rFixos').textContent=BRL.format(state.config.fixos);$('rVariaveis').textContent=BRL.format(c.variaveis);$('rSaldo').textContent=BRL.format(c.saldo);$('rSaldo').className=c.saldo>=0?'good':'bad';
-  const meta50=Number(state.config.meta50)||0, meta100=Number(state.config.meta100)||0;
-  $('bar50').style.width=meta50>0?Math.min(100,(c.h50/meta50)*100)+'%':'0%';
-  $('bar100').style.width=meta100>0?Math.min(100,(c.h100/meta100)*100)+'%':'0%';
-  $('meta50txt').textContent=meta50>0?`${c.h50.toFixed(1)}h / ${meta50}h`:`${c.h50.toFixed(1)}h / meta não definida`;
-  $('meta100txt').textContent=meta100>0?`${c.h100.toFixed(1)}h / ${meta100}h`:`${c.h100.toFixed(1)}h / meta não definida`;
-  const fd=Number(state.config.horasDia)||0,
-        f50=meta50>0?Math.max(0,meta50-c.h50):0,
-        f100=meta100>0?Math.max(0,meta100-c.h100):0,
-        d50=(fd>0&&f50>0)?Math.ceil(f50/fd):0,
-        disp=diasPermitidosRestantes(c.p),
-        fs=finsSemanaRestantes(c.p),
-        p100=meta100>0?plano100(f100,c.p):{texto:'Defina uma meta',detalhe:'Configure a meta de HE 100%.'};
-  $('falta50').textContent=meta50<=0?'Defina uma meta':(f50<=0?'Meta atingida':fmtHorasDecimal(f50));
-  $('dias50').textContent=meta50<=0?'—':(f50<=0?'0 dias':(fd>0?`${d50} dia${d50===1?'':'s'} de ${fmtHorasDecimal(fd)}`:'Defina as horas habituais por dia'));
-  $('falta100').textContent=meta100<=0?'Defina uma meta':(f100<=0?'Meta atingida':fmtHorasDecimal(f100));
-  $('dias100').textContent=p100.texto;
-  $('finsSemana').textContent=`${fs.sab} sáb. + ${fs.dom} dom.`;
-  $('diasDisponiveis').textContent=`${disp} dia${disp===1?'':'s'} (seg–qui)`;
-  let msg50='Configure suas metas para ver a previsão.';
-  if(meta50>0){
-    if(f50<=0) msg50='Meta de 50% atingida.';
-    else if(fd<=0) msg50=`HE 50%: faltam ${fmtHorasDecimal(f50)}. Defina sua HE habitual por dia para calcular quantos dias faltam.`;
-    else msg50=d50<=disp?`HE 50%: faltam ${fmtHorasDecimal(f50)}, equivalentes a ${d50} dia(s) no ritmo de ${fmtHorasDecimal(fd)}.`:`HE 50%: seriam ${d50} dia(s), mas restam apenas ${disp} dias permitidos.`;
-  }
-  $('previsaoMeta').textContent=`${msg50} HE 100%: ${p100.detalhe}`;
-  renderHE(c.hes);renderGastos(c.gastos);renderHistorico();
-  $('cfgSalario').value=state.config.salario||'';
-  $('cfgJornada').value=state.config.jornada||'';
-  $('cfgMeta50').value=state.config.meta50||'';
-  $('cfgMeta100').value=state.config.meta100||'';
-  $('cfgFixos').value=state.config.fixos||'';
-  $('cfgDia').value=state.config.diaInicio||'';
-  $('cfgHorasDia').value=state.config.horasDia||'';
-  $('cfgSabado100').value=state.config.sabado100||'';
-  $('cfgDomingoFim').value=state.config.domingoFim?String(state.config.domingoFim):'';
-}
-function renderHE(arr){$('heLista').innerHTML=!arr.length?'<p class="small">Nenhuma hora extra neste fechamento.</p>':'<table><tr><th>Data</th><th>Tipo</th><th>Horas</th><th>Obs.</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${parseLocal(x.data).toLocaleDateString('pt-BR')}</td><td><span class="pill">${x.tipo}%</span></td><td>${fmtHorasDecimal(x.horas)}</td><td>${x.obs||''}</td><td><button class="btn-danger" data-delhe="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
-function renderGastos(arr){$('gLista').innerHTML=!arr.length?'<p class="small">Nenhum gasto neste fechamento.</p>':'<table><tr><th>Data</th><th>Categoria</th><th>Valor</th><th>Descrição</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${parseLocal(x.data).toLocaleDateString('pt-BR')}</td><td>${x.cat}</td><td>${BRL.format(x.valor)}</td><td>${x.desc||''}</td><td><button class="btn-danger" data-delgasto="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
-function renderHistorico(){$('historico').innerHTML=!state.fechamentos.length?'<p class="small">Nenhum fechamento salvo ainda.</p>':'<table><tr><th>Período</th><th>HE 50%</th><th>HE 100%</th><th>Líquido</th><th>Saldo</th><th></th></tr>'+state.fechamentos.slice().sort((a,b)=>(b.criadoEm||'').localeCompare(a.criadoEm||'')).map(x=>`<tr><td>${x.periodo}</td><td>${Number(x.h50).toFixed(1)}h</td><td>${Number(x.h100).toFixed(1)}h</td><td>${BRL.format(x.liquido)}</td><td class="${x.saldo>=0?'good':'bad'}">${BRL.format(x.saldo)}</td><td><button class="btn-danger" data-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+const DEFAULT_CONFIG={salario:3644.10,jornada:0,valePct:40,farmacia:200,cesta:85,mae:400,carro:450,outrosDescontos:0,meta50:0,meta100:0,metaReserva:0,metaFundo:0,planoInicio:'2027-01',planoMeses:24,configurado:true};
+const DIVIDAS_PADRAO=[
+ {id:'clt-safra',nome:'Safra',tipo:'CLT',parcela:178.49,total:12,inicio:'2026-03',quitacao:0},
+ {id:'clt-digio',nome:'Digio / Bradesco',tipo:'CLT',parcela:434.45,total:24,inicio:'2026-06',quitacao:0},
+ {id:'clt-parati-700895125',nome:'Parati 700895125',tipo:'CLT',parcela:126.88,total:42,inicio:'2026-09',quitacao:0},
+ {id:'clt-parati-700387113',nome:'Parati 700387113',tipo:'CLT',parcela:237.20,total:48,inicio:'2026-09',quitacao:0},
+ {id:'clt-qi',nome:'QI Crédito',tipo:'CLT',parcela:186.12,total:48,inicio:'2026-09',quitacao:0},
+ {id:'clt-pan-575306',nome:'PAN •••575306',tipo:'CLT',parcela:34.50,total:24,inicio:'2026-05',quitacao:0},
+ {id:'clt-pan-599936',nome:'PAN •••599936',tipo:'CLT',parcela:18.29,total:24,inicio:'2026-05',quitacao:0},
+ {id:'clt-parati-698329674',nome:'Parati 698329674',tipo:'CLT',parcela:179.27,total:42,inicio:'2026-06',quitacao:0},
+ {id:'clt-pan-110643',nome:'PAN •••110643',tipo:'CLT',parcela:24.99,total:24,inicio:'2026-07',quitacao:0},
+ {id:'banco-1061',nome:'Empréstimo bancário',tipo:'BANCARIO',parcela:1061,total:24,inicio:'2026-05',quitacao:0},
+ {id:'outro-113',nome:'Parcela adicional R$ 113',tipo:'OUTRO',parcela:113,total:9,inicio:'2026-10',quitacao:0}
+];
+let currentUser=null,unsubs=[],desbloqueado=sessionStorage.getItem('planoFinanceiroDesbloqueado')==='1',loginEmAndamento=false;
+let state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};
+let competencia='2027-01';
 
-function paths(uid){
-  return{
-    config:doc(firestore,'users',uid,'config','main'),
-    horas:collection(firestore,'users',uid,'horas'),
-    gastos:collection(firestore,'users',uid,'gastos'),
-    fechamentos:collection(firestore,'users',uid,'fechamentos')
-  }
+function parseMes(s){const [y,m]=s.split('-').map(Number);return new Date(y,m-1,1,12)}
+function mesIndex(s){const [y,m]=s.split('-').map(Number);return y*12+(m-1)}
+function fmtMes(s){return parseMes(s).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}
+function fmtDataIso(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12).toLocaleDateString('pt-BR')}
+function fmtHorasDecimal(h){h=Math.max(0,Number(h)||0);let hh=Math.floor(h),min=Math.round((h-hh)*60);if(min===60){hh++;min=0}if(hh===0)return `${min}min`;if(min===0)return `${hh}h`;return `${hh}h ${String(min).padStart(2,'0')}min`}
+function mesDaData(s){return String(s||'').slice(0,7)}
+function antecipacoesDaDivida(id,ateMes){return state.antecipacoes.filter(a=>a.dividaId===id && (!ateMes || mesDaData(a.data)<=ateMes)).reduce((n,a)=>n+(Number(a.parcelas)||0),0)}
+function statusDivida(d,mes=competencia){
+  const ini=mesIndex(d.inicio), atual=mesIndex(mes), passadas=Math.max(0,Math.min(d.total,atual-ini));
+  const antecipadas=antecipacoesDaDivida(d.id,mes);
+  const pagasAntes=Math.min(d.total,passadas+antecipadas);
+  const ativa=atual>=ini && pagasAntes<d.total;
+  const pendentesInicio=Math.max(0,d.total-pagasAntes);
+  const baixaCompetencia=ativa?1:0;
+  const restantesDepois=Math.max(0,pendentesInicio-baixaCompetencia);
+  const saldoAntes=pendentesInicio*Number(d.parcela||0);
+  const saldoDepois=restantesDepois*Number(d.parcela||0);
+  return{ativa,pagasAntes,pendentesInicio,baixaCompetencia,restantesDepois,saldoAntes,saldoDepois,antecipadas};
 }
+function valorMensalTipo(tipo,mes=competencia){return state.dividas.filter(d=>d.tipo===tipo).reduce((s,d)=>s+(statusDivida(d,mes).ativa?Number(d.parcela):0),0)}
+function saldoTipo(tipo,mes=competencia){return state.dividas.filter(d=>d.tipo===tipo).reduce((s,d)=>s+statusDivida(d,mes).saldoAntes,0)}
+function hesMes(mes=competencia){return state.hes.filter(x=>mesDaData(x.data)===mes)}
+function gastosMes(mes=competencia){return state.gastos.filter(x=>mesDaData(x.data)===mes)}
+function calcHE(mes=competencia){const hes=hesMes(mes),h50=hes.filter(x=>x.tipo==='50').reduce((a,b)=>a+Number(b.horas),0),h100=hes.filter(x=>x.tipo==='100').reduce((a,b)=>a+Number(b.horas),0),sal=Number(state.config.salario)||0,j=Number(state.config.jornada)||0,vh=j>0?sal/j:0,he=vh*1.5*h50+vh*2*h100;return{h50,h100,he}}
+function aportes(tipo){return state.aportes.filter(a=>a.tipo===tipo).reduce((s,a)=>s+Number(a.valor||0),0)}
+function calcMes(mes=competencia){
+ const he=calcHE(mes),sal=Number(state.config.salario)||0,vale=sal*(Number(state.config.valePct)||0)/100,clt=valorMensalTipo('CLT',mes),banco=valorMensalTipo('BANCARIO',mes),outro=valorMensalTipo('OUTRO',mes);
+ const recorrentes=(Number(state.config.farmacia)||0)+(Number(state.config.cesta)||0)+(Number(state.config.mae)||0)+(Number(state.config.carro)||0)+(Number(state.config.outrosDescontos)||0);
+ const variaveis=gastosMes(mes).reduce((s,g)=>s+Number(g.valor||0),0),renda=sal+he.he,comp=clt+banco+outro+recorrentes+variaveis,livre=renda-comp;
+ return{...he,sal,vale,clt,banco,outro,recorrentes,variaveis,renda,comp,livre};
+}
+function planoInfo(mes=competencia){const i=mesIndex(mes)-mesIndex(state.config.planoInicio||'2027-01')+1,total=Number(state.config.planoMeses)||24;if(i<1)return{txt:'Preparação',pct:0,status:'Período anterior ao início oficial do plano.'};if(i>total)return{txt:`Após o plano`,pct:100,status:'O período de 24 meses já foi concluído.'};return{txt:`Mês ${i} de ${total}`,pct:(i/total)*100,status:`${Math.max(0,total-i)} mês(es) restantes após esta competência.`}}
+function paths(uid){return{config:doc(firestore,'users',uid,'config','main'),horas:collection(firestore,'users',uid,'horas'),gastos:collection(firestore,'users',uid,'gastos'),fechamentos:collection(firestore,'users',uid,'fechamentos'),dividas:collection(firestore,'users',uid,'dividas'),antecipacoes:collection(firestore,'users',uid,'antecipacoes'),aportes:collection(firestore,'users',uid,'aportes')}}
 function clearListeners(){unsubs.forEach(fn=>fn());unsubs=[]}
-function startSync(user){
-  clearListeners();const p=paths(user.uid);$('syncStatus').textContent='Sincronizando…';
-  unsubs.push(onSnapshot(p.config,async snap=>{
-    if(snap.exists())state.config={...DEFAULT_CONFIG,...snap.data()};
-    else await setDoc(p.config,{...DEFAULT_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
-    render();
-  }));
-  unsubs.push(onSnapshot(p.horas,s=>{state.hes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
-  unsubs.push(onSnapshot(p.gastos,s=>{state.gastos=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
-  unsubs.push(onSnapshot(p.fechamentos,s=>{state.fechamentos=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
+async function seedDividasSeNecessario(uid){const p=paths(uid),snap=await getDocs(p.dividas);if(snap.empty){await Promise.all(DIVIDAS_PADRAO.map(d=>setDoc(doc(p.dividas,d.id),{...d,createdAt:new Date().toISOString()})))}}
+function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus').textContent='Sincronizando…';
+ unsubs.push(onSnapshot(p.config,async s=>{if(s.exists())state.config={...DEFAULT_CONFIG,...s.data()};else await setDoc(p.config,{...DEFAULT_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});render()}));
+ unsubs.push(onSnapshot(p.horas,s=>{state.hes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ unsubs.push(onSnapshot(p.gastos,s=>{state.gastos=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ unsubs.push(onSnapshot(p.fechamentos,s=>{state.fechamentos=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ unsubs.push(onSnapshot(p.dividas,s=>{state.dividas=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ unsubs.push(onSnapshot(p.antecipacoes,s=>{state.antecipacoes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ unsubs.push(onSnapshot(p.aportes,s=>{state.aportes=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
+ seedDividasSeNecessario(user.uid).catch(console.error);
 }
+function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo(),reserva=aportes('RESERVA'),fundo=aportes('FUNDO'),metaR=Number(state.config.metaReserva)||0,metaF=Number(state.config.metaFundo)||0;
+ $('mesPainel').value=competencia;$('periodoAtual').textContent=`Competência selecionada: ${fmtMes(competencia)} • Plano oficial desde janeiro/2027`;$('tagCompetencia').textContent=fmtMes(competencia);
+ $('mRenda').textContent=BRL.format(c.renda);$('mCompromissos').textContent=BRL.format(c.comp);$('mDivida').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));$('mLivre').textContent=BRL.format(c.livre);$('mLivre').className='value '+(c.livre>=0?'good':'bad');
+ $('resCLT').textContent=`${BRL.format(saldoTipo('CLT'))} • ${BRL.format(c.clt)}/mês`;$('resBanco').textContent=`${BRL.format(saldoTipo('BANCARIO'))} • ${BRL.format(c.banco)}/mês`;$('resOutros').textContent=`${BRL.format(saldoTipo('OUTRO'))} • ${BRL.format(c.outro)}/mês`;$('resDividaTotal').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));
+ $('planoMes').textContent=p.txt;$('barPlano').style.width=Math.min(100,p.pct)+'%';$('planoStatus').textContent=p.status;$('reservaAtualTxt').textContent=BRL.format(reserva);$('fundoAtualTxt').textContent=BRL.format(fundo);
+ renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderMetas(reserva,fundo,metaR,metaF);renderHistorico();preencherConfig();}
+function renderCompromissos(c){const itens=[['Empréstimos CLT',c.clt],['Empréstimo bancário',c.banco],['Parcela adicional',c.outro],['Cartão farmácia',Number(state.config.farmacia)||0],['Cesta básica',Number(state.config.cesta)||0],['Ajuda em casa',Number(state.config.mae)||0],['Carro / gasolina',Number(state.config.carro)||0],['Outros descontos de folha',Number(state.config.outrosDescontos)||0],['Gastos variáveis lançados',c.variaveis]];$('compromissosResumo').innerHTML='<table><tr><th>Compromisso</th><th>Valor</th></tr>'+itens.filter(x=>x[1]>0).map(x=>`<tr><td>${x[0]}</td><td>${BRL.format(x[1])}</td></tr>`).join('')+'</table>'}
+function renderDividas(){if(!state.dividas.length){$('listaDividas').innerHTML='<p class="small">Carregando contratos…</p>';return}
+ const ordem={CLT:1,BANCARIO:2,OUTRO:3};const arr=state.dividas.slice().sort((a,b)=>(ordem[a.tipo]-ordem[b.tipo])||a.nome.localeCompare(b.nome));
+ $('listaDividas').innerHTML=arr.map(d=>{const s=statusDivida(d),pct=d.total?Math.min(100,(s.pagasAntes/d.total)*100):0,quit=Number(d.quitacao)||0;return `<div class="loanCard"><div class="loanTop"><div><div class="loanName">${d.nome}</div><div class="loanMeta">${d.tipo} • início ${fmtMes(d.inicio)} • ${d.total}x de ${BRL.format(d.parcela)}</div></div><span class="pill ${s.ativa?'green':'amber'}">${s.ativa?'Ativo nesta competência':'Sem parcela neste mês'}</span></div><div class="loanNumbers"><div class="mini"><span>Pagas/abatidas antes do mês</span><strong>${s.pagasAntes} de ${d.total}</strong></div><div class="mini"><span>Pendentes ao iniciar o mês</span><strong>${s.pendentesInicio}</strong></div><div class="mini"><span>Após baixa da competência</span><strong>${s.restantesDepois}</strong></div><div class="mini"><span>Saldo nominal no início</span><strong>${BRL.format(s.saldoAntes)}</strong></div></div><div class="progress"><div class="bar" style="width:${pct}%"></div></div><div class="rowline"><span class="small">Antecipações registradas: ${s.antecipadas} parcela(s)</span><span class="small">Quitação informada: ${quit>0?BRL.format(quit):'não informada'}</span></div><div class="actions"><button class="btn-amber btn-sm" data-antecipar="${d.id}">Registrar antecipação</button><button class="btn-light btn-sm" data-editquit="${d.id}">Atualizar quitação</button><button class="btn-danger btn-sm" data-deldivida="${d.id}">Excluir</button></div></div>`}).join('')}
+function renderFluxo(c){$('valeEstimado').textContent=BRL.format(c.vale);$('valeBanco').textContent=BRL.format(c.banco);$('valeSobra').textContent=BRL.format(c.vale-c.banco);$('pagBruto').textContent=BRL.format(c.sal);$('pagHE').textContent=BRL.format(c.he);$('pagVale').textContent='− '+BRL.format(c.vale);$('pagCLT').textContent='− '+BRL.format(c.clt);$('pagFarmacia').textContent='− '+BRL.format(Number(state.config.farmacia)||0);$('pagCesta').textContent='− '+BRL.format(Number(state.config.cesta)||0);$('pagMae').textContent='− '+BRL.format(Number(state.config.mae)||0);$('pagCarro').textContent='− '+BRL.format(Number(state.config.carro)||0);$('pagOutro').textContent='− '+BRL.format(c.outro);$('pagDescontos').textContent='− '+BRL.format(Number(state.config.outrosDescontos)||0);const disp=c.sal+c.he-c.vale-c.clt-c.outro-(Number(state.config.farmacia)||0)-(Number(state.config.cesta)||0)-(Number(state.config.mae)||0)-(Number(state.config.carro)||0)-(Number(state.config.outrosDescontos)||0);$('pagDisponivel').textContent=BRL.format(disp);$('pagDisponivel').className=disp>=0?'good':'bad'}
+function renderHE(){const arr=hesMes();$('heLista').innerHTML=!arr.length?'<p class="small">Nenhuma HE lançada nesta competência.</p>':'<table><tr><th>Data</th><th>Tipo</th><th>Horas</th><th>Obs.</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td><span class="pill">${x.tipo}%</span></td><td>${fmtHorasDecimal(x.horas)}</td><td>${x.obs||''}</td><td><button class="btn-danger btn-sm" data-delhe="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+function renderGastos(){const arr=gastosMes();$('gLista').innerHTML=!arr.length?'<p class="small">Nenhum gasto variável nesta competência.</p>':'<table><tr><th>Data</th><th>Categoria</th><th>Valor</th><th>Descrição</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td>${x.cat}</td><td>${BRL.format(x.valor)}</td><td>${x.desc||''}</td><td><button class="btn-danger btn-sm" data-delgasto="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+function renderMetas(reserva,fundo,metaR,metaF){$('metaReservaAtual').textContent=BRL.format(reserva);$('metaReservaAlvo').textContent=metaR>0?BRL.format(metaR):'A definir';$('barReserva').style.width=metaR>0?Math.min(100,reserva/metaR*100)+'%':'0%';$('metaFundoAtual').textContent=BRL.format(fundo);$('metaFundoAlvo').textContent=metaF>0?BRL.format(metaF):'A definir';$('barFundo').style.width=metaF>0?Math.min(100,fundo/metaF*100)+'%':'0%';$('aportesLista').innerHTML=!state.aportes.length?'<p class="small">Nenhum aporte registrado.</p>':'<table><tr><th>Data</th><th>Destino</th><th>Valor</th><th></th></tr>'+state.aportes.slice().sort((a,b)=>b.data.localeCompare(a.data)).map(a=>`<tr><td>${fmtDataIso(a.data)}</td><td>${a.tipo==='RESERVA'?'Reserva':'Fundo de independência'}</td><td>${BRL.format(a.valor)}</td><td><button class="btn-danger btn-sm" data-delaporte="${a.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+function renderHistorico(){$('historico').innerHTML=!state.fechamentos.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Competência</th><th>Renda</th><th>Compromissos</th><th>Dívida futura</th><th>Livre</th><th></th></tr>'+state.fechamentos.slice().sort((a,b)=>(b.competencia||'').localeCompare(a.competencia||'')).map(x=>`<tr><td>${x.competencia?fmtMes(x.competencia):x.periodo||'-'}</td><td>${BRL.format(x.renda||x.liquido||0)}</td><td>${BRL.format(x.compromissos||0)}</td><td>${BRL.format(x.dividaFutura||0)}</td><td class="${Number(x.livre??x.saldo)>=0?'good':'bad'}">${BRL.format(x.livre??x.saldo??0)}</td><td><button class="btn-danger btn-sm" data-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+function preencherConfig(){$('cfgSalario').value=state.config.salario||'';$('cfgJornada').value=state.config.jornada||'';$('cfgValePct').value=state.config.valePct??40;$('cfgOutrosDescontos').value=state.config.outrosDescontos||'';$('cfgFarmacia').value=state.config.farmacia||'';$('cfgCesta').value=state.config.cesta||'';$('cfgMae').value=state.config.mae||'';$('cfgCarro').value=state.config.carro||'';$('cfgMeta50').value=state.config.meta50||'';$('cfgMeta100').value=state.config.meta100||'';$('cfgMetaReserva').value=state.config.metaReserva||'';$('cfgMetaFundo').value=state.config.metaFundo||''}
 
+async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
+function abrirApp(){$('authScreen').classList.add('hidden');$('app').style.display='block';render()}
+function mostrarLogin(msg=''){$('app').style.display='none';$('authScreen').classList.remove('hidden');if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
+function bloquearApp(){desbloqueado=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
+async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{if(await sha256(senha)!==HASH_SENHA_CORRETA){$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,EMAIL_FIXO,senha)}else throw e}currentUser=cred.user;desbloqueado=true;sessionStorage.setItem('planoFinanceiroDesbloqueado','1');startSync(currentUser);$('loginSenha').value='';$('authMsg').textContent='';abrirApp()}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
+$('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;
+onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO){if(desbloqueado){startSync(user);abrirApp()}else mostrarLogin('')}else mostrarLogin('')});
 
-
-async function sha256(texto){
-  const bytes=new TextEncoder().encode(texto);
-  const hash=await crypto.subtle.digest('SHA-256',bytes);
-  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-function abrirApp(){
-  $('authScreen').classList.add('hidden');
-  $('app').style.display='block';
-  render();
-}
-
-function mostrarLogin(msg=''){
-  $('app').style.display='none';
-  $('authScreen').classList.remove('hidden');
-  if(!loginEmAndamento)$('authMsg').textContent=msg;
-  setTimeout(()=>$('loginSenha').focus(),50);
-}
-
-function bloquearApp(){
-  desbloqueado=false;
-  sessionStorage.removeItem('hrExtraDesbloqueado');
-  clearListeners();
-  mostrarLogin('');
-  $('loginSenha').value='';
-}
-
-/* Lê os dados da conta antiga ANTES de trocar o login Firebase.
-   Isso permite migrar o histórico atual sem perder nada. */
-async function capturarDadosDaConta(uid){
-  const p=paths(uid);
-  const [cfgSnap,horasSnap,gastosSnap,fechSnap]=await Promise.all([
-    getDoc(p.config),
-    getDocs(p.horas),
-    getDocs(p.gastos),
-    getDocs(p.fechamentos)
-  ]);
-  return{
-    uidOrigem:uid,
-    config:cfgSnap.exists()?cfgSnap.data():null,
-    horas:horasSnap.docs.map(d=>({id:d.id,...d.data()})),
-    gastos:gastosSnap.docs.map(d=>({id:d.id,...d.data()})),
-    fechamentos:fechSnap.docs.map(d=>({id:d.id,...d.data()}))
-  };
-}
-
-/* Copia somente o que ainda não existe na conta fixa.
-   Assim a migração não apaga dados já sincronizados em outros aparelhos. */
-async function migrarDadosParaContaFixa(dados,uidDestino){
-  if(!dados || dados.uidOrigem===uidDestino)return false;
-
-  const p=paths(uidDestino);
-  const [cfgDestino,horasDestino,gastosDestino,fechDestino]=await Promise.all([
-    getDoc(p.config),
-    getDocs(p.horas),
-    getDocs(p.gastos),
-    getDocs(p.fechamentos)
-  ]);
-
-  const idsHoras=new Set(horasDestino.docs.map(d=>d.id));
-  const idsGastos=new Set(gastosDestino.docs.map(d=>d.id));
-  const idsFech=new Set(fechDestino.docs.map(d=>d.id));
-
-  const tarefas=[];
-
-  if(dados.config && (!cfgDestino.exists() || !cfgDestino.data()?.configurado)){
-    tarefas.push(setDoc(p.config,{...dados.config,updatedAt:serverTimestamp()},{merge:true}));
-  }
-
-  for(const x of dados.horas||[]){
-    if(!idsHoras.has(x.id)){
-      const {id,...resto}=x;
-      tarefas.push(setDoc(doc(p.horas,id),resto,{merge:true}));
-    }
-  }
-  for(const x of dados.gastos||[]){
-    if(!idsGastos.has(x.id)){
-      const {id,...resto}=x;
-      tarefas.push(setDoc(doc(p.gastos,id),resto,{merge:true}));
-    }
-  }
-  for(const x of dados.fechamentos||[]){
-    if(!idsFech.has(x.id)){
-      const {id,...resto}=x;
-      tarefas.push(setDoc(doc(p.fechamentos,id),resto,{merge:true}));
-    }
-  }
-
-  if(tarefas.length)await Promise.all(tarefas);
-  localStorage.setItem('hrExtraMigracaoContaFixa',JSON.stringify({
-    origem:dados.uidOrigem,
-    destino:uidDestino,
-    quando:new Date().toISOString()
-  }));
-  return tarefas.length>0;
-}
-
-async function entrarComSenhaUnica(){
-  if(loginEmAndamento)return;
-
-  const senha=$('loginSenha').value.trim();
-  if(!senha){
-    $('authMsg').textContent='Digite sua senha.';
-    return;
-  }
-
-  loginEmAndamento=true;
-  $('btnEntrar').disabled=true;
-  $('authMsg').textContent='Conectando aos seus dados…';
-
-  try{
-    // Confere a senha antes de permitir a criação automática da conta fixa.
-    const hash=await sha256(senha);
-    if(hash!==HASH_SENHA_CORRETA){
-      $('authMsg').textContent='Senha incorreta.';
-      $('loginSenha').select();
-      return;
-    }
-
-    // Se este navegador ainda estiver conectado na conta antiga,
-    // salva tudo em memória antes de trocar a autenticação.
-    const usuarioAnterior=auth.currentUser;
-    let dadosAntigos=null;
-
-    if(usuarioAnterior && usuarioAnterior.email!==EMAIL_FIXO){
-      $('authMsg').textContent='Preparando seus dados atuais…';
-      try{
-        dadosAntigos=await capturarDadosDaConta(usuarioAnterior.uid);
-      }catch(e){
-        console.warn('Não foi possível capturar automaticamente a conta antiga:',e);
-      }
-    }
-
-    $('authMsg').textContent='Entrando…';
-
-    let credencial;
-    try{
-      credencial=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha);
-    }catch(e){
-      // Na primeira utilização, a conta fixa ainda não existe.
-      if(e.code==='auth/invalid-credential' || e.code==='auth/user-not-found'){
-        $('authMsg').textContent='Ativando seu acesso único pela primeira vez…';
-        try{
-          credencial=await createUserWithEmailAndPassword(auth,EMAIL_FIXO,senha);
-        }catch(criarErro){
-          // Se outro aparelho acabou de criar a conta ao mesmo tempo, tenta entrar de novo.
-          if(criarErro.code==='auth/email-already-in-use'){
-            credencial=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha);
-          }else{
-            throw criarErro;
-          }
-        }
-      }else{
-        throw e;
-      }
-    }
-
-    currentUser=credencial.user;
-
-    if(dadosAntigos && dadosAntigos.uidOrigem!==currentUser.uid){
-      $('authMsg').textContent='Migrando seu histórico para o acesso único…';
-      await migrarDadosParaContaFixa(dadosAntigos,currentUser.uid);
-    }
-
-    desbloqueado=true;
-    sessionStorage.setItem('hrExtraDesbloqueado','1');
-
-    clearListeners();
-    state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
-    startSync(currentUser);
-    $('authMsg').textContent='';
-    $('loginSenha').value='';
-    abrirApp();
-
-  }catch(e){
-    console.error('Falha no acesso único:',e);
-    const mensagens={
-      'auth/operation-not-allowed':'Ative o método E-mail/Senha no Firebase Authentication.',
-      'auth/network-request-failed':'Sem conexão com o Firebase. Confira sua internet.',
-      'auth/too-many-requests':'Muitas tentativas seguidas. Tente novamente em instantes.',
-      'auth/unauthorized-domain':'Este domínio ainda não está autorizado no Firebase Authentication.',
-      'auth/invalid-credential':'Não foi possível acessar a conta fixa com essa senha.'
-    };
-    $('authMsg').textContent=mensagens[e.code]||'Não foi possível acessar seus dados agora.';
-  }finally{
-    loginEmAndamento=false;
-    $('btnEntrar').disabled=false;
-  }
-}
-
-$('btnEntrar').onclick=entrarComSenhaUnica;
-$('loginSenha').addEventListener('keydown',e=>{
-  if(e.key==='Enter')entrarComSenhaUnica();
-});
-$('btnSair').onclick=()=>bloquearApp();
-
-/*
-  Ao abrir:
-  - se já estiver autenticado na conta fixa e a aba ainda estiver desbloqueada,
-    carrega normalmente;
-  - se estiver numa conta antiga, mantém essa sessão silenciosamente até o
-    primeiro login 161004, para que a migração automática possa copiar os dados.
-*/
-onAuthStateChanged(auth,user=>{
-  if(loginEmAndamento)return;
-
-  currentUser=user;
-
-  if(user && user.email===EMAIL_FIXO){
-    if(desbloqueado){
-      clearListeners();
-      state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
-      startSync(user);
-      abrirApp();
-    }else{
-      mostrarLogin('');
-    }
-    return;
-  }
-
-  clearListeners();
-  state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[]};
-  mostrarLogin('');
-});
-
-// Navegação lateral
-document.addEventListener('click',e=>{
-  const btn=e.target.closest('[data-view]');
-  if(!btn)return;
-  document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===btn));
-  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-  const alvo=document.getElementById('view-'+btn.dataset.view);
-  if(alvo)alvo.classList.add('active');
-  sessionStorage.setItem('hrExtraView',btn.dataset.view);
-});
-const viewSalva=sessionStorage.getItem('hrExtraView');
-if(viewSalva){
-  const btn=document.querySelector(`[data-view="${viewSalva}"]`);
-  if(btn)setTimeout(()=>btn.click(),0);
-}
-
-$('btnAddHE').onclick=async()=>{
-  if(!currentUser)return;const data=$('heData').value,tipo=$('heTipo').value,horas=Number($('heHoras').value),obs=$('heObs').value.trim();if(!data||!horas||horas<=0)return alert('Preencha data e horas.');
-  const id=uuid();await setDoc(doc(paths(currentUser.uid).horas,id),{data,tipo,horas,obs,createdAt:new Date().toISOString()});$('heHoras').value='';$('heObs').value=''
-};
-$('btnAddGasto').onclick=async()=>{
-  if(!currentUser)return;const data=$('gData').value,cat=$('gCat').value,valor=Number($('gValor').value),desc=$('gDesc').value.trim();if(!data||!valor||valor<=0)return alert('Preencha data e valor.');
-  const id=uuid();await setDoc(doc(paths(currentUser.uid).gastos,id),{data,cat,valor,desc,createdAt:new Date().toISOString()});$('gValor').value='';$('gDesc').value=''
-};
 document.addEventListener('click',async e=>{
-  if(!currentUser)return;
-  const a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]');
-  if(a)await deleteDoc(doc(paths(currentUser.uid).horas,a.dataset.delhe));
-  if(b)await deleteDoc(doc(paths(currentUser.uid).gastos,b.dataset.delgasto));
-  if(c)await deleteDoc(doc(paths(currentUser.uid).fechamentos,c.dataset.delfech));
+ const nav=e.target.closest('[data-view]');if(nav){document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===nav));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+nav.dataset.view)?.classList.add('active');sessionStorage.setItem('planoFinanceiroView',nav.dataset.view);return}
+ if(!currentUser)return;const p=paths(currentUser.uid),a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]'),d=e.target.closest('[data-deldivida]'),an=e.target.closest('[data-antecipar]'),eq=e.target.closest('[data-editquit]'),ap=e.target.closest('[data-delaporte]');
+ if(a)await deleteDoc(doc(p.horas,a.dataset.delhe));if(b)await deleteDoc(doc(p.gastos,b.dataset.delgasto));if(c)await deleteDoc(doc(p.fechamentos,c.dataset.delfech));if(ap)await deleteDoc(doc(p.aportes,ap.dataset.delaporte));
+ if(d&&confirm('Excluir este contrato?'))await deleteDoc(doc(p.dividas,d.dataset.deldivida));
+ if(an){const div=state.dividas.find(x=>x.id===an.dataset.antecipar);if(!div)return;const qtd=Number(prompt(`Quantas parcelas de ${div.nome} foram antecipadas?`,'1'));if(!qtd||qtd<=0)return;const valor=Number(prompt('Quanto você pagou nessa antecipação? (opcional, pode deixar 0)','0'))||0;const data=prompt('Data da antecipação (AAAA-MM-DD)',new Date().toISOString().slice(0,10));if(!/^\d{4}-\d{2}-\d{2}$/.test(data||''))return alert('Data inválida.');const id=uuid();await setDoc(doc(p.antecipacoes,id),{dividaId:div.id,parcelas:Math.floor(qtd),valor,data,createdAt:new Date().toISOString()})}
+ if(eq){const div=state.dividas.find(x=>x.id===eq.dataset.editquit);if(!div)return;const v=Number(prompt(`Valor atual para quitar ${div.nome}:`,String(div.quitacao||'')));if(Number.isNaN(v)||v<0)return;await setDoc(doc(p.dividas,div.id),{...div,quitacao:v,updatedAt:serverTimestamp()},{merge:true})}
 });
-$('btnSalvarConfig').onclick=async()=>{
-  if(!currentUser)return;
-  const cfg={
-    salario:Number($('cfgSalario').value)||0,
-    jornada:Number($('cfgJornada').value)||0,
-    meta50:Number($('cfgMeta50').value)||0,
-    meta100:Number($('cfgMeta100').value)||0,
-    fixos:Number($('cfgFixos').value)||0,
-    diaInicio:Math.min(28,Math.max(1,Number($('cfgDia').value)||21)),
-    horasDia:Number($('cfgHorasDia').value)||0,
-    sabado100:Number($('cfgSabado100').value)||0,
-    domingoFim:[15,17].includes(Number($('cfgDomingoFim').value))?Number($('cfgDomingoFim').value):0,
-    configurado:true,
-    updatedAt:serverTimestamp()
-  };
-  await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas na nuvem.')
-};
-$('btnFechar').onclick=async()=>{
-  if(!currentUser)return;const c=calc(),id=uuid(),periodo=`${fmtData(c.p.inicio)} a ${fmtData(c.p.fim)}`;
-  await setDoc(doc(paths(currentUser.uid).fechamentos,id),{periodo,h50:c.h50,h100:c.h100,liquido:c.liquido,saldo:c.saldo,heBruta:c.heBruta,inss:c.inss,variaveis:c.variaveis,criadoEm:new Date().toISOString()});alert('Fechamento salvo na nuvem.')
-};
 
-$('btnImportarLocal').onclick=async()=>{
-  if(!currentUser)return;
-  const raw=localStorage.getItem('controle_financeiro_he_v1');
-  if(!raw)return alert('Não encontrei dados antigos neste navegador.');
-  if(!confirm('Importar os dados antigos deste navegador para sua conta Firebase?'))return;
-  try{
-    const old=JSON.parse(raw),p=paths(currentUser.uid);
-    if(old.config)await setDoc(p.config,{...DEFAULT_CONFIG,...old.config,updatedAt:serverTimestamp()},{merge:true});
-    for(const x of old.hes||[]){const id=String(x.id||uuid());await setDoc(doc(p.horas,id),x,{merge:true})}
-    for(const x of old.gastos||[]){const id=String(x.id||uuid());await setDoc(doc(p.gastos,id),x,{merge:true})}
-    for(const x of old.fechamentos||[]){const id=String(x.id||uuid());await setDoc(doc(p.fechamentos,id),{...x,criadoEm:x.criadoEm||new Date().toISOString()},{merge:true})}
-    alert('Dados antigos importados para o Firebase.');
-  }catch(e){console.error(e);alert('Não foi possível importar os dados antigos.')}
-};
+$('mesPainel').onchange=e=>{if(e.target.value){competencia=e.target.value;render()}};$('btnMesAtual').onclick=()=>{const d=new Date();competencia=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;render()};
+$('btnAddHE').onclick=async()=>{if(!currentUser)return;const data=$('heData').value,tipo=$('heTipo').value,horas=Number($('heHoras').value),obs=$('heObs').value.trim();if(!data||!horas||horas<=0)return alert('Preencha data e horas.');const id=uuid();await setDoc(doc(paths(currentUser.uid).horas,id),{data,tipo,horas,obs,createdAt:new Date().toISOString()});$('heHoras').value='';$('heObs').value=''};
+$('btnAddGasto').onclick=async()=>{if(!currentUser)return;const data=$('gData').value,cat=$('gCat').value,valor=Number($('gValor').value),desc=$('gDesc').value.trim();if(!data||!valor||valor<=0)return alert('Preencha data e valor.');const id=uuid();await setDoc(doc(paths(currentUser.uid).gastos,id),{data,cat,valor,desc,createdAt:new Date().toISOString()});$('gValor').value='';$('gDesc').value=''};
+$('btnAddDivida').onclick=async()=>{if(!currentUser)return;const nome=$('dNome').value.trim(),tipo=$('dTipo').value,parcela=Number($('dParcela').value),total=Number($('dTotal').value),inicio=$('dInicio').value,quitacao=Number($('dQuitacao').value)||0;if(!nome||!parcela||!total||!inicio)return alert('Preencha nome, parcela, total e início.');const id=uuid();await setDoc(doc(paths(currentUser.uid).dividas,id),{nome,tipo,parcela,total:Math.floor(total),inicio,quitacao,createdAt:new Date().toISOString()});['dNome','dParcela','dTotal','dInicio','dQuitacao'].forEach(id=>$(id).value='')};
+$('btnSalvarConfig').onclick=async()=>{if(!currentUser)return;const cfg={salario:Number($('cfgSalario').value)||0,jornada:Number($('cfgJornada').value)||0,valePct:Number($('cfgValePct').value)||0,outrosDescontos:Number($('cfgOutrosDescontos').value)||0,farmacia:Number($('cfgFarmacia').value)||0,cesta:Number($('cfgCesta').value)||0,mae:Number($('cfgMae').value)||0,carro:Number($('cfgCarro').value)||0,meta50:Number($('cfgMeta50').value)||0,meta100:Number($('cfgMeta100').value)||0,metaReserva:Number($('cfgMetaReserva').value)||0,metaFundo:Number($('cfgMetaFundo').value)||0,planoInicio:'2027-01',planoMeses:24,configurado:true,updatedAt:serverTimestamp()};await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas.')};
+async function addAporte(tipo){if(!currentUser)return;const valor=Number($(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value),data=$(tipo==='RESERVA'?'aporteReservaData':'aporteFundoData').value;if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(paths(currentUser.uid).aportes,id),{tipo,valor,data,createdAt:new Date().toISOString()});$(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value=''}
+$('btnAporteReserva').onclick=()=>addAporte('RESERVA');$('btnAporteFundo').onclick=()=>addAporte('FUNDO');
+$('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,reserva:aportes('RESERVA'),fundo:aportes('FUNDO'),criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
 
-const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);$('heData').value=hojeIso;$('gData').value=hojeIso;
+const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','aporteReservaData','aporteFundoData'].forEach(id=>$(id).value=hojeIso);
+const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
 </script>
 </body>
 </html>
