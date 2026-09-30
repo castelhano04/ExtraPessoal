@@ -161,21 +161,31 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;bor
       </section>
 
       <section id="view-metas" class="view">
-        <div class="two">
+        <div class="card">
+          <h2>Guardar o possível</h2>
+          <p class="sub">Sem meta fixa por enquanto. O sistema calcula o que sobra depois dos compromissos do mês e você decide quanto realmente consegue guardar.</p>
+          <div class="planGrid">
+            <div class="planBox"><span>Livre estimado antes de guardar</span><strong id="livreAntesAportes"></strong></div>
+            <div class="planBox"><span>Já guardado nesta competência</span><strong id="guardadoMes"></strong></div>
+            <div class="planBox"><span>Ainda disponível para decidir</span><strong id="potencialGuardar"></strong></div>
+          </div>
+          <div class="info" style="margin-top:16px"><strong>Regra atual:</strong> não existe obrigação de guardar um valor específico. Primeiro vêm empréstimos, contas, carro e gastos necessários. Do que realmente sobrar, você registra o valor que conseguiu separar.</div>
+        </div>
+        <div class="section two">
           <div class="card">
-            <h2>Reserva financeira</h2><p class="sub">Dinheiro de segurança. Não depende do que sobrar no fim do mês.</p>
-            <div class="rowline"><span>Guardado</span><strong id="metaReservaAtual"></strong></div><div class="rowline"><span>Meta</span><strong id="metaReservaAlvo"></strong></div><div class="progress"><div class="bar" id="barReserva"></div></div>
-            <div class="three" style="margin-top:15px"><div><label>Registrar aporte</label><input type="number" id="aporteReserva" step="0.01"></div><div><label>Data</label><input type="date" id="aporteReservaData"></div></div>
+            <h2>Reserva financeira</h2><p class="sub">Dinheiro de segurança. Guarde quando houver sobra, sem uma meta obrigatória.</p>
+            <div class="rowline"><span>Total guardado</span><strong id="metaReservaAtual"></strong></div>
+            <div class="three" style="margin-top:15px"><div><label>Valor que conseguiu guardar</label><input type="number" id="aporteReserva" step="0.01"></div><div><label>Data</label><input type="date" id="aporteReservaData"></div></div>
             <div class="actions"><button class="btn-success" id="btnAporteReserva">Guardar na reserva</button></div>
           </div>
           <div class="card">
-            <h2>Fundo de independência</h2><p class="sub">Capital separado para construir opções fora do CLT.</p>
-            <div class="rowline"><span>Acumulado</span><strong id="metaFundoAtual"></strong></div><div class="rowline"><span>Meta</span><strong id="metaFundoAlvo"></strong></div><div class="progress"><div class="bar" id="barFundo"></div></div>
-            <div class="three" style="margin-top:15px"><div><label>Registrar aporte</label><input type="number" id="aporteFundo" step="0.01"></div><div><label>Data</label><input type="date" id="aporteFundoData"></div></div>
+            <h2>Fundo de independência</h2><p class="sub">Capital para construir opções fora do CLT. Sem meta fixa neste momento.</p>
+            <div class="rowline"><span>Total acumulado</span><strong id="metaFundoAtual"></strong></div>
+            <div class="three" style="margin-top:15px"><div><label>Valor que conseguiu separar</label><input type="number" id="aporteFundo" step="0.01"></div><div><label>Data</label><input type="date" id="aporteFundoData"></div></div>
             <div class="actions"><button class="btn-primary" id="btnAporteFundo">Adicionar ao fundo</button></div>
           </div>
         </div>
-        <div class="section card"><h2>Histórico de aportes</h2><div id="aportesLista"></div></div>
+        <div class="section card"><h2>Histórico do que foi guardado</h2><div id="aportesLista"></div></div>
       </section>
 
       <section id="view-config" class="view">
@@ -192,8 +202,6 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;bor
             <div><label>Carro / gasolina</label><input type="number" id="cfgCarro" step="0.01"></div>
             <div><label>Meta HE 50%</label><input type="number" id="cfgMeta50" step="0.25"></div>
             <div><label>Meta HE 100%</label><input type="number" id="cfgMeta100" step="0.25"></div>
-            <div><label>Meta da reserva</label><input type="number" id="cfgMetaReserva" step="0.01" placeholder="Defina quando quiser"></div>
-            <div><label>Meta fundo independência</label><input type="number" id="cfgMetaFundo" step="0.01" placeholder="Defina quando quiser"></div>
           </div>
           <div class="warn" style="margin-top:16px"><strong>Importante:</strong> o sistema não trata o FGTS como desconto do salário. Use “Outros descontos de folha” para o valor efetivamente descontado no holerite, como INSS e outras rubricas.</div>
           <div class="actions"><button class="btn-dark" id="btnSalvarConfig">Salvar configurações</button></div>
@@ -264,6 +272,7 @@ function hesMes(mes=competencia){return state.hes.filter(x=>mesDaData(x.data)===
 function gastosMes(mes=competencia){return state.gastos.filter(x=>mesDaData(x.data)===mes)}
 function calcHE(mes=competencia){const hes=hesMes(mes),h50=hes.filter(x=>x.tipo==='50').reduce((a,b)=>a+Number(b.horas),0),h100=hes.filter(x=>x.tipo==='100').reduce((a,b)=>a+Number(b.horas),0),sal=Number(state.config.salario)||0,j=Number(state.config.jornada)||0,vh=j>0?sal/j:0,he=vh*1.5*h50+vh*2*h100;return{h50,h100,he}}
 function aportes(tipo){return state.aportes.filter(a=>a.tipo===tipo).reduce((s,a)=>s+Number(a.valor||0),0)}
+function aportesMes(mes=competencia){return state.aportes.filter(a=>mesDaData(a.data)===mes).reduce((s,a)=>s+Number(a.valor||0),0)}
 function calcMes(mes=competencia){
  const he=calcHE(mes),sal=Number(state.config.salario)||0,vale=sal*(Number(state.config.valePct)||0)/100,clt=valorMensalTipo('CLT',mes),banco=valorMensalTipo('BANCARIO',mes),outro=valorMensalTipo('OUTRO',mes);
  const recorrentes=(Number(state.config.farmacia)||0)+(Number(state.config.cesta)||0)+(Number(state.config.mae)||0)+(Number(state.config.carro)||0)+(Number(state.config.outrosDescontos)||0);
@@ -284,12 +293,12 @@ function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus'
  unsubs.push(onSnapshot(p.aportes,s=>{state.aportes=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
  seedDividasSeNecessario(user.uid).catch(console.error);
 }
-function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo(),reserva=aportes('RESERVA'),fundo=aportes('FUNDO'),metaR=Number(state.config.metaReserva)||0,metaF=Number(state.config.metaFundo)||0;
+function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo(),reserva=aportes('RESERVA'),fundo=aportes('FUNDO');
  $('mesPainel').value=competencia;$('periodoAtual').textContent=`Competência selecionada: ${fmtMes(competencia)} • Plano oficial desde janeiro/2027`;$('tagCompetencia').textContent=fmtMes(competencia);
  $('mRenda').textContent=BRL.format(c.renda);$('mCompromissos').textContent=BRL.format(c.comp);$('mDivida').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));$('mLivre').textContent=BRL.format(c.livre);$('mLivre').className='value '+(c.livre>=0?'good':'bad');
  $('resCLT').textContent=`${BRL.format(saldoTipo('CLT'))} • ${BRL.format(c.clt)}/mês`;$('resBanco').textContent=`${BRL.format(saldoTipo('BANCARIO'))} • ${BRL.format(c.banco)}/mês`;$('resOutros').textContent=`${BRL.format(saldoTipo('OUTRO'))} • ${BRL.format(c.outro)}/mês`;$('resDividaTotal').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));
  $('planoMes').textContent=p.txt;$('barPlano').style.width=Math.min(100,p.pct)+'%';$('planoStatus').textContent=p.status;$('reservaAtualTxt').textContent=BRL.format(reserva);$('fundoAtualTxt').textContent=BRL.format(fundo);
- renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderMetas(reserva,fundo,metaR,metaF);renderHistorico();preencherConfig();}
+ renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderMetas(reserva,fundo,c);renderHistorico();preencherConfig();}
 function renderCompromissos(c){const itens=[['Empréstimos CLT',c.clt],['Empréstimo bancário',c.banco],['Parcela adicional',c.outro],['Cartão farmácia',Number(state.config.farmacia)||0],['Cesta básica',Number(state.config.cesta)||0],['Ajuda em casa',Number(state.config.mae)||0],['Carro / gasolina',Number(state.config.carro)||0],['Outros descontos de folha',Number(state.config.outrosDescontos)||0],['Gastos variáveis lançados',c.variaveis]];$('compromissosResumo').innerHTML='<table><tr><th>Compromisso</th><th>Valor</th></tr>'+itens.filter(x=>x[1]>0).map(x=>`<tr><td>${x[0]}</td><td>${BRL.format(x[1])}</td></tr>`).join('')+'</table>'}
 function renderDividas(){if(!state.dividas.length){$('listaDividas').innerHTML='<p class="small">Carregando contratos…</p>';return}
  const ordem={CLT:1,BANCARIO:2,OUTRO:3};const arr=state.dividas.slice().sort((a,b)=>(ordem[a.tipo]-ordem[b.tipo])||a.nome.localeCompare(b.nome));
@@ -297,9 +306,18 @@ function renderDividas(){if(!state.dividas.length){$('listaDividas').innerHTML='
 function renderFluxo(c){$('valeEstimado').textContent=BRL.format(c.vale);$('valeBanco').textContent=BRL.format(c.banco);$('valeSobra').textContent=BRL.format(c.vale-c.banco);$('pagBruto').textContent=BRL.format(c.sal);$('pagHE').textContent=BRL.format(c.he);$('pagVale').textContent='− '+BRL.format(c.vale);$('pagCLT').textContent='− '+BRL.format(c.clt);$('pagFarmacia').textContent='− '+BRL.format(Number(state.config.farmacia)||0);$('pagCesta').textContent='− '+BRL.format(Number(state.config.cesta)||0);$('pagMae').textContent='− '+BRL.format(Number(state.config.mae)||0);$('pagCarro').textContent='− '+BRL.format(Number(state.config.carro)||0);$('pagOutro').textContent='− '+BRL.format(c.outro);$('pagDescontos').textContent='− '+BRL.format(Number(state.config.outrosDescontos)||0);const disp=c.sal+c.he-c.vale-c.clt-c.outro-(Number(state.config.farmacia)||0)-(Number(state.config.cesta)||0)-(Number(state.config.mae)||0)-(Number(state.config.carro)||0)-(Number(state.config.outrosDescontos)||0);$('pagDisponivel').textContent=BRL.format(disp);$('pagDisponivel').className=disp>=0?'good':'bad'}
 function renderHE(){const arr=hesMes();$('heLista').innerHTML=!arr.length?'<p class="small">Nenhuma HE lançada nesta competência.</p>':'<table><tr><th>Data</th><th>Tipo</th><th>Horas</th><th>Obs.</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td><span class="pill">${x.tipo}%</span></td><td>${fmtHorasDecimal(x.horas)}</td><td>${x.obs||''}</td><td><button class="btn-danger btn-sm" data-delhe="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
 function renderGastos(){const arr=gastosMes();$('gLista').innerHTML=!arr.length?'<p class="small">Nenhum gasto variável nesta competência.</p>':'<table><tr><th>Data</th><th>Categoria</th><th>Valor</th><th>Descrição</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td>${x.cat}</td><td>${BRL.format(x.valor)}</td><td>${x.desc||''}</td><td><button class="btn-danger btn-sm" data-delgasto="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
-function renderMetas(reserva,fundo,metaR,metaF){$('metaReservaAtual').textContent=BRL.format(reserva);$('metaReservaAlvo').textContent=metaR>0?BRL.format(metaR):'A definir';$('barReserva').style.width=metaR>0?Math.min(100,reserva/metaR*100)+'%':'0%';$('metaFundoAtual').textContent=BRL.format(fundo);$('metaFundoAlvo').textContent=metaF>0?BRL.format(metaF):'A definir';$('barFundo').style.width=metaF>0?Math.min(100,fundo/metaF*100)+'%':'0%';$('aportesLista').innerHTML=!state.aportes.length?'<p class="small">Nenhum aporte registrado.</p>':'<table><tr><th>Data</th><th>Destino</th><th>Valor</th><th></th></tr>'+state.aportes.slice().sort((a,b)=>b.data.localeCompare(a.data)).map(a=>`<tr><td>${fmtDataIso(a.data)}</td><td>${a.tipo==='RESERVA'?'Reserva':'Fundo de independência'}</td><td>${BRL.format(a.valor)}</td><td><button class="btn-danger btn-sm" data-delaporte="${a.id}">Excluir</button></td></tr>`).join('')+'</table>'}
+function renderMetas(reserva,fundo,c){
+ const guardado=aportesMes(),potencial=Math.max(0,c.livre-guardado);
+ $('metaReservaAtual').textContent=BRL.format(reserva);
+ $('metaFundoAtual').textContent=BRL.format(fundo);
+ $('livreAntesAportes').textContent=BRL.format(Math.max(0,c.livre));
+ $('guardadoMes').textContent=BRL.format(guardado);
+ $('potencialGuardar').textContent=BRL.format(potencial);
+ $('potencialGuardar').className=potencial>0?'good':'';
+ $('aportesLista').innerHTML=!state.aportes.length?'<p class="small">Nenhum valor guardado ainda.</p>':'<table><tr><th>Data</th><th>Destino</th><th>Valor</th><th></th></tr>'+state.aportes.slice().sort((a,b)=>b.data.localeCompare(a.data)).map(a=>`<tr><td>${fmtDataIso(a.data)}</td><td>${a.tipo==='RESERVA'?'Reserva':'Fundo de independência'}</td><td>${BRL.format(a.valor)}</td><td><button class="btn-danger btn-sm" data-delaporte="${a.id}">Excluir</button></td></tr>`).join('')+'</table>'
+}
 function renderHistorico(){$('historico').innerHTML=!state.fechamentos.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Competência</th><th>Renda</th><th>Compromissos</th><th>Dívida futura</th><th>Livre</th><th></th></tr>'+state.fechamentos.slice().sort((a,b)=>(b.competencia||'').localeCompare(a.competencia||'')).map(x=>`<tr><td>${x.competencia?fmtMes(x.competencia):x.periodo||'-'}</td><td>${BRL.format(x.renda||x.liquido||0)}</td><td>${BRL.format(x.compromissos||0)}</td><td>${BRL.format(x.dividaFutura||0)}</td><td class="${Number(x.livre??x.saldo)>=0?'good':'bad'}">${BRL.format(x.livre??x.saldo??0)}</td><td><button class="btn-danger btn-sm" data-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
-function preencherConfig(){$('cfgSalario').value=state.config.salario||'';$('cfgJornada').value=state.config.jornada||'';$('cfgValePct').value=state.config.valePct??40;$('cfgOutrosDescontos').value=state.config.outrosDescontos||'';$('cfgFarmacia').value=state.config.farmacia||'';$('cfgCesta').value=state.config.cesta||'';$('cfgMae').value=state.config.mae||'';$('cfgCarro').value=state.config.carro||'';$('cfgMeta50').value=state.config.meta50||'';$('cfgMeta100').value=state.config.meta100||'';$('cfgMetaReserva').value=state.config.metaReserva||'';$('cfgMetaFundo').value=state.config.metaFundo||''}
+function preencherConfig(){$('cfgSalario').value=state.config.salario||'';$('cfgJornada').value=state.config.jornada||'';$('cfgValePct').value=state.config.valePct??40;$('cfgOutrosDescontos').value=state.config.outrosDescontos||'';$('cfgFarmacia').value=state.config.farmacia||'';$('cfgCesta').value=state.config.cesta||'';$('cfgMae').value=state.config.mae||'';$('cfgCarro').value=state.config.carro||'';$('cfgMeta50').value=state.config.meta50||'';$('cfgMeta100').value=state.config.meta100||''}
 
 async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
 function abrirApp(){$('authScreen').classList.add('hidden');$('app').style.display='block';render()}
@@ -322,7 +340,7 @@ $('mesPainel').onchange=e=>{if(e.target.value){competencia=e.target.value;render
 $('btnAddHE').onclick=async()=>{if(!currentUser)return;const data=$('heData').value,tipo=$('heTipo').value,horas=Number($('heHoras').value),obs=$('heObs').value.trim();if(!data||!horas||horas<=0)return alert('Preencha data e horas.');const id=uuid();await setDoc(doc(paths(currentUser.uid).horas,id),{data,tipo,horas,obs,createdAt:new Date().toISOString()});$('heHoras').value='';$('heObs').value=''};
 $('btnAddGasto').onclick=async()=>{if(!currentUser)return;const data=$('gData').value,cat=$('gCat').value,valor=Number($('gValor').value),desc=$('gDesc').value.trim();if(!data||!valor||valor<=0)return alert('Preencha data e valor.');const id=uuid();await setDoc(doc(paths(currentUser.uid).gastos,id),{data,cat,valor,desc,createdAt:new Date().toISOString()});$('gValor').value='';$('gDesc').value=''};
 $('btnAddDivida').onclick=async()=>{if(!currentUser)return;const nome=$('dNome').value.trim(),tipo=$('dTipo').value,parcela=Number($('dParcela').value),total=Number($('dTotal').value),inicio=$('dInicio').value,quitacao=Number($('dQuitacao').value)||0;if(!nome||!parcela||!total||!inicio)return alert('Preencha nome, parcela, total e início.');const id=uuid();await setDoc(doc(paths(currentUser.uid).dividas,id),{nome,tipo,parcela,total:Math.floor(total),inicio,quitacao,createdAt:new Date().toISOString()});['dNome','dParcela','dTotal','dInicio','dQuitacao'].forEach(id=>$(id).value='')};
-$('btnSalvarConfig').onclick=async()=>{if(!currentUser)return;const cfg={salario:Number($('cfgSalario').value)||0,jornada:Number($('cfgJornada').value)||0,valePct:Number($('cfgValePct').value)||0,outrosDescontos:Number($('cfgOutrosDescontos').value)||0,farmacia:Number($('cfgFarmacia').value)||0,cesta:Number($('cfgCesta').value)||0,mae:Number($('cfgMae').value)||0,carro:Number($('cfgCarro').value)||0,meta50:Number($('cfgMeta50').value)||0,meta100:Number($('cfgMeta100').value)||0,metaReserva:Number($('cfgMetaReserva').value)||0,metaFundo:Number($('cfgMetaFundo').value)||0,planoInicio:'2027-01',planoMeses:24,configurado:true,updatedAt:serverTimestamp()};await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas.')};
+$('btnSalvarConfig').onclick=async()=>{if(!currentUser)return;const cfg={salario:Number($('cfgSalario').value)||0,jornada:Number($('cfgJornada').value)||0,valePct:Number($('cfgValePct').value)||0,outrosDescontos:Number($('cfgOutrosDescontos').value)||0,farmacia:Number($('cfgFarmacia').value)||0,cesta:Number($('cfgCesta').value)||0,mae:Number($('cfgMae').value)||0,carro:Number($('cfgCarro').value)||0,meta50:Number($('cfgMeta50').value)||0,meta100:Number($('cfgMeta100').value)||0,planoInicio:'2027-01',planoMeses:24,configurado:true,updatedAt:serverTimestamp()};await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas.')};
 async function addAporte(tipo){if(!currentUser)return;const valor=Number($(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value),data=$(tipo==='RESERVA'?'aporteReservaData':'aporteFundoData').value;if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(paths(currentUser.uid).aportes,id),{tipo,valor,data,createdAt:new Date().toISOString()});$(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value=''}
 $('btnAporteReserva').onclick=()=>addAporte('RESERVA');$('btnAporteFundo').onclick=()=>addAporte('FUNDO');
 $('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,reserva:aportes('RESERVA'),fundo:aportes('FUNDO'),criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
