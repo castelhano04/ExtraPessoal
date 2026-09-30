@@ -11,7 +11,7 @@
   --blueSoft:#eff6ff;--greenSoft:#ecfdf5;--redSoft:#fef2f2;--amberSoft:#fffbeb;--shadow:0 12px 35px rgba(15,23,42,.08)
 }
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}#app{display:none}.wrap{max-width:1450px;margin:auto;padding:24px}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}#app,#casalApp{display:none}.wrap{max-width:1450px;margin:auto;padding:24px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,#0f172a 0%,#17346f 48%,#2563eb 100%);color:#fff;border-radius:26px;padding:28px 30px;box-shadow:var(--shadow);margin-bottom:20px}
 .topbar h1{margin:0;font-size:30px;letter-spacing:-.5px}.topbar p{margin:7px 0 0;color:#dbeafe}.topActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.status{font-size:12px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:800}
 .layout{display:grid;grid-template-columns:245px 1fr;gap:20px;align-items:start}.sidebar{position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow)}
@@ -22,10 +22,10 @@ label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#4755
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}button{border:0;border-radius:11px;padding:11px 14px;font-weight:800}.btn-primary{background:var(--primary2);color:#fff}.btn-dark{background:var(--dark);color:#fff}.btn-danger{background:#fee2e2;color:var(--red)}.btn-light{background:#e9eef5;color:#0f172a}.btn-success{background:var(--green);color:#fff}.btn-amber{background:#fef3c7;color:#92400e}.btn-sm{padding:7px 9px;font-size:12px}
 table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}th{background:var(--surface2);color:#475569;font-size:12px}.small{font-size:12px;color:var(--muted)}.rowline{display:flex;justify-content:space-between;gap:16px;margin:9px 0;align-items:center}.progress{height:9px;background:#e5eaf1;border-radius:999px;overflow:hidden;margin-top:7px}.bar{height:100%;background:var(--primary2);width:0;transition:.25s}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#dbeafe;color:var(--primary);font-size:11px;font-weight:900}.pill.green{background:#dcfce7;color:#166534}.pill.amber{background:#fef3c7;color:#92400e}.pill.red{background:#fee2e2;color:#991b1b}
 .info{border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}.warn{border:1px solid #fde68a;background:#fffbeb;color:#854d0e;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}.success{border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}
-.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.planBox{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px}.planBox span{display:block;color:var(--muted);font-size:12px;font-weight:700}.planBox strong{display:block;margin-top:5px;font-size:15px}.loanCard{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;margin-top:10px}.loanTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.loanName{font-weight:900}.loanMeta{font-size:12px;color:var(--muted);margin-top:4px}.loanNumbers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.mini{background:var(--surface2);border-radius:11px;padding:10px}.mini span{display:block;color:var(--muted);font-size:11px}.mini strong{display:block;margin-top:4px;font-size:13px}.divider{height:1px;background:var(--line);margin:14px 0}.tag{padding:5px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:11px;font-weight:900}
+.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.planBox{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px}.planBox span{display:block;color:var(--muted);font-size:12px;font-weight:700}.planBox strong{display:block;margin-top:5px;font-size:15px}.loanCard{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;margin-top:10px}.loanTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.loanName{font-weight:900}.loanMeta{font-size:12px;color:var(--muted);margin-top:4px}.loanNumbers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.mini{background:var(--surface2);border-radius:11px;padding:10px}.mini span{display:block;color:var(--muted);font-size:11px}.mini strong{display:block;margin-top:4px;font-size:13px}.divider{height:1px;background:var(--line);margin:14px 0}.tag{padding:5px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:11px;font-weight:900}.coupleHero{background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 50%,#2563eb 100%)}.personCard{border-left:5px solid #8b5cf6}.houseCard{border-left:5px solid #2563eb}.moneyBig{font-size:34px;font-weight:950;letter-spacing:-1px}.coupleGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.monthTable td:first-child{font-weight:800}
 .monthHeader{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.monthPicker{display:flex;gap:8px;align-items:center}.monthPicker input{width:auto;min-width:155px}.kpiNote{font-size:11px;color:var(--muted);margin-top:6px}.authWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at top right,#2f6fe7 0,#193c7d 28%,#0f172a 65%)}.authCard{width:min(430px,100%);background:#fff;border-radius:26px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.4)}.authLogo{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#eaf1ff;color:var(--primary);font-size:23px;font-weight:900;margin-bottom:17px}.authCard h1{margin:0;font-size:27px}.authCard p{color:var(--muted);line-height:1.5}.authMsg{min-height:20px;margin-top:10px;font-size:13px;color:var(--red)}.authHint{font-size:12px;color:#94a3b8;margin-top:14px;text-align:center}.lockBtn{background:rgba(255,255,255,.92);color:#0f172a}hr{border:0;border-top:1px solid var(--line)}
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:6px}.navbtn{white-space:nowrap;width:auto}.grid4{grid-template-columns:repeat(2,1fr)}.loanNumbers{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:760px){.two,.three,.four,.planGrid,.grid3{grid-template-columns:1fr}.wrap{padding:12px}.topbar{padding:22px}.grid4{grid-template-columns:1fr}.topActions{justify-content:flex-start}.loanNumbers{grid-template-columns:1fr 1fr}}
+@media(max-width:1100px){.coupleGrid{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:6px}.navbtn{white-space:nowrap;width:auto}.grid4{grid-template-columns:repeat(2,1fr)}.loanNumbers{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.coupleGrid{grid-template-columns:1fr}.two,.three,.four,.planGrid,.grid3{grid-template-columns:1fr}.wrap{padding:12px}.topbar{padding:22px}.grid4{grid-template-columns:1fr}.topActions{justify-content:flex-start}.loanNumbers{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){table{display:block;overflow:auto}.topbar h1{font-size:25px}.loanNumbers{grid-template-columns:1fr}}
 </style>
 </head>
@@ -34,11 +34,11 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;bor
   <div class="authCard">
     <div class="authLogo">PF</div>
     <h1>Meu Plano Financeiro</h1>
-    <p>Controle pessoal de renda, horas extras, dívidas, reserva e plano de independência.</p>
+    <p>Digite sua senha. Cada senha abre sua área correspondente: controle pessoal ou dinheiro do casal.</p>
     <div style="margin-top:18px"><label>Senha de acesso</label><input type="password" id="loginSenha" inputmode="numeric" autocomplete="current-password" placeholder="Digite sua senha"></div>
     <div class="actions"><button class="btn-primary" id="btnEntrar" style="width:100%">Entrar</button></div>
     <div id="authMsg" class="authMsg"></div>
-    <div class="authHint">Acesso único • dados sincronizados pelo Firebase</div>
+    <div class="authHint">Controle pessoal e área do casal • dados separados e sincronizados</div>
   </div>
 </div>
 
@@ -208,6 +208,105 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:12px;bor
   </div>
 </div></div>
 
+
+<div id="casalApp"><div class="wrap">
+  <div class="topbar coupleHero">
+    <div><h1>Nosso Fundo da Casa</h1><p id="casalPeriodo">Controle de quanto o casal consegue guardar</p></div>
+    <div class="topActions"><div id="casalSyncStatus" class="status">Conectando…</div><button class="lockBtn" id="btnCasalSair">Bloquear</button></div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="navbtn casal-nav active" data-casal-view="casal-painel">Visão geral</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-aportes">Guardar dinheiro</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-historico">Histórico mensal</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-config">Configurações</button>
+    </aside>
+
+    <main class="content">
+      <section id="view-casal-painel" class="view casal-view active">
+        <div class="card houseCard">
+          <div class="monthHeader">
+            <div><h2>Dinheiro para nossa casa</h2><p class="sub" style="margin-bottom:0">Sem obrigação de guardar um valor perfeito. O importante é registrar o que cada um realmente conseguiu separar.</p></div>
+            <div class="tag">Senha exclusiva 171025</div>
+          </div>
+        </div>
+
+        <div class="coupleGrid section">
+          <div class="card metric"><div class="label">Total do casal</div><div class="value good" id="casalTotal">R$ 0,00</div><div class="kpiNote">saldo inicial + todos os aportes</div></div>
+          <div class="card metric"><div class="label">Guardado neste mês</div><div class="value blue" id="casalMes">R$ 0,00</div><div class="kpiNote" id="casalMesDetalhe">Você R$ 0 • Namorada R$ 0</div></div>
+          <div class="card metric"><div class="label">Média mensal real</div><div class="value" id="casalMedia">R$ 0,00</div><div class="kpiNote">média dos meses com registro</div></div>
+          <div class="card metric"><div class="label">Referência mensal</div><div class="value" id="casalReferencia">R$ 800,00</div><div class="kpiNote">apenas referência, não obrigação</div></div>
+        </div>
+
+        <div class="section two">
+          <div class="card personCard">
+            <h2 id="casalNome1Titulo">Anderson</h2><p class="sub">Quanto você já colocou no fundo.</p>
+            <div class="moneyBig" id="casalTotal1">R$ 0,00</div>
+            <div class="rowline"><span>Este mês</span><strong id="casalMes1">R$ 0,00</strong></div>
+          </div>
+          <div class="card personCard">
+            <h2 id="casalNome2Titulo">Namorada</h2><p class="sub">Quanto ela já colocou no fundo.</p>
+            <div class="moneyBig" id="casalTotal2">R$ 0,00</div>
+            <div class="rowline"><span>Este mês</span><strong id="casalMes2">R$ 0,00</strong></div>
+          </div>
+        </div>
+
+        <div class="section card">
+          <h2>Projeção mantendo o ritmo</h2><p class="sub">Projeção simples baseada na média mensal realmente registrada. Se ainda não houver histórico suficiente, usa a referência mensal configurada.</p>
+          <div class="planGrid">
+            <div class="planBox"><span>Em 12 meses</span><strong id="casalProj12">R$ 0,00</strong></div>
+            <div class="planBox"><span>Em 24 meses</span><strong id="casalProj24">R$ 0,00</strong></div>
+            <div class="planBox"><span>Falta para entrada desejada</span><strong id="casalFaltaMeta">Sem meta definida</strong></div>
+          </div>
+          <div class="progress" style="margin-top:16px"><div class="bar" id="casalMetaBar"></div></div>
+          <div class="small" id="casalMetaTexto" style="margin-top:8px">Você pode deixar a meta de entrada em branco.</div>
+        </div>
+      </section>
+
+      <section id="view-casal-aportes" class="view casal-view">
+        <div class="two">
+          <div class="card">
+            <h2 id="casalAporteTitulo1">Guardar — Anderson</h2><p class="sub">Registre somente quando o dinheiro realmente estiver separado.</p>
+            <div><label>Valor</label><input type="number" id="casalValor1" min="0" step="0.01" placeholder="0,00"></div>
+            <div style="margin-top:10px"><label>Data</label><input type="date" id="casalData1"></div>
+            <div style="margin-top:10px"><label>Observação</label><input id="casalObs1" placeholder="Ex.: aporte de janeiro"></div>
+            <div class="actions"><button class="btn-success" id="btnCasalAporte1">Guardar</button></div>
+          </div>
+          <div class="card">
+            <h2 id="casalAporteTitulo2">Guardar — Namorada</h2><p class="sub">O valor fica separado no histórico dela, mas soma no fundo do casal.</p>
+            <div><label>Valor</label><input type="number" id="casalValor2" min="0" step="0.01" placeholder="0,00"></div>
+            <div style="margin-top:10px"><label>Data</label><input type="date" id="casalData2"></div>
+            <div style="margin-top:10px"><label>Observação</label><input id="casalObs2" placeholder="Ex.: aporte de janeiro"></div>
+            <div class="actions"><button class="btn-primary" id="btnCasalAporte2">Guardar</button></div>
+          </div>
+        </div>
+        <div class="section card"><h2>Últimos aportes</h2><div id="casalAportesLista"></div></div>
+      </section>
+
+      <section id="view-casal-historico" class="view casal-view">
+        <div class="card"><h2>Evolução mês a mês</h2><p class="sub">Mostra quanto cada um guardou e o total acumulado do casal.</p><div id="casalHistoricoMensal"></div></div>
+      </section>
+
+      <section id="view-casal-config" class="view casal-view">
+        <div class="card">
+          <h2>Configurações do fundo</h2><p class="sub">A referência mensal serve apenas para projeções. Não bloqueia nem cobra nenhum valor.</p>
+          <div class="three">
+            <div><label>Seu nome</label><input id="casalCfgNome1"></div>
+            <div><label>Nome dela</label><input id="casalCfgNome2"></div>
+            <div><label>Referência mensal do casal</label><input type="number" id="casalCfgReferencia" step="0.01" placeholder="Ex.: 800"></div>
+            <div><label>Seu saldo inicial já guardado</label><input type="number" id="casalCfgInicial1" step="0.01"></div>
+            <div><label>Saldo inicial dela</label><input type="number" id="casalCfgInicial2" step="0.01"></div>
+            <div><label>Meta de entrada (opcional)</label><input type="number" id="casalCfgMetaCasa" step="0.01" placeholder="Pode deixar em branco"></div>
+          </div>
+          <div class="info" style="margin-top:16px"><strong>Valor atual:</strong> deixei seus R$ 2.000 já guardados como saldo inicial. Vocês podem mudar isso a qualquer momento.</div>
+          <div class="actions"><button class="btn-dark" id="btnCasalSalvarConfig">Salvar configurações</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
@@ -219,6 +318,8 @@ const firestore=initializeFirestore(appFirebase,{localCache:persistentLocalCache
 const auth=getAuth(appFirebase);
 const EMAIL_FIXO='controle.pessoal.161004@hr-extra.app';
 const HASH_SENHA_CORRETA='6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
+const EMAIL_CASAL='controle.casal.171025@hr-extra.app';
+const HASH_SENHA_CASAL='79c672ad849d58c03a17588c0a91f2a53b384f52a2c41d623fab806e381d76c9';
 const BRL=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const $=id=>document.getElementById(id); const uuid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 
@@ -248,8 +349,10 @@ function estimarQuitacao(d,s){
  const valor=p*(1-Math.pow(1+i,-n))/i;
  return{valor,nominal:n*p,economia:(n*p)-valor,taxaPct};
 }
-let currentUser=null,unsubs=[],desbloqueado=sessionStorage.getItem('planoFinanceiroDesbloqueado')==='1',loginEmAndamento=false;
+let currentUser=null,unsubs=[],desbloqueado=sessionStorage.getItem('planoFinanceiroDesbloqueado')==='1',casalDesbloqueado=sessionStorage.getItem('planoCasalDesbloqueado')==='1',loginEmAndamento=false,areaAtiva=null;
 let state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};
+const DEFAULT_CASAL_CONFIG={nome1:'Anderson',nome2:'Namorada',referenciaMensal:800,saldoInicial1:2000,saldoInicial2:0,metaCasa:0,configurado:true};
+let casalState={config:{...DEFAULT_CASAL_CONFIG},aportes:[]};
 const _agora=new Date();
 let competencia=`${_agora.getFullYear()}-${String(_agora.getMonth()+1).padStart(2,'0')}`;
 
@@ -343,15 +446,39 @@ function renderMetas(reserva,fundo,c){
 function renderHistorico(){$('historico').innerHTML=!state.fechamentos.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Competência</th><th>Renda</th><th>Compromissos</th><th>Dívida futura</th><th>Livre</th><th></th></tr>'+state.fechamentos.slice().sort((a,b)=>(b.competencia||'').localeCompare(a.competencia||'')).map(x=>`<tr><td>${x.competencia?fmtMes(x.competencia):x.periodo||'-'}</td><td>${BRL.format(x.renda||x.liquido||0)}</td><td>${BRL.format(x.compromissos||0)}</td><td>${BRL.format(x.dividaFutura||0)}</td><td class="${Number(x.livre??x.saldo)>=0?'good':'bad'}">${BRL.format(x.livre??x.saldo??0)}</td><td><button class="btn-danger btn-sm" data-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
 function preencherConfig(){$('cfgSalario').value=state.config.salario||'';$('cfgJornada').value=state.config.jornada||'';$('cfgValePct').value=state.config.valePct??40;$('cfgOutrosDescontos').value=state.config.outrosDescontos||'';$('cfgFarmacia').value=state.config.farmacia||'';$('cfgCesta').value=state.config.cesta||'';$('cfgMae').value=state.config.mae||'';$('cfgCarro').value=state.config.carro||''}
 
+
+function casalPaths(uid){return{config:doc(firestore,'users',uid,'casal','config'),aportes:collection(firestore,'users',uid,'casalAportes')}}
+function startCasalSync(user){clearListeners();const p=casalPaths(user.uid);$('casalSyncStatus').textContent='Sincronizando…';
+ unsubs.push(onSnapshot(p.config,async s=>{if(s.exists())casalState.config={...DEFAULT_CASAL_CONFIG,...s.data()};else await setDoc(p.config,{...DEFAULT_CASAL_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});renderCasal()}));
+ unsubs.push(onSnapshot(p.aportes,s=>{casalState.aportes=s.docs.map(d=>({id:d.id,...d.data()}));renderCasal();$('casalSyncStatus').textContent='✓ Sincronizado'}));
+}
+function casalMesAtual(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function casalSomaPessoa(pessoa){return casalState.aportes.filter(a=>a.pessoa===pessoa).reduce((s,a)=>s+Number(a.valor||0),0)}
+function casalSomaPessoaMes(pessoa,mes){return casalState.aportes.filter(a=>a.pessoa===pessoa&&mesDaData(a.data)===mes).reduce((s,a)=>s+Number(a.valor||0),0)}
+function casalAgruparMeses(){const mapa=new Map();for(const a of casalState.aportes){const mes=mesDaData(a.data);if(!mes)continue;if(!mapa.has(mes))mapa.set(mes,{mes,p1:0,p2:0,total:0});const r=mapa.get(mes),v=Number(a.valor||0);if(a.pessoa==='P1')r.p1+=v;else if(a.pessoa==='P2')r.p2+=v;r.total+=v}return [...mapa.values()].sort((a,b)=>a.mes.localeCompare(b.mes))}
+function renderCasal(){if(!$('casalApp'))return;const cfg=casalState.config,mes=casalMesAtual();const p1=Number(cfg.saldoInicial1||0)+casalSomaPessoa('P1'),p2=Number(cfg.saldoInicial2||0)+casalSomaPessoa('P2'),total=p1+p2,m1=casalSomaPessoaMes('P1',mes),m2=casalSomaPessoaMes('P2',mes),mesTotal=m1+m2;const grupos=casalAgruparMeses(),media=grupos.length?grupos.reduce((s,x)=>s+x.total,0)/grupos.length:0,ritmo=media>0?media:Number(cfg.referenciaMensal||0),meta=Number(cfg.metaCasa||0);
+ $('casalTotal').textContent=BRL.format(total);$('casalMes').textContent=BRL.format(mesTotal);$('casalMesDetalhe').textContent=`${cfg.nome1}: ${BRL.format(m1)} • ${cfg.nome2}: ${BRL.format(m2)}`;$('casalMedia').textContent=BRL.format(media);$('casalReferencia').textContent=BRL.format(Number(cfg.referenciaMensal||0));
+ $('casalNome1Titulo').textContent=cfg.nome1;$('casalNome2Titulo').textContent=cfg.nome2;$('casalAporteTitulo1').textContent=`Guardar — ${cfg.nome1}`;$('casalAporteTitulo2').textContent=`Guardar — ${cfg.nome2}`;$('casalTotal1').textContent=BRL.format(p1);$('casalTotal2').textContent=BRL.format(p2);$('casalMes1').textContent=BRL.format(m1);$('casalMes2').textContent=BRL.format(m2);
+ $('casalProj12').textContent=BRL.format(total+ritmo*12);$('casalProj24').textContent=BRL.format(total+ritmo*24);if(meta>0){const falta=Math.max(0,meta-total),pct=Math.min(100,total/meta*100);$('casalFaltaMeta').textContent=falta<=0?'Meta alcançada':BRL.format(falta);$('casalMetaBar').style.width=pct+'%';$('casalMetaTexto').textContent=`${BRL.format(total)} de ${BRL.format(meta)} (${pct.toFixed(1).replace('.',',')}%)`}else{$('casalFaltaMeta').textContent='Sem meta definida';$('casalMetaBar').style.width='0%';$('casalMetaTexto').textContent='Você pode deixar a meta de entrada em branco.'}
+ $('casalCfgNome1').value=cfg.nome1||'';$('casalCfgNome2').value=cfg.nome2||'';$('casalCfgReferencia').value=cfg.referenciaMensal||'';$('casalCfgInicial1').value=cfg.saldoInicial1||'';$('casalCfgInicial2').value=cfg.saldoInicial2||'';$('casalCfgMetaCasa').value=cfg.metaCasa||'';
+ const arr=casalState.aportes.slice().sort((a,b)=>(b.data||'').localeCompare(a.data||''));$('casalAportesLista').innerHTML=!arr.length?'<p class="small">Nenhum aporte registrado ainda.</p>':'<table><tr><th>Data</th><th>Pessoa</th><th>Valor</th><th>Observação</th><th></th></tr>'+arr.map(a=>`<tr><td>${fmtDataIso(a.data)}</td><td>${a.pessoa==='P1'?cfg.nome1:cfg.nome2}</td><td>${BRL.format(a.valor)}</td><td>${a.obs||''}</td><td><button class="btn-danger btn-sm" data-casal-delaporte="${a.id}">Excluir</button></td></tr>`).join('')+'</table>';
+ let acumulado=Number(cfg.saldoInicial1||0)+Number(cfg.saldoInicial2||0);$('casalHistoricoMensal').innerHTML=!grupos.length?'<p class="small">O histórico mensal aparecerá depois do primeiro aporte.</p>':'<table class="monthTable"><tr><th>Mês</th><th>'+cfg.nome1+'</th><th>'+cfg.nome2+'</th><th>Total do mês</th><th>Acumulado</th></tr>'+grupos.map(g=>{acumulado+=g.total;return `<tr><td>${fmtMes(g.mes)}</td><td>${BRL.format(g.p1)}</td><td>${BRL.format(g.p2)}</td><td><strong>${BRL.format(g.total)}</strong></td><td>${BRL.format(acumulado)}</td></tr>`}).join('')+'</table>';
+ $('casalPeriodo').textContent=`Fundo do casal • ${fmtMes(mes)} • guardar o que for possível`;
+}
+function abrirCasal(){$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='block';areaAtiva='CASAL';renderCasal()}
+async function addCasalAporte(pessoa){if(!currentUser||areaAtiva!=='CASAL')return;const valor=Number($(pessoa==='P1'?'casalValor1':'casalValor2').value),data=$(pessoa==='P1'?'casalData1':'casalData2').value,obs=$(pessoa==='P1'?'casalObs1':'casalObs2').value.trim();if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(casalPaths(currentUser.uid).aportes,id),{pessoa,valor,data,obs,createdAt:new Date().toISOString()});$(pessoa==='P1'?'casalValor1':'casalValor2').value='';$(pessoa==='P1'?'casalObs1':'casalObs2').value=''}
+
 async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
-function abrirApp(){$('authScreen').classList.add('hidden');$('app').style.display='block';render()}
-function mostrarLogin(msg=''){$('app').style.display='none';$('authScreen').classList.remove('hidden');if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
-function bloquearApp(){desbloqueado=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
-async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{if(await sha256(senha)!==HASH_SENHA_CORRETA){$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,EMAIL_FIXO,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,EMAIL_FIXO,senha)}else throw e}currentUser=cred.user;desbloqueado=true;sessionStorage.setItem('planoFinanceiroDesbloqueado','1');startSync(currentUser);$('loginSenha').value='';$('authMsg').textContent='';abrirApp()}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
-$('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;
-onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO){if(desbloqueado){startSync(user);abrirApp()}else mostrarLogin('')}else mostrarLogin('')});
+function abrirApp(){$('authScreen').classList.add('hidden');$('casalApp').style.display='none';$('app').style.display='block';areaAtiva='PESSOAL';render()}
+function mostrarLogin(msg=''){$('app').style.display='none';$('casalApp').style.display='none';$('authScreen').classList.remove('hidden');areaAtiva=null;if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
+function bloquearApp(){desbloqueado=false;casalDesbloqueado=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
+async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{const hash=await sha256(senha);let email,modo;if(hash===HASH_SENHA_CORRETA){email=EMAIL_FIXO;modo='PESSOAL'}else if(hash===HASH_SENHA_CASAL){email=EMAIL_CASAL;modo='CASAL'}else{$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,email,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,email,senha)}else throw e}currentUser=cred.user;clearListeners();if(modo==='PESSOAL'){desbloqueado=true;casalDesbloqueado=false;sessionStorage.setItem('planoFinanceiroDesbloqueado','1');sessionStorage.removeItem('planoCasalDesbloqueado');startSync(currentUser);abrirApp()}else{casalDesbloqueado=true;desbloqueado=false;sessionStorage.setItem('planoCasalDesbloqueado','1');sessionStorage.removeItem('planoFinanceiroDesbloqueado');startCasalSync(currentUser);abrirCasal()}$('loginSenha').value='';$('authMsg').textContent=''}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
+$('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;$('btnCasalSair').onclick=bloquearApp;
+onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO&&desbloqueado){startSync(user);abrirApp()}else if(user&&user.email===EMAIL_CASAL&&casalDesbloqueado){startCasalSync(user);abrirCasal()}else mostrarLogin('')});
 
 document.addEventListener('click',async e=>{
+ const casalNav=e.target.closest('[data-casal-view]');if(casalNav){document.querySelectorAll('.casal-nav').forEach(x=>x.classList.toggle('active',x===casalNav));document.querySelectorAll('.casal-view').forEach(x=>x.classList.remove('active'));$('view-'+casalNav.dataset.casalView)?.classList.add('active');sessionStorage.setItem('planoCasalView',casalNav.dataset.casalView);return}
+ const casalDel=e.target.closest('[data-casal-delaporte]');if(casalDel&&currentUser&&areaAtiva==='CASAL'){await deleteDoc(doc(casalPaths(currentUser.uid).aportes,casalDel.dataset.casalDelaporte));return}
  const nav=e.target.closest('[data-view]');if(nav){document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===nav));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+nav.dataset.view)?.classList.add('active');sessionStorage.setItem('planoFinanceiroView',nav.dataset.view);return}
  if(!currentUser)return;const p=paths(currentUser.uid),a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]'),d=e.target.closest('[data-deldivida]'),an=e.target.closest('[data-antecipar]'),eq=e.target.closest('[data-editquit]'),ap=e.target.closest('[data-delaporte]');
  if(a)await deleteDoc(doc(p.horas,a.dataset.delhe));if(b)await deleteDoc(doc(p.gastos,b.dataset.delgasto));if(c)await deleteDoc(doc(p.fechamentos,c.dataset.delfech));if(ap)await deleteDoc(doc(p.aportes,ap.dataset.delaporte));
@@ -368,8 +495,11 @@ async function addAporte(tipo){if(!currentUser)return;const valor=Number($(tipo=
 $('btnAporteReserva').onclick=()=>addAporte('RESERVA');$('btnAporteFundo').onclick=()=>addAporte('FUNDO');
 $('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,reserva:aportes('RESERVA'),fundo:aportes('FUNDO'),criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
 
-const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['gData','aporteReservaData','aporteFundoData'].forEach(id=>$(id).value=hojeIso);
-const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
+$('btnCasalAporte1').onclick=()=>addCasalAporte('P1');$('btnCasalAporte2').onclick=()=>addCasalAporte('P2');
+$('btnCasalSalvarConfig').onclick=async()=>{if(!currentUser||areaAtiva!=='CASAL')return;const cfg={nome1:$('casalCfgNome1').value.trim()||'Anderson',nome2:$('casalCfgNome2').value.trim()||'Namorada',referenciaMensal:Number($('casalCfgReferencia').value)||0,saldoInicial1:Number($('casalCfgInicial1').value)||0,saldoInicial2:Number($('casalCfgInicial2').value)||0,metaCasa:Number($('casalCfgMetaCasa').value)||0,configurado:true,updatedAt:serverTimestamp()};await setDoc(casalPaths(currentUser.uid).config,cfg,{merge:true});alert('Configurações do casal salvas.')};
+
+const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['gData','aporteReservaData','aporteFundoData','casalData1','casalData2'].forEach(id=>$(id).value=hojeIso);
+const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const casalViewSalva=sessionStorage.getItem('planoCasalView');if(casalViewSalva){const btn=document.querySelector(`[data-casal-view="${casalViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
 </script>
 </body>
 </html>
