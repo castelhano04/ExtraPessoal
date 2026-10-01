@@ -791,7 +791,7 @@ function renderCasal(){if(!$('casalApp'))return;const cfg=casalState.config,mes=
  let acumulado=inicial;$('casalHistoricoMensal').innerHTML=!grupos.length?'<p class="small">O histórico mensal aparecerá depois do primeiro aporte.</p>':'<table class="monthTable"><tr><th>Mês</th><th>Guardado no mês</th><th>Saldo acumulado</th></tr>'+grupos.map(g=>{acumulado+=g.total;return `<tr><td>${fmtMes(g.mes)}</td><td><strong>${BRL.format(g.total)}</strong></td><td>${BRL.format(acumulado)}</td></tr>`}).join('')+'</table>';
  $('casalPeriodo').textContent=`Fundo conjunto • ${fmtMes(mes)} • guardar o que for possível`;
 }
-function abrirCasal(){$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='block';areaAtiva='CASAL';renderCasal()}
+function abrirCasal(){sessionStorage.removeItem('planoCasalView');document.querySelectorAll('.casal-nav').forEach(x=>x.classList.toggle('active',x.dataset.casalView==='casal-painel'));document.querySelectorAll('.casal-view').forEach(x=>x.classList.toggle('active',x.id==='view-casal-painel'));$('authScreen').classList.add('hidden');$('app').style.display='none';$('livreApp').style.display='none';$('casalApp').style.display='block';areaAtiva='CASAL';renderCasal()}
 async function addCasalAporte(){if(!currentUser||areaAtiva!=='CASAL')return;const valor=Number($('casalValor').value),data=$('casalData').value,obs=$('casalObs').value.trim();if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(casalPaths(currentUser.uid).aportes,id),{valor,data,obs,createdAt:new Date().toISOString()});$('casalValor').value='';$('casalObs').value=''}
 
 
@@ -817,7 +817,7 @@ function renderLivre(){if(!$('livreApp'))return;const c=calcLivre();$('livreMesP
  const fech=livreState.fechamentos.slice().sort((a,b)=>(b.mes||'').localeCompare(a.mes||''));$('livreHistorico').innerHTML=!fech.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Mês</th><th>Disponível inicial</th><th>Entradas</th><th>Contas</th><th>Saldo</th><th></th></tr>'+fech.map(x=>`<tr><td>${fmtMes(x.mes)}</td><td>${BRL.format(x.inicial)}</td><td>${BRL.format(x.recebido)}</td><td>${BRL.format(x.totalContas)}</td><td class="${Number(x.saldo)>=0?'good':'bad'}">${BRL.format(x.saldo)}</td><td><button class="btn-danger btn-sm" data-livre-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>';
  $('livreCfgDisponivel').value=c.inicial||'';const reg=livreState.disponiveis.find(x=>x.mes===livreCompetencia);$('livreCfgObs').value=reg?.obs||'';
 }
-function abrirLivre(){$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='none';$('livreApp').style.display='block';areaAtiva='LIVRE';renderLivre()}
+function abrirLivre(){sessionStorage.removeItem('planoLivreView');document.querySelectorAll('.livre-nav').forEach(x=>x.classList.toggle('active',x.dataset.livreView==='livre-painel'));document.querySelectorAll('.livre-view').forEach(x=>x.classList.toggle('active',x.id==='view-livre-painel'));$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='none';$('livreApp').style.display='block';areaAtiva='LIVRE';renderLivre()}
 
 async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
 function abrirApp(zerado=false){modoPessoalZero=!!zerado;$('authScreen').classList.add('hidden');$('casalApp').style.display='none';$('livreApp').style.display='none';$('app').style.display='block';areaAtiva=zerado?'PESSOAL_ZERO':'PESSOAL';const titulo=document.querySelector('#app .topbar h1');if(titulo)titulo.textContent=zerado?'Meu Plano Financeiro — Novo':'Meu Plano Financeiro';render()}
@@ -915,7 +915,7 @@ $('btnCasalAporte').onclick=()=>addCasalAporte();
 $('btnCasalSalvarConfig').onclick=async()=>{if(!currentUser||areaAtiva!=='CASAL')return;const cfg={saldoInicialConjunto:Number($('casalCfgInicial').value)||0,metaCasa:Number($('casalCfgMetaCasa').value)||0,configurado:true,updatedAt:serverTimestamp()};await setDoc(casalPaths(currentUser.uid).config,cfg,{merge:true});alert('Configurações do fundo salvas.')};
 
 const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','casalData','livreEntradaData'].forEach(id=>$(id).value=hojeIso);$('livreContaInicio').value=livreCompetencia;
-const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const casalViewSalva=sessionStorage.getItem('planoCasalView');if(casalViewSalva){const btn=document.querySelector(`[data-casal-view="${casalViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const livreViewSalva=sessionStorage.getItem('planoLivreView');if(livreViewSalva){const btn=document.querySelector(`[data-livre-view="${livreViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
+const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
 </script>
 </body>
 </html>
