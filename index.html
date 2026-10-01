@@ -64,6 +64,49 @@ input[type="number"]{font-variant-numeric:tabular-nums}
   .actions>button{flex:1 1 auto}
 }
 
+
+
+/* ===== área do casal — visual mais elegante ===== */
+.coupleHero{
+  background:linear-gradient(135deg,#172554 0%,#5b21b6 45%,#2563eb 100%);
+  border:1px solid rgba(255,255,255,.12);
+  position:relative;
+  overflow:hidden;
+}
+.coupleHero::after{
+  content:"🏡";
+  position:absolute;
+  right:96px;
+  bottom:-18px;
+  font-size:92px;
+  opacity:.10;
+  pointer-events:none;
+}
+.coupleHero h1{display:flex;align-items:center;gap:12px}
+.houseEmoji{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);font-size:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+#casalApp .sidebar{background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);border-color:#dbe5f1}
+#casalApp .navbtn{font-weight:800;color:#334155;border-radius:14px;padding:13px 14px}
+#casalApp .navbtn:hover,#casalApp .navbtn.active{background:linear-gradient(135deg,#eef4ff 0%,#e9edff 100%);color:#1d4ed8;box-shadow:inset 0 0 0 1px #d8e4ff}
+.futureLead{border:1px solid #dbeafe;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);border-left:6px solid #2563eb}
+.softTag{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef4ff;color:#1e40af;font-size:11px;font-weight:900;letter-spacing:.02em;margin-bottom:10px}
+.futureCard{background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);border:1px solid #e1eaf7}
+.futureCard .value{letter-spacing:-.4px}
+.futureShowcase{border:1px solid #e7defe;background:linear-gradient(135deg,#ffffff 0%,#fbf7ff 100%);border-left:6px solid #7c3aed}
+.futureShowcase .moneyBig{color:#0f172a}
+.futureProjection{border:1px solid #dbeafe;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%)}
+.futureProjection .planBox{background:#fff;border-color:#dde7f2}
+#casalApp .metric{min-height:154px}
+#casalApp .metric .label{font-size:12px;letter-spacing:.05em}
+#casalApp .kpiNote{font-size:12px}
+#casalApp .progress{height:10px;background:#e7eef7}
+#casalApp .bar{background:linear-gradient(90deg,#7c3aed 0%,#2563eb 100%)}
+#casalApp .card h2{font-size:18px}
+#casalApp .actions .btn-success{background:linear-gradient(135deg,#15803d 0%,#16a34a 100%)}
+@media(max-width:760px){
+  .coupleHero::after{right:18px;bottom:-10px;font-size:62px}
+  .houseEmoji{width:38px;height:38px;font-size:20px}
+}
+
 </style>
 </head>
 <body>
@@ -305,41 +348,42 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
 <div id="casalApp"><div class="wrap">
   <div class="topbar coupleHero">
-    <div><h1>Para nosso futuro</h1><p id="casalPeriodo">Fundo conjunto • guardar o que for possível</p></div>
+    <div><h1><span class="houseEmoji">🏡</span>Para nosso futuro</h1><p id="casalPeriodo">Fundo conjunto • guardar o que for possível</p></div>
     <div class="topActions"><div id="casalSyncStatus" class="status">Conectando…</div><button class="lockBtn" id="btnCasalSair">Bloquear</button></div>
   </div>
 
   <div class="layout">
     <aside class="sidebar">
-      <button class="navbtn casal-nav active" data-casal-view="casal-painel">Visão geral</button>
-      <button class="navbtn casal-nav" data-casal-view="casal-aportes">Guardar dinheiro</button>
-      <button class="navbtn casal-nav" data-casal-view="casal-historico">Histórico mensal</button>
-      <button class="navbtn casal-nav" data-casal-view="casal-config">Configurações</button>
+      <button class="navbtn casal-nav active" data-casal-view="casal-painel">🏡 Visão geral</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-aportes">💰 Guardar dinheiro</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-historico">📅 Histórico mensal</button>
+      <button class="navbtn casal-nav" data-casal-view="casal-config">⚙️ Configurações</button>
     </aside>
 
     <main class="content">
       <section id="view-casal-painel" class="view casal-view active">
-        <div class="card houseCard">
+        <div class="card futureLead">
           <div class="monthHeader">
-            <div><h2>Dinheiro para o nosso futuro</h2><p class="sub" style="margin-bottom:0">Uma única conta conjunta. Sem meta mensal fixa: guardem o que realmente for possível.</p></div>
+            <div><div class="softTag">🏠 Fundo conjunto do casal</div><h2>Dinheiro para o nosso futuro</h2><p class="sub" style="margin-bottom:0">Uma única conta conjunta. Sem meta mensal fixa: guardem o que realmente for possível.</p></div>
             <div class="tag">Senha exclusiva 171025</div>
           </div>
         </div>
 
         <div class="coupleGrid section">
-          <div class="card metric"><div class="label">Saldo conjunto</div><div class="value good" id="casalTotal">R$ 0,00</div><div class="kpiNote">R$ 2.000 iniciais + todos os aportes</div></div>
-          <div class="card metric"><div class="label">Guardado neste mês</div><div class="value blue" id="casalMes">R$ 0,00</div><div class="kpiNote" id="casalMesDetalhe">total conjunto do mês</div></div>
-          <div class="card metric"><div class="label">Média mensal real</div><div class="value" id="casalMedia">R$ 0,00</div><div class="kpiNote">média apenas dos meses com aportes</div></div>
+          <div class="card metric futureCard"><div class="label">Saldo conjunto</div><div class="value good" id="casalTotal">R$ 0,00</div><div class="kpiNote">R$ 2.000 iniciais + todos os aportes</div></div>
+          <div class="card metric futureCard"><div class="label">Guardado neste mês</div><div class="value blue" id="casalMes">R$ 0,00</div><div class="kpiNote" id="casalMesDetalhe">total conjunto do mês</div></div>
+          <div class="card metric futureCard"><div class="label">Média mensal real</div><div class="value" id="casalMedia">R$ 0,00</div><div class="kpiNote">média apenas dos meses com aportes</div></div>
         </div>
 
-        <div class="section card personCard">
-          <h2>Conta conjunta</h2><p class="sub">Todo valor registrado entra no mesmo fundo, sem separar quem guardou.</p>
+        <div class="section card futureShowcase">
+          <div class="softTag">🏡 Conta conjunta</div>
+          <h2>Patrimônio guardado</h2><p class="sub">Todo valor registrado entra no mesmo fundo, sem separar quem guardou.</p>
           <div class="moneyBig" id="casalTotalConjunto">R$ 0,00</div>
           <div class="rowline"><span>Guardado nesta competência</span><strong id="casalMesConjunto">R$ 0,00</strong></div>
         </div>
 
-        <div class="section card">
-          <h2>Projeção mantendo o ritmo real</h2><p class="sub">A projeção usa somente a média do que vocês realmente registraram. Sem referência ou obrigação mensal.</p>
+        <div class="section card futureProjection">
+          <div class="softTag">📈 Projeção do fundo</div><h2>Projeção mantendo o ritmo real</h2><p class="sub">A projeção usa somente a média do que vocês realmente registraram. Sem referência ou obrigação mensal.</p>
           <div class="planGrid">
             <div class="planBox"><span>Em 12 meses</span><strong id="casalProj12">R$ 0,00</strong></div>
             <div class="planBox"><span>Em 24 meses</span><strong id="casalProj24">R$ 0,00</strong></div>
@@ -352,7 +396,7 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
       <section id="view-casal-aportes" class="view casal-view">
         <div class="card">
-          <h2>Guardar dinheiro</h2><p class="sub">Registre qualquer valor que vocês realmente separarem para o fundo conjunto.</p>
+          <h2>💰 Guardar dinheiro</h2><p class="sub">Registre qualquer valor que vocês realmente separarem para o fundo conjunto.</p>
           <div class="three">
             <div><label>Valor</label><input type="number" id="casalValor" min="0" step="0.01" placeholder="0,00"></div>
             <div><label>Data</label><input type="date" id="casalData"></div>
@@ -360,16 +404,16 @@ input[type="number"]{font-variant-numeric:tabular-nums}
           </div>
           <div class="actions"><button class="btn-success" id="btnCasalAporte">Guardar no fundo conjunto</button></div>
         </div>
-        <div class="section card"><h2>Últimos aportes</h2><div id="casalAportesLista"></div></div>
+        <div class="section card futureCard"><h2>🧾 Últimos aportes</h2><div id="casalAportesLista"></div></div>
       </section>
 
       <section id="view-casal-historico" class="view casal-view">
-        <div class="card"><h2>Evolução mês a mês</h2><p class="sub">Mostra quanto entrou no fundo conjunto e o saldo acumulado.</p><div id="casalHistoricoMensal"></div></div>
+        <div class="card futureCard"><h2>📅 Evolução mês a mês</h2><p class="sub">Mostra quanto entrou no fundo conjunto e o saldo acumulado.</p><div id="casalHistoricoMensal"></div></div>
       </section>
 
       <section id="view-casal-config" class="view casal-view">
         <div class="card">
-          <h2>Configurações do fundo</h2><p class="sub">O saldo inicial continua sendo conjunto. Não existe referência mensal.</p>
+          <h2>⚙️ Configurações do fundo</h2><p class="sub">O saldo inicial continua sendo conjunto. Não existe referência mensal.</p>
           <div class="two">
             <div><label>Saldo inicial conjunto</label><input type="number" id="casalCfgInicial" step="0.01"></div>
             <div><label>Meta de entrada (opcional)</label><input type="number" id="casalCfgMetaCasa" step="0.01" placeholder="Pode deixar em branco"></div>
