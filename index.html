@@ -91,7 +91,7 @@ input[type="number"]{font-variant-numeric:tabular-nums}
       <button class="navbtn" data-view="dividas">Empréstimos</button>
       <button class="navbtn" data-view="fluxo">Fluxo do mês</button>
       <button class="navbtn" data-view="lancamentos">HE e gastos</button>
-      <button class="navbtn" data-view="metas">Reserva e independência</button>
+      <button class="navbtn" data-view="metas">Quanto guardar</button>
       <button class="navbtn" data-view="config">Configurações</button>
       <button class="navbtn" data-view="historico">Fechamentos</button>
     </aside>
@@ -122,11 +122,10 @@ input[type="number"]{font-variant-numeric:tabular-nums}
             <div class="info" style="margin-top:14px">O saldo nominal já considera a baixa automática da competência selecionada. A estimativa de quitação é exibida somente para os contratos CLT.</div>
           </div>
           <div class="card">
-            <h2>Plano de independência</h2><p class="sub">Janeiro/2027 é o mês 1 do plano de 24 meses.</p>
+            <h2>Plano financeiro</h2><p class="sub">Janeiro/2027 é o mês 1 do acompanhamento oficial de 24 meses.</p>
             <div class="rowline"><span>Mês do plano</span><strong id="planoMes"></strong></div>
-            <div class="rowline"><span>Meta final</span><strong>Dezembro/2028</strong></div>
-            <div class="rowline"><span>Reserva atual</span><strong id="reservaAtualTxt"></strong></div>
-            <div class="rowline"><span>Fundo independência</span><strong id="fundoAtualTxt"></strong></div>
+            <div class="rowline"><span>Período final</span><strong>Dezembro/2028</strong></div>
+            <div class="rowline"><span>Situação da competência</span><strong id="planoSaldoMes"></strong></div>
             <div class="progress"><div class="bar" id="barPlano"></div></div>
             <div class="small" id="planoStatus" style="margin-top:9px"></div>
           </div>
@@ -236,30 +235,23 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
       <section id="view-metas" class="view">
         <div class="card">
-          <h2>Guardar o possível</h2>
-          <p class="sub">Sem meta fixa por enquanto. O sistema calcula o que sobra depois dos compromissos do mês e você decide quanto realmente consegue guardar.</p>
+          <h2>Quanto guardar neste mês</h2>
+          <p class="sub">A recomendação usa somente o que realmente sobra depois de INSS, empréstimos, contas recorrentes e gastos variáveis lançados.</p>
           <div class="planGrid">
-            <div class="planBox"><span>Livre estimado antes de guardar</span><strong id="livreAntesAportes"></strong></div>
-            <div class="planBox"><span>Já guardado nesta competência</span><strong id="guardadoMes"></strong></div>
-            <div class="planBox"><span>Ainda disponível para decidir</span><strong id="potencialGuardar"></strong></div>
+            <div class="planBox"><span>Saldo após pagar tudo</span><strong id="guardarSaldoMes"></strong></div>
+            <div class="planBox"><span>Sugestão para guardar</span><strong id="guardarSugestao"></strong></div>
+            <div class="planBox"><span>Saldo que permaneceria</span><strong id="guardarSaldoDepois"></strong></div>
           </div>
-          <div class="info" style="margin-top:16px"><strong>Regra atual:</strong> não existe obrigação de guardar um valor específico. Primeiro vêm empréstimos, contas, carro e gastos necessários. Do que realmente sobrar, você registra o valor que conseguiu separar.</div>
+          <div id="guardarMensagem" class="info" style="margin-top:16px"></div>
         </div>
-        <div class="section two">
-          <div class="card">
-            <h2>Reserva financeira</h2><p class="sub">Dinheiro de segurança. Guarde quando houver sobra, sem uma meta obrigatória.</p>
-            <div class="rowline"><span>Total guardado</span><strong id="metaReservaAtual"></strong></div>
-            <div class="three" style="margin-top:15px"><div><label>Valor que conseguiu guardar</label><input type="number" id="aporteReserva" step="0.01"></div><div><label>Data</label><input type="date" id="aporteReservaData"></div></div>
-            <div class="actions"><button class="btn-success" id="btnAporteReserva">Guardar na reserva</button></div>
-          </div>
-          <div class="card">
-            <h2>Fundo de independência</h2><p class="sub">Capital para construir opções fora do CLT. Sem meta fixa neste momento.</p>
-            <div class="rowline"><span>Total acumulado</span><strong id="metaFundoAtual"></strong></div>
-            <div class="three" style="margin-top:15px"><div><label>Valor que conseguiu separar</label><input type="number" id="aporteFundo" step="0.01"></div><div><label>Data</label><input type="date" id="aporteFundoData"></div></div>
-            <div class="actions"><button class="btn-primary" id="btnAporteFundo">Adicionar ao fundo</button></div>
-          </div>
+        <div class="section card">
+          <h2>Como a recomendação funciona</h2>
+          <p class="sub">Não existe teto máximo. A sugestão acompanha sua sobra real e não substitui a conta conjunta “Para nosso futuro”.</p>
+          <div class="rowline"><span>Valor mínimo recomendado quando houver espaço</span><strong>R$ 200,00</strong></div>
+          <div class="rowline"><span>Acima do mínimo</span><strong>aprox. 50% da sobra positiva</strong></div>
+          <div class="rowline"><span>Proteção</span><strong>nunca recomenda 100% do saldo</strong></div>
+          <div class="info" style="margin-top:14px"><strong>Importante:</strong> se a competência ficar negativa ou se a sobra for insuficiente para guardar pelo menos R$ 200 sem zerar o saldo, o sistema recomenda não guardar naquele mês.</div>
         </div>
-        <div class="section card"><h2>Histórico do que foi guardado</h2><div id="aportesLista"></div></div>
       </section>
 
       <section id="view-config" class="view">
@@ -489,14 +481,14 @@ function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus'
  unsubs.push(onSnapshot(p.aportes,s=>{state.aportes=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
  seedDividasSeNecessario(user.uid).catch(console.error);
 }
-function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo(),reserva=aportes('RESERVA'),fundo=aportes('FUNDO');
+function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo();
  $('mesPainel').value=competencia;$('periodoAtual').textContent=`Competência selecionada: ${fmtMes(competencia)} • Plano oficial desde janeiro/2027`;$('tagCompetencia').textContent=fmtMes(competencia);
  $('mBase').textContent=BRL.format(c.sal);$('mRenda').textContent=BRL.format(c.rendaLiquida);$('mCompromissos').textContent=BRL.format(c.comp);$('mDivida').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));$('mLivre').textContent=BRL.format(c.livre);$('mLivre').className='value '+(c.livre>=0?'good':'bad');
  $('folhaBase').textContent=BRL.format(c.sal);$('folhaHE').textContent=c.he>0?'+ '+BRL.format(c.he):BRL.format(0);$('folhaINSS').textContent='− '+BRL.format(c.inss);$('folhaLiquido').textContent=BRL.format(c.rendaLiquida);
  $('logicaLiquido').textContent=BRL.format(c.rendaLiquida);$('logicaComp').textContent='− '+BRL.format(c.comp);$('logicaSaldo').textContent=BRL.format(c.livre);$('logicaSaldo').className=c.livre>=0?'good':'bad';
  $('resCLT').textContent=`${BRL.format(saldoTipo('CLT'))} • ${BRL.format(c.clt)}/mês`;$('resBanco').textContent=`${BRL.format(saldoTipo('BANCARIO'))} • ${BRL.format(c.banco)}/mês`;$('resOutros').textContent=`${BRL.format(saldoTipo('OUTRO'))} • ${BRL.format(c.outro)}/mês`;$('resDividaTotal').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));
- $('planoMes').textContent=p.txt;$('barPlano').style.width=Math.min(100,p.pct)+'%';$('planoStatus').textContent=p.status;$('reservaAtualTxt').textContent=BRL.format(reserva);$('fundoAtualTxt').textContent=BRL.format(fundo);
- renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderMetas(reserva,fundo,c);renderHistorico();preencherConfig();}
+ $('planoMes').textContent=p.txt;$('barPlano').style.width=Math.min(100,p.pct)+'%';$('planoStatus').textContent=p.status;$('planoSaldoMes').textContent=c.livre>0?'Positiva':(c.livre<0?'Negativa':'Zerada');$('planoSaldoMes').className=c.livre>0?'good':(c.livre<0?'bad':'');
+ renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderRecomendacaoGuardar(c);renderHistorico();preencherConfig();}
 function dataReferenciaQuitacao(mes=competencia){
  const hoje=new Date();const mesHoje=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
  let d;if(mes===mesHoje){d=hoje}else if(mes>mesHoje){const [y,m]=mes.split('-').map(Number);d=new Date(y,m-1,1,12)}else{const [y,m]=mes.split('-').map(Number);d=new Date(y,m,0,12)}
@@ -525,15 +517,28 @@ function renderFluxo(c){
 }
 function renderHE(){const arr=hesMes();const calc=calcHE();if(arr.length&&!calc.jornadaOk){$('heLista').innerHTML='<div class="warn" style="margin-top:12px"><strong>Atenção:</strong> informe sua jornada mensal em Configurações para calcular o valor financeiro da HE.</div>';}else $('heLista').innerHTML=!arr.length?'<p class="small">Nenhuma HE lançada nesta competência.</p>':'<table><tr><th>Data</th><th>Tipo</th><th>Horas</th><th>Obs.</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td><span class="pill">${x.tipo}%</span></td><td>${fmtHorasDecimal(x.horas)}</td><td>${escapeHtml(x.obs||'')}</td><td><button class="btn-danger btn-sm" data-delhe="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
 function renderGastos(){const arr=gastosMes();$('gLista').innerHTML=!arr.length?'<p class="small">Nenhum gasto variável nesta competência.</p>':'<table><tr><th>Data</th><th>Categoria</th><th>Valor</th><th>Descrição</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td>${escapeHtml(x.cat)}</td><td>${BRL.format(x.valor)}</td><td>${escapeHtml(x.desc||'')}</td><td><button class="btn-danger btn-sm" data-delgasto="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
-function renderMetas(reserva,fundo,c){
- const guardado=aportesMes(),potencial=Math.max(0,c.livre-guardado);
- $('metaReservaAtual').textContent=BRL.format(reserva);
- $('metaFundoAtual').textContent=BRL.format(fundo);
- $('livreAntesAportes').textContent=BRL.format(Math.max(0,c.livre));
- $('guardadoMes').textContent=BRL.format(guardado);
- $('potencialGuardar').textContent=BRL.format(potencial);
- $('potencialGuardar').className=potencial>0?'good':'';
- $('aportesLista').innerHTML=!state.aportes.length?'<p class="small">Nenhum valor guardado ainda.</p>':'<table><tr><th>Data</th><th>Destino</th><th>Valor</th><th></th></tr>'+state.aportes.slice().sort((a,b)=>b.data.localeCompare(a.data)).map(a=>`<tr><td>${fmtDataIso(a.data)}</td><td>${a.tipo==='RESERVA'?'Reserva':'Fundo de independência'}</td><td>${BRL.format(a.valor)}</td><td><button class="btn-danger btn-sm" data-delaporte="${a.id}">Excluir</button></td></tr>`).join('')+'</table>'
+function renderRecomendacaoGuardar(c){
+ const saldo=Number(c.livre)||0;
+ let sugestao=0,mensagem='',classe='info';
+ if(saldo<=0){
+   mensagem=`<strong>${fmtMes(competencia)} não gerou saldo positivo para guardar.</strong> O saldo projetado após todos os compromissos é <span class="bad">${BRL.format(saldo)}</span>. Neste mês, a recomendação é não retirar dinheiro para poupança e priorizar fechar a competência sem aumentar o déficit.`;
+ }else if(saldo<=200){
+   mensagem=`<strong>Há saldo positivo, mas ainda não há espaço seguro para a meta mínima de R$ 200,00.</strong> A sobra projetada é ${BRL.format(saldo)}. Guardar R$ 200,00 zeraria ou ultrapassaria o saldo disponível, então a recomendação deste mês é preservar o caixa.`;
+ }else{
+   sugestao=Math.max(200,Math.floor((saldo*0.50)/10)*10);
+   if(sugestao>=saldo)sugestao=Math.max(0,Math.floor((saldo-0.01)/10)*10);
+   const depois=saldo-sugestao;
+   mensagem=`<strong>Este mês permite guardar.</strong> Pela sobra projetada de ${BRL.format(saldo)}, a sugestão é separar <span class="good">${BRL.format(sugestao)}</span>. Depois disso ainda permaneceriam ${BRL.format(depois)} disponíveis. Você pode guardar mais se quiser; o sistema não impõe limite máximo.`;
+ }
+ const depois=Math.max(0,saldo-sugestao);
+ $('guardarSaldoMes').textContent=BRL.format(saldo);
+ $('guardarSaldoMes').className=saldo>0?'good':(saldo<0?'bad':'');
+ $('guardarSugestao').textContent=sugestao>0?BRL.format(sugestao):'R$ 0,00';
+ $('guardarSugestao').className=sugestao>0?'good':'';
+ $('guardarSaldoDepois').textContent=BRL.format(depois);
+ $('guardarSaldoDepois').className=depois>0?'good':'';
+ $('guardarMensagem').className=(saldo<=0?'warn':'info');
+ $('guardarMensagem').innerHTML=mensagem;
 }
 function renderHistorico(){$('historico').innerHTML=!state.fechamentos.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Competência</th><th>Renda líquida est.</th><th>Compromissos</th><th>Dívida futura</th><th>Livre</th><th></th></tr>'+state.fechamentos.slice().sort((a,b)=>(b.competencia||'').localeCompare(a.competencia||'')).map(x=>`<tr><td>${x.competencia?fmtMes(x.competencia):x.periodo||'-'}</td><td>${BRL.format(x.renda||x.liquido||0)}</td><td>${BRL.format(x.compromissos||0)}</td><td>${BRL.format(x.dividaFutura||0)}</td><td class="${Number(x.livre??x.saldo)>=0?'good':'bad'}">${BRL.format(x.livre??x.saldo??0)}</td><td><button class="btn-danger btn-sm" data-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
 function preencherConfig(){$('cfgSalario').value=state.config.salario||'';$('cfgJornada').value=state.config.jornada||'';$('cfgValePct').value=state.config.valePct??40;$('cfgOutrosDescontos').value=state.config.outrosDescontos||'';$('cfgFarmacia').value=state.config.farmacia||'';$('cfgCesta').value=state.config.cesta||'';$('cfgMae').value=state.config.mae||'';$('cfgCarro').value=state.config.carro||''}
@@ -572,7 +577,7 @@ document.addEventListener('click',async e=>{
  const casalNav=e.target.closest('[data-casal-view]');if(casalNav){document.querySelectorAll('.casal-nav').forEach(x=>x.classList.toggle('active',x===casalNav));document.querySelectorAll('.casal-view').forEach(x=>x.classList.remove('active'));$('view-'+casalNav.dataset.casalView)?.classList.add('active');sessionStorage.setItem('planoCasalView',casalNav.dataset.casalView);return}
  const casalDel=e.target.closest('[data-casal-delaporte]');if(casalDel&&currentUser&&areaAtiva==='CASAL'){if(confirm('Excluir este aporte do fundo conjunto?'))await deleteDoc(doc(casalPaths(currentUser.uid).aportes,casalDel.dataset.casalDelaporte));return}
  const nav=e.target.closest('[data-view]');if(nav){document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===nav));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+nav.dataset.view)?.classList.add('active');sessionStorage.setItem('planoFinanceiroView',nav.dataset.view);return}
- if(!currentUser)return;const p=paths(currentUser.uid),a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]'),d=e.target.closest('[data-deldivida]'),an=e.target.closest('[data-antecipar]'),eq=e.target.closest('[data-editquit]'),ap=e.target.closest('[data-delaporte]');
+ if(!currentUser)return;const p=paths(currentUser.uid),a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]'),d=e.target.closest('[data-deldivida]'),an=e.target.closest('[data-antecipar]'),eq=e.target.closest('[data-editquit]');
  if(a&&confirm('Excluir esta hora extra?'))await deleteDoc(doc(p.horas,a.dataset.delhe));if(b&&confirm('Excluir este gasto?'))await deleteDoc(doc(p.gastos,b.dataset.delgasto));if(c&&confirm('Excluir este fechamento?'))await deleteDoc(doc(p.fechamentos,c.dataset.delfech));if(ap&&confirm('Excluir este valor guardado?'))await deleteDoc(doc(p.aportes,ap.dataset.delaporte));
  if(d&&confirm('Excluir este contrato?'))await deleteDoc(doc(p.dividas,d.dataset.deldivida));
  if(an){const div=state.dividas.find(x=>x.id===an.dataset.antecipar);if(!div)return;const qtd=Number(prompt(`Quantas parcelas de ${div.nome} foram antecipadas?`,'1'));if(!qtd||qtd<=0)return;const valor=Number(prompt('Quanto você pagou nessa antecipação? (opcional, pode deixar 0)','0'))||0;const data=prompt('Data da antecipação (AAAA-MM-DD)',new Date().toISOString().slice(0,10));if(!/^\d{4}-\d{2}-\d{2}$/.test(data||''))return alert('Data inválida.');const id=uuid();await setDoc(doc(p.antecipacoes,id),{dividaId:div.id,parcelas:Math.floor(qtd),valor,data,createdAt:new Date().toISOString()})}
@@ -584,14 +589,12 @@ $('btnAddHE').onclick=async()=>{if(!currentUser)return;const data=$('heData').va
 $('btnAddGasto').onclick=async()=>{if(!currentUser)return;const data=$('gData').value,cat=$('gCat').value,valor=Number($('gValor').value),desc=$('gDesc').value.trim();if(!data||!valor||valor<=0)return alert('Preencha data e valor.');const id=uuid();await setDoc(doc(paths(currentUser.uid).gastos,id),{data,cat,valor,desc,createdAt:new Date().toISOString()});$('gValor').value='';$('gDesc').value=''};
 $('btnAddDivida').onclick=async()=>{if(!currentUser)return;const nome=$('dNome').value.trim(),tipo=$('dTipo').value,parcela=Number($('dParcela').value),total=Number($('dTotal').value),taxaJuros=Number($('dTaxa').value)||0,inicio=$('dInicio').value,quitacao=Number($('dQuitacao').value)||0;if(!nome||!parcela||!total||!inicio)return alert('Preencha nome, parcela, total e início.');const id=uuid();await setDoc(doc(paths(currentUser.uid).dividas,id),{nome,tipo,parcela,total:Math.floor(total),taxaJuros,inicio,quitacao,createdAt:new Date().toISOString()});['dNome','dParcela','dTotal','dTaxa','dInicio','dQuitacao'].forEach(id=>$(id).value='')};
 $('btnSalvarConfig').onclick=async()=>{if(!currentUser)return;const cfg={salario:Number($('cfgSalario').value)||0,jornada:Number($('cfgJornada').value)||0,valePct:Number($('cfgValePct').value)||0,outrosDescontos:Number($('cfgOutrosDescontos').value)||0,farmacia:Number($('cfgFarmacia').value)||0,cesta:Number($('cfgCesta').value)||0,mae:Number($('cfgMae').value)||0,carro:Number($('cfgCarro').value)||0,planoInicio:'2027-01',planoMeses:24,configurado:true,updatedAt:serverTimestamp()};await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas.')};
-async function addAporte(tipo){if(!currentUser)return;const valor=Number($(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value),data=$(tipo==='RESERVA'?'aporteReservaData':'aporteFundoData').value;if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(paths(currentUser.uid).aportes,id),{tipo,valor,data,createdAt:new Date().toISOString()});$(tipo==='RESERVA'?'aporteReserva':'aporteFundo').value=''}
-$('btnAporteReserva').onclick=()=>addAporte('RESERVA');$('btnAporteFundo').onclick=()=>addAporte('FUNDO');
-$('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,reserva:aportes('RESERVA'),fundo:aportes('FUNDO'),criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
+$('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
 
 $('btnCasalAporte').onclick=()=>addCasalAporte();
 $('btnCasalSalvarConfig').onclick=async()=>{if(!currentUser||areaAtiva!=='CASAL')return;const cfg={saldoInicialConjunto:Number($('casalCfgInicial').value)||0,metaCasa:Number($('casalCfgMetaCasa').value)||0,configurado:true,updatedAt:serverTimestamp()};await setDoc(casalPaths(currentUser.uid).config,cfg,{merge:true});alert('Configurações do fundo salvas.')};
 
-const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','aporteReservaData','aporteFundoData','casalData'].forEach(id=>$(id).value=hojeIso);
+const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','casalData'].forEach(id=>$(id).value=hojeIso);
 const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const casalViewSalva=sessionStorage.getItem('planoCasalView');if(casalViewSalva){const btn=document.querySelector(`[data-casal-view="${casalViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
 </script>
 </body>
