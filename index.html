@@ -109,7 +109,7 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
 
 
-/* ===== área 1810 — controle financeiro não CLT ===== */
+/* ===== área 181082 — controle financeiro não CLT ===== */
 .freeHero{background:linear-gradient(135deg,#0f172a 0%,#134e4a 48%,#0f766e 100%)}
 .freeAccent{border-left:5px solid #0f766e}
 .freeSoft{background:linear-gradient(180deg,#ffffff 0%,#f7fbfa 100%);border-color:#d7e8e5}
@@ -535,7 +535,7 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,updatePassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 import { initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,collection,setDoc,deleteDoc,onSnapshot,getDoc,getDocs,serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyAUWXZ7T0wDUoCMO53lNRXVzLO68tMWAck",authDomain:"controle-hr-extra.firebaseapp.com",projectId:"controle-hr-extra",storageBucket:"controle-hr-extra.firebasestorage.app",messagingSenderId:"99291846127",appId:"1:99291846127:web:5370d6a763b8db357a521a",measurementId:"G-ZLK1F9F01B"};
@@ -543,13 +543,13 @@ const appFirebase=initializeApp(firebaseConfig);
 const firestore=initializeFirestore(appFirebase,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
 const auth=getAuth(appFirebase);
 const EMAIL_FIXO='controle.pessoal.161004@hr-extra.app';
-const HASH_SENHA_CORRETA='6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
+const HASH_SENHA_CORRETA='33601222d92b5628e7863d9ca1a93c22b3cd52af47354e0ec7b6b45e5fd6944a'; // 140515
 const EMAIL_CASAL='controle.casal.171025@hr-extra.app';
 const HASH_SENHA_CASAL='79c672ad849d58c03a17588c0a91f2a53b384f52a2c41d623fab806e381d76c9';
-const EMAIL_LIVRE='controle.livre.1810@hr-extra.app';
-const HASH_SENHA_LIVRE='1a09807a0e6928a66d91025ed5fccd713c9edb101e72a1bbcb8a01cd9a53cb51';
-const EMAIL_PESSOAL_ZERO='controle.pessoal.1610@hr-extra.app';
-const HASH_SENHA_PESSOAL_ZERO='31d8edb99534fd4800651db4d241d86e0380fa7376718b88590c2d772b41d5f4';
+const EMAIL_LIVRE='controle.livre.181082@hr-extra.app';
+const HASH_SENHA_LIVRE='7574a318183647273a1de883e10ec136b94f40b4785097d8b58ba0fed9f32733'; // 181082
+const EMAIL_PESSOAL_ZERO='controle.pessoal.novo.161004@hr-extra.app';
+const HASH_SENHA_PESSOAL_ZERO='6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb'; // 161004
 const BRL=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const $=id=>document.getElementById(id); const uuid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 
@@ -823,7 +823,60 @@ async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=aw
 function abrirApp(zerado=false){modoPessoalZero=!!zerado;$('authScreen').classList.add('hidden');$('casalApp').style.display='none';$('livreApp').style.display='none';$('app').style.display='block';areaAtiva=zerado?'PESSOAL_ZERO':'PESSOAL';const titulo=document.querySelector('#app .topbar h1');if(titulo)titulo.textContent=zerado?'Meu Plano Financeiro — Novo':'Meu Plano Financeiro';render()}
 function mostrarLogin(msg=''){$('app').style.display='none';$('casalApp').style.display='none';$('livreApp').style.display='none';$('authScreen').classList.remove('hidden');areaAtiva=null;if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
 function bloquearApp(){desbloqueado=false;pessoalZeroDesbloqueado=false;casalDesbloqueado=false;livreDesbloqueado=false;modoPessoalZero=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoFinanceiroZeroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');sessionStorage.removeItem('planoLivreDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
-async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{const hash=await sha256(senha);let email,modo;if(hash===HASH_SENHA_CORRETA){email=EMAIL_FIXO;modo='PESSOAL'}else if(hash===HASH_SENHA_PESSOAL_ZERO){email=EMAIL_PESSOAL_ZERO;modo='PESSOAL_ZERO'}else if(hash===HASH_SENHA_CASAL){email=EMAIL_CASAL;modo='CASAL'}else if(hash===HASH_SENHA_LIVRE){email=EMAIL_LIVRE;modo='LIVRE'}else{$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,email,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,email,senha)}else throw e}currentUser=cred.user;clearListeners();desbloqueado=modo==='PESSOAL';pessoalZeroDesbloqueado=modo==='PESSOAL_ZERO';casalDesbloqueado=modo==='CASAL';livreDesbloqueado=modo==='LIVRE';sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoFinanceiroZeroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');sessionStorage.removeItem('planoLivreDesbloqueado');state={config:{...(modo==='PESSOAL_ZERO'?DEFAULT_CONFIG_ZERO:DEFAULT_CONFIG)},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};if(modo==='PESSOAL'){sessionStorage.setItem('planoFinanceiroDesbloqueado','1');startSync(currentUser,false);abrirApp(false)}else if(modo==='PESSOAL_ZERO'){sessionStorage.setItem('planoFinanceiroZeroDesbloqueado','1');startSync(currentUser,true);abrirApp(true)}else if(modo==='CASAL'){sessionStorage.setItem('planoCasalDesbloqueado','1');startCasalSync(currentUser);abrirCasal()}else{sessionStorage.setItem('planoLivreDesbloqueado','1');startLivreSync(currentUser);abrirLivre()}$('loginSenha').value='';$('authMsg').textContent=''}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
+async function entrar(){
+ if(loginEmAndamento)return;
+ const senha=$('loginSenha').value.trim();
+ if(!senha){$('authMsg').textContent='Digite sua senha.';return}
+ loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';
+ try{
+  const hash=await sha256(senha);let email,modo;
+  if(hash===HASH_SENHA_CORRETA){email=EMAIL_FIXO;modo='PESSOAL'}
+  else if(hash===HASH_SENHA_PESSOAL_ZERO){email=EMAIL_PESSOAL_ZERO;modo='PESSOAL_ZERO'}
+  else if(hash===HASH_SENHA_CASAL){email=EMAIL_CASAL;modo='CASAL'}
+  else if(hash===HASH_SENHA_LIVRE){email=EMAIL_LIVRE;modo='LIVRE'}
+  else{$('authMsg').textContent='Senha incorreta.';return}
+
+  let cred;
+  if(modo==='PESSOAL'){
+   // O plano com seus dados já existe na conta antiga. Na primeira entrada com 140515,
+   // tenta a senha nova; se ainda não tiver sido migrada, entra com a senha antiga e
+   // atualiza a senha Firebase para 140515 preservando o mesmo UID e todos os dados.
+   try{
+    cred=await signInWithEmailAndPassword(auth,email,senha);
+   }catch(e){
+    if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){
+     $('authMsg').textContent='Atualizando seu acesso sem perder os dados…';
+     cred=await signInWithEmailAndPassword(auth,email,'161004');
+     await updatePassword(cred.user,senha);
+    }else throw e;
+   }
+  }else{
+   try{cred=await signInWithEmailAndPassword(auth,email,senha)}
+   catch(e){
+    if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found')cred=await createUserWithEmailAndPassword(auth,email,senha);
+    else throw e;
+   }
+  }
+
+  currentUser=cred.user;clearListeners();
+  desbloqueado=modo==='PESSOAL';pessoalZeroDesbloqueado=modo==='PESSOAL_ZERO';casalDesbloqueado=modo==='CASAL';livreDesbloqueado=modo==='LIVRE';
+  sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoFinanceiroZeroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');sessionStorage.removeItem('planoLivreDesbloqueado');
+  state={config:{...(modo==='PESSOAL_ZERO'?DEFAULT_CONFIG_ZERO:DEFAULT_CONFIG)},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};
+  if(modo==='PESSOAL'){sessionStorage.setItem('planoFinanceiroDesbloqueado','1');startSync(currentUser,false);abrirApp(false)}
+  else if(modo==='PESSOAL_ZERO'){sessionStorage.setItem('planoFinanceiroZeroDesbloqueado','1');startSync(currentUser,true);abrirApp(true)}
+  else if(modo==='CASAL'){sessionStorage.setItem('planoCasalDesbloqueado','1');startCasalSync(currentUser);abrirCasal()}
+  else{sessionStorage.setItem('planoLivreDesbloqueado','1');startLivreSync(currentUser);abrirLivre()}
+  $('loginSenha').value='';$('authMsg').textContent='';
+ }catch(e){
+  console.error(e);
+  const mensagens={
+   'auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.',
+   'auth/too-many-requests':'Muitas tentativas seguidas. Aguarde um pouco e tente novamente.',
+   'auth/network-request-failed':'Sem conexão com o Firebase no momento.'
+  };
+  $('authMsg').textContent=mensagens[e.code]||'Não foi possível acessar seus dados agora.';
+ }finally{loginEmAndamento=false;$('btnEntrar').disabled=false}
+}
 $('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;$('btnCasalSair').onclick=bloquearApp;$('btnLivreSair').onclick=bloquearApp;
 onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO&&desbloqueado){state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};startSync(user,false);abrirApp(false)}else if(user&&user.email===EMAIL_PESSOAL_ZERO&&pessoalZeroDesbloqueado){state={config:{...DEFAULT_CONFIG_ZERO},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};startSync(user,true);abrirApp(true)}else if(user&&user.email===EMAIL_CASAL&&casalDesbloqueado){startCasalSync(user);abrirCasal()}else if(user&&user.email===EMAIL_LIVRE&&livreDesbloqueado){startLivreSync(user);abrirLivre()}else mostrarLogin('')});
 
@@ -837,7 +890,7 @@ document.addEventListener('click',async e=>{
  const casalDel=e.target.closest('[data-casal-delaporte]');if(casalDel&&currentUser&&areaAtiva==='CASAL'){if(confirm('Excluir este aporte do fundo conjunto?'))await deleteDoc(doc(casalPaths(currentUser.uid).aportes,casalDel.dataset.casalDelaporte));return}
  const nav=e.target.closest('[data-view]');if(nav){document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===nav));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+nav.dataset.view)?.classList.add('active');sessionStorage.setItem('planoFinanceiroView',nav.dataset.view);return}
  if(!currentUser)return;const p=paths(currentUser.uid),a=e.target.closest('[data-delhe]'),b=e.target.closest('[data-delgasto]'),c=e.target.closest('[data-delfech]'),d=e.target.closest('[data-deldivida]'),an=e.target.closest('[data-antecipar]'),eq=e.target.closest('[data-editquit]');
- if(a&&confirm('Excluir esta hora extra?'))await deleteDoc(doc(p.horas,a.dataset.delhe));if(b&&confirm('Excluir este gasto?'))await deleteDoc(doc(p.gastos,b.dataset.delgasto));if(c&&confirm('Excluir este fechamento?'))await deleteDoc(doc(p.fechamentos,c.dataset.delfech));if(ap&&confirm('Excluir este valor guardado?'))await deleteDoc(doc(p.aportes,ap.dataset.delaporte));
+ if(a&&confirm('Excluir esta hora extra?'))await deleteDoc(doc(p.horas,a.dataset.delhe));if(b&&confirm('Excluir este gasto?'))await deleteDoc(doc(p.gastos,b.dataset.delgasto));if(c&&confirm('Excluir este fechamento?'))await deleteDoc(doc(p.fechamentos,c.dataset.delfech));
  if(d&&confirm('Excluir este contrato?'))await deleteDoc(doc(p.dividas,d.dataset.deldivida));
  if(an){const div=state.dividas.find(x=>x.id===an.dataset.antecipar);if(!div)return;const qtd=Number(prompt(`Quantas parcelas de ${div.nome} foram antecipadas?`,'1'));if(!qtd||qtd<=0)return;const valor=Number(prompt('Quanto você pagou nessa antecipação? (opcional, pode deixar 0)','0'))||0;const data=prompt('Data da antecipação (AAAA-MM-DD)',new Date().toISOString().slice(0,10));if(!/^\d{4}-\d{2}-\d{2}$/.test(data||''))return alert('Data inválida.');const id=uuid();await setDoc(doc(p.antecipacoes,id),{dividaId:div.id,parcelas:Math.floor(qtd),valor,data,createdAt:new Date().toISOString()})}
  if(eq){const div=state.dividas.find(x=>x.id===eq.dataset.editquit);if(!div)return;const v=Number(prompt(`Valor atual para quitar ${div.nome}:`,String(div.quitacao||'')));if(Number.isNaN(v)||v<0)return;await setDoc(doc(p.dividas,div.id),{quitacao:v,quitacaoAtualizadaEm:new Date().toISOString(),updatedAt:serverTimestamp()},{merge:true})}
