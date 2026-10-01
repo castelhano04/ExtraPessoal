@@ -132,8 +132,31 @@ input[type="number"]{font-variant-numeric:tabular-nums}
           </div>
         </div>
 
+        <div class="section two">
+          <div class="card">
+            <h2>Descontos da folha</h2>
+            <p class="sub">O INSS é calculado sobre salário bruto + HE válida e já é abatido antes do saldo do mês.</p>
+            <div class="rowline"><span>Salário bruto base</span><strong id="folhaBase"></strong></div>
+            <div class="rowline"><span>Hora extra considerada</span><strong id="folhaHE"></strong></div>
+            <div class="rowline"><span>INSS estimado</span><strong class="bad" id="folhaINSS"></strong></div>
+            <hr>
+            <div class="rowline"><span><strong>Salário líquido estimado</strong></span><strong class="blue" id="folhaLiquido"></strong></div>
+            <div class="small">O INSS não entra novamente nos compromissos abaixo, evitando desconto em duplicidade.</div>
+          </div>
+          <div class="card">
+            <h2>Leitura do saldo</h2>
+            <p class="sub">Resumo da lógica usada no painel.</p>
+            <div class="rowline"><span>Renda líquida estimada</span><strong id="logicaLiquido"></strong></div>
+            <div class="rowline"><span>Compromissos do mês</span><strong class="bad" id="logicaComp"></strong></div>
+            <hr>
+            <div class="rowline"><span><strong>Saldo após compromissos</strong></span><strong id="logicaSaldo"></strong></div>
+            <div class="small">Saldo positivo = sobra estimada. Saldo negativo = valor que ainda falta cobrir no mês.</div>
+          </div>
+        </div>
+
         <div class="section card">
-          <h2>Compromissos automáticos da competência</h2><p class="sub">Esses valores já entram como comprometidos quando o mês vira.</p>
+          <h2>Compromissos do mês</h2>
+          <p class="sub">Empréstimos, custos recorrentes e gastos lançados. O INSS não aparece aqui porque já foi abatido da renda líquida.</p>
           <div id="compromissosResumo"></div>
         </div>
       </section>
@@ -448,7 +471,16 @@ function paths(uid){return{config:doc(firestore,'users',uid,'config','main'),hor
 function clearListeners(){unsubs.forEach(fn=>fn());unsubs=[]}
 async function seedDividasSeNecessario(uid){const p=paths(uid),snap=await getDocs(p.dividas);if(snap.empty){await Promise.all(DIVIDAS_PADRAO.map(d=>setDoc(doc(p.dividas,d.id),{...d,createdAt:new Date().toISOString()})))}}
 function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus').textContent='Sincronizando…';
- unsubs.push(onSnapshot(p.config,async s=>{if(s.exists())state.config={...DEFAULT_CONFIG,...s.data()};else await setDoc(p.config,{...DEFAULT_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});render()}));
+ unsubs.push(onSnapshot(p.config,async s=>{
+   if(s.exists()){
+     state.config={...DEFAULT_CONFIG,...s.data()};
+     if(Math.abs((Number(state.config.salario)||0)-3644)<0.005){
+       state.config.salario=3644.10;
+       await setDoc(p.config,{salario:3644.10,updatedAt:serverTimestamp()},{merge:true});
+     }
+   }else await setDoc(p.config,{...DEFAULT_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   render()
+ }));
  unsubs.push(onSnapshot(p.horas,s=>{state.hes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
  unsubs.push(onSnapshot(p.gastos,s=>{state.gastos=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
  unsubs.push(onSnapshot(p.fechamentos,s=>{state.fechamentos=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
@@ -460,6 +492,8 @@ function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus'
 function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo(),reserva=aportes('RESERVA'),fundo=aportes('FUNDO');
  $('mesPainel').value=competencia;$('periodoAtual').textContent=`Competência selecionada: ${fmtMes(competencia)} • Plano oficial desde janeiro/2027`;$('tagCompetencia').textContent=fmtMes(competencia);
  $('mBase').textContent=BRL.format(c.sal);$('mRenda').textContent=BRL.format(c.rendaLiquida);$('mCompromissos').textContent=BRL.format(c.comp);$('mDivida').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));$('mLivre').textContent=BRL.format(c.livre);$('mLivre').className='value '+(c.livre>=0?'good':'bad');
+ $('folhaBase').textContent=BRL.format(c.sal);$('folhaHE').textContent=c.he>0?'+ '+BRL.format(c.he):BRL.format(0);$('folhaINSS').textContent='− '+BRL.format(c.inss);$('folhaLiquido').textContent=BRL.format(c.rendaLiquida);
+ $('logicaLiquido').textContent=BRL.format(c.rendaLiquida);$('logicaComp').textContent='− '+BRL.format(c.comp);$('logicaSaldo').textContent=BRL.format(c.livre);$('logicaSaldo').className=c.livre>=0?'good':'bad';
  $('resCLT').textContent=`${BRL.format(saldoTipo('CLT'))} • ${BRL.format(c.clt)}/mês`;$('resBanco').textContent=`${BRL.format(saldoTipo('BANCARIO'))} • ${BRL.format(c.banco)}/mês`;$('resOutros').textContent=`${BRL.format(saldoTipo('OUTRO'))} • ${BRL.format(c.outro)}/mês`;$('resDividaTotal').textContent=BRL.format(saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO'));
  $('planoMes').textContent=p.txt;$('barPlano').style.width=Math.min(100,p.pct)+'%';$('planoStatus').textContent=p.status;$('reservaAtualTxt').textContent=BRL.format(reserva);$('fundoAtualTxt').textContent=BRL.format(fundo);
  renderCompromissos(c);renderDividas();renderFluxo(c);renderHE();renderGastos();renderMetas(reserva,fundo,c);renderHistorico();preencherConfig();}
@@ -468,7 +502,7 @@ function dataReferenciaQuitacao(mes=competencia){
  let d;if(mes===mesHoje){d=hoje}else if(mes>mesHoje){const [y,m]=mes.split('-').map(Number);d=new Date(y,m-1,1,12)}else{const [y,m]=mes.split('-').map(Number);d=new Date(y,m,0,12)}
  return d.toLocaleDateString('pt-BR');
 }
-function renderCompromissos(c){const itens=[['Empréstimos CLT',c.clt],['Empréstimo bancário',c.banco],['Parcela adicional',c.outro],['Cartão farmácia',Number(state.config.farmacia)||0],['Cesta básica',Number(state.config.cesta)||0],['Ajuda em casa',Number(state.config.mae)||0],['Carro / gasolina',Number(state.config.carro)||0],['INSS estimado — tabela 2026 (já abatido da renda)',c.inss],['Outros descontos de folha (sem INSS)',Number(state.config.outrosDescontos)||0],['Gastos variáveis lançados',c.variaveis]];$('compromissosResumo').innerHTML='<table><tr><th>Compromisso</th><th>Valor</th></tr>'+itens.filter(x=>x[1]>0).map(x=>`<tr><td>${x[0]}</td><td>${BRL.format(x[1])}</td></tr>`).join('')+'</table>'}
+function renderCompromissos(c){const itens=[['Empréstimos CLT',c.clt],['Empréstimo bancário',c.banco],['Parcela adicional',c.outro],['Cartão farmácia',Number(state.config.farmacia)||0],['Cesta básica',Number(state.config.cesta)||0],['Ajuda em casa',Number(state.config.mae)||0],['Carro / gasolina',Number(state.config.carro)||0],['Outros descontos de folha (sem INSS)',Number(state.config.outrosDescontos)||0],['Gastos variáveis lançados',c.variaveis]];$('compromissosResumo').innerHTML='<table><tr><th>Compromisso</th><th>Valor</th></tr>'+itens.filter(x=>x[1]>0).map(x=>`<tr><td>${x[0]}</td><td>${BRL.format(x[1])}</td></tr>`).join('')+'<tr><th>Total de compromissos</th><th>'+BRL.format(c.comp)+'</th></tr></table>'}
 function renderDividas(){if(!state.dividas.length){$('listaDividas').innerHTML='<p class="small">Carregando contratos…</p>';return}
  const ordem={CLT:1,BANCARIO:2,OUTRO:3};const arr=state.dividas.slice().sort((a,b)=>(ordem[a.tipo]-ordem[b.tipo])||a.nome.localeCompare(b.nome));
  $('listaDividas').innerHTML=arr.map(d=>{
