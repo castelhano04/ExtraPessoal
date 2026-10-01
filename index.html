@@ -11,7 +11,7 @@
   --blueSoft:#eff6ff;--greenSoft:#ecfdf5;--redSoft:#fef2f2;--amberSoft:#fffbeb;--shadow:0 12px 35px rgba(15,23,42,.08)
 }
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}#app,#casalApp{display:none}.wrap{max-width:1450px;margin:auto;padding:24px}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}#app,#casalApp,#livreApp{display:none}.wrap{max-width:1450px;margin:auto;padding:24px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,#0f172a 0%,#17346f 48%,#2563eb 100%);color:#fff;border-radius:26px;padding:28px 30px;box-shadow:var(--shadow);margin-bottom:20px}
 .topbar h1{margin:0;font-size:30px;letter-spacing:-.5px}.topbar p{margin:7px 0 0;color:#dbeafe}.topActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.status{font-size:12px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:800}
 .layout{display:grid;grid-template-columns:245px 1fr;gap:20px;align-items:start}.sidebar{position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow)}
@@ -106,6 +106,18 @@ input[type="number"]{font-variant-numeric:tabular-nums}
   .coupleHero::after{right:18px;bottom:-10px;font-size:62px}
   .houseEmoji{width:38px;height:38px;font-size:20px}
 }
+
+
+
+/* ===== área 1810 — controle financeiro não CLT ===== */
+.freeHero{background:linear-gradient(135deg,#0f172a 0%,#134e4a 48%,#0f766e 100%)}
+.freeAccent{border-left:5px solid #0f766e}
+.freeSoft{background:linear-gradient(180deg,#ffffff 0%,#f7fbfa 100%);border-color:#d7e8e5}
+.freeGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.freeAmount{font-size:31px;font-weight:950;letter-spacing:-.7px}
+.freeBadge{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:11px;font-weight:900}
+@media(max-width:1100px){.freeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.freeGrid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -362,13 +374,6 @@ input[type="number"]{font-variant-numeric:tabular-nums}
 
     <main class="content">
       <section id="view-casal-painel" class="view casal-view active">
-        <div class="card futureLead">
-          <div class="monthHeader">
-            <div><div class="softTag">🏠 Fundo conjunto do casal</div><h2>Dinheiro para o nosso futuro</h2><p class="sub" style="margin-bottom:0">Uma única conta conjunta. Sem meta mensal fixa: guardem o que realmente for possível.</p></div>
-            <div class="tag">Senha exclusiva 171025</div>
-          </div>
-        </div>
-
         <div class="coupleGrid section">
           <div class="card metric futureCard"><div class="label">Saldo conjunto</div><div class="value good" id="casalTotal">R$ 0,00</div><div class="kpiNote">R$ 2.000 iniciais + todos os aportes</div></div>
           <div class="card metric futureCard"><div class="label">Guardado neste mês</div><div class="value blue" id="casalMes">R$ 0,00</div><div class="kpiNote" id="casalMesDetalhe">total conjunto do mês</div></div>
@@ -426,6 +431,108 @@ input[type="number"]{font-variant-numeric:tabular-nums}
   </div>
 </div></div>
 
+
+<div id="livreApp"><div class="wrap">
+  <div class="topbar freeHero">
+    <div><h1>Controle Financeiro</h1><p id="livrePeriodo">Controle mensal • sem vínculo CLT</p></div>
+    <div class="topActions"><div id="livreSyncStatus" class="status">Conectando…</div><button class="lockBtn" id="btnLivreSair">Bloquear</button></div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="navbtn livre-nav active" data-livre-view="livre-painel">Visão geral</button>
+      <button class="navbtn livre-nav" data-livre-view="livre-entradas">Entradas</button>
+      <button class="navbtn livre-nav" data-livre-view="livre-contas">Contas mensais</button>
+      <button class="navbtn livre-nav" data-livre-view="livre-historico">Histórico mensal</button>
+      <button class="navbtn livre-nav" data-livre-view="livre-config">Configurações</button>
+    </aside>
+
+    <main class="content">
+      <section id="view-livre-painel" class="view livre-view active">
+        <div class="card">
+          <div class="monthHeader">
+            <div><h2>Mês de controle</h2><p class="sub" style="margin-bottom:0">Selecione o mês para ver entradas, contas recorrentes e o valor disponível para pagar tudo.</p></div>
+            <div class="monthPicker"><input type="month" id="livreMesPainel"><button class="btn-light" id="btnLivreMesAtual">Mês atual</button></div>
+          </div>
+        </div>
+
+        <div class="freeGrid section">
+          <div class="card metric freeSoft"><div class="label">Disponível no início do mês</div><div class="value blue" id="livreInicial">R$ 0,00</div><div class="kpiNote">valor informado para começar a competência</div></div>
+          <div class="card metric freeSoft"><div class="label">Recebido no mês</div><div class="value good" id="livreRecebido">R$ 0,00</div><div class="kpiNote">todas as entradas registradas</div></div>
+          <div class="card metric freeSoft"><div class="label">Contas do mês</div><div class="value bad" id="livreContas">R$ 0,00</div><div class="kpiNote">contas mensais ativas</div></div>
+          <div class="card metric freeSoft"><div class="label">Saldo após contas</div><div class="value" id="livreSaldo">R$ 0,00</div><div class="kpiNote">disponível + entradas − contas</div></div>
+        </div>
+
+        <div class="section two">
+          <div class="card freeAccent">
+            <h2>Resumo do mês</h2><p class="sub">Uma leitura simples do dinheiro disponível.</p>
+            <div class="rowline"><span>Disponível no início</span><strong id="livreResumoInicial"></strong></div>
+            <div class="rowline"><span>Entradas recebidas</span><strong class="good" id="livreResumoEntradas"></strong></div>
+            <div class="rowline"><span>Contas mensais</span><strong class="bad" id="livreResumoContas"></strong></div>
+            <hr><div class="rowline"><span><strong>Saldo estimado</strong></span><strong id="livreResumoSaldo"></strong></div>
+          </div>
+          <div class="card">
+            <h2>Situação</h2><p class="sub">O sistema não presume salário, INSS, FGTS ou hora extra.</p>
+            <div id="livreSituacao" class="info"></div>
+          </div>
+        </div>
+
+        <div class="section card">
+          <h2>Contas previstas desta competência</h2><p class="sub">As contas mensais ativas aparecem automaticamente todos os meses a partir do cadastro.</p>
+          <div id="livreContasResumo"></div>
+        </div>
+      </section>
+
+      <section id="view-livre-entradas" class="view livre-view">
+        <div class="card">
+          <h2>Registrar entrada de dinheiro</h2><p class="sub">Use para qualquer valor recebido: ajuda, benefício, pensão, venda, bico, transferência ou outra origem.</p>
+          <div class="three">
+            <div><label>Data</label><input type="date" id="livreEntradaData"></div>
+            <div><label>Valor recebido</label><input type="number" id="livreEntradaValor" min="0" step="0.01" placeholder="0,00"></div>
+            <div><label>Origem / descrição</label><input id="livreEntradaDesc" placeholder="Ex.: benefício, venda, ajuda"></div>
+          </div>
+          <div class="actions"><button class="btn-success" id="btnLivreAddEntrada">Adicionar entrada</button></div>
+        </div>
+        <div class="section card"><h2>Entradas registradas</h2><div id="livreEntradasLista"></div></div>
+      </section>
+
+      <section id="view-livre-contas" class="view livre-view">
+        <div class="card">
+          <h2>Cadastrar conta mensal</h2><p class="sub">Cadastre uma vez e ela entra automaticamente em cada competência a partir do mês inicial.</p>
+          <div class="four">
+            <div><label>Nome da conta</label><input id="livreContaNome" placeholder="Ex.: Luz"></div>
+            <div><label>Valor mensal</label><input type="number" id="livreContaValor" min="0" step="0.01" placeholder="0,00"></div>
+            <div><label>Dia do vencimento</label><input type="number" id="livreContaDia" min="1" max="31" placeholder="Ex.: 10"></div>
+            <div><label>Começa em</label><input type="month" id="livreContaInicio"></div>
+          </div>
+          <div class="actions"><button class="btn-primary" id="btnLivreAddConta">Adicionar conta mensal</button></div>
+        </div>
+        <div class="section card"><h2>Contas cadastradas</h2><div id="livreContasLista"></div></div>
+      </section>
+
+      <section id="view-livre-historico" class="view livre-view">
+        <div class="card">
+          <h2>Histórico mensal</h2><p class="sub">Salve uma fotografia de cada mês quando quiser.</p>
+          <div class="actions"><button class="btn-primary" id="btnLivreFechar">Salvar fechamento do mês selecionado</button></div>
+          <div id="livreHistorico"></div>
+        </div>
+      </section>
+
+      <section id="view-livre-config" class="view livre-view">
+        <div class="card">
+          <h2>Configurações</h2><p class="sub">Este acesso começa zerado. Informe apenas o valor que estiver realmente disponível para pagar as contas no início do mês.</p>
+          <div class="two">
+            <div><label>Valor disponível no início do mês selecionado</label><input type="number" id="livreCfgDisponivel" min="0" step="0.01" placeholder="0,00"></div>
+            <div><label>Observação</label><input id="livreCfgObs" placeholder="Opcional"></div>
+          </div>
+          <div class="info" style="margin-top:16px"><strong>Sem salário fixo:</strong> aqui não há cálculo de CLT, INSS, FGTS ou HE. O saldo é formado pelo valor disponível informado + o que realmente entrar − as contas mensais.</div>
+          <div class="actions"><button class="btn-dark" id="btnLivreSalvarConfig">Salvar valor disponível deste mês</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
@@ -439,10 +546,15 @@ const EMAIL_FIXO='controle.pessoal.161004@hr-extra.app';
 const HASH_SENHA_CORRETA='6428ddbc2c67cc1848f4cfe3b99d535667d079bc354e4fd0416f81aef255ebbb';
 const EMAIL_CASAL='controle.casal.171025@hr-extra.app';
 const HASH_SENHA_CASAL='79c672ad849d58c03a17588c0a91f2a53b384f52a2c41d623fab806e381d76c9';
+const EMAIL_LIVRE='controle.livre.1810@hr-extra.app';
+const HASH_SENHA_LIVRE='1a09807a0e6928a66d91025ed5fccd713c9edb101e72a1bbcb8a01cd9a53cb51';
+const EMAIL_PESSOAL_ZERO='controle.pessoal.1610@hr-extra.app';
+const HASH_SENHA_PESSOAL_ZERO='31d8edb99534fd4800651db4d241d86e0380fa7376718b88590c2d772b41d5f4';
 const BRL=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const $=id=>document.getElementById(id); const uuid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 
 const DEFAULT_CONFIG={salario:3644.10,jornada:0,valePct:40,farmacia:200,cesta:85,mae:400,carro:450,outrosDescontos:0,meta50:0,meta100:0,metaReserva:0,metaFundo:0,planoInicio:'2027-01',planoMeses:24,configurado:true};
+const DEFAULT_CONFIG_ZERO={salario:0,jornada:0,valePct:0,farmacia:0,cesta:0,mae:0,carro:0,outrosDescontos:0,meta50:0,meta100:0,metaReserva:0,metaFundo:0,planoInicio:'2027-01',planoMeses:24,configurado:false};
 const DIVIDAS_PADRAO=[
  {id:'clt-safra',nome:'Safra',tipo:'CLT',parcela:178.49,total:12,inicio:'2026-03',taxaJuros:3.45,quitacao:0},
  {id:'clt-digio',nome:'Digio / Bradesco',tipo:'CLT',parcela:434.45,total:24,inicio:'2026-06',taxaJuros:3.89,quitacao:0},
@@ -468,12 +580,14 @@ function estimarQuitacao(d,s){
  const valor=p*(1-Math.pow(1+i,-n))/i;
  return{valor,nominal:n*p,economia:(n*p)-valor,taxaPct};
 }
-let currentUser=null,unsubs=[],desbloqueado=sessionStorage.getItem('planoFinanceiroDesbloqueado')==='1',casalDesbloqueado=sessionStorage.getItem('planoCasalDesbloqueado')==='1',loginEmAndamento=false,areaAtiva=null;
+let currentUser=null,unsubs=[],desbloqueado=sessionStorage.getItem('planoFinanceiroDesbloqueado')==='1',pessoalZeroDesbloqueado=sessionStorage.getItem('planoFinanceiroZeroDesbloqueado')==='1',casalDesbloqueado=sessionStorage.getItem('planoCasalDesbloqueado')==='1',livreDesbloqueado=sessionStorage.getItem('planoLivreDesbloqueado')==='1',loginEmAndamento=false,areaAtiva=null,modoPessoalZero=false;
 let state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};
 const DEFAULT_CASAL_CONFIG={saldoInicialConjunto:2000,metaCasa:0,configurado:true};
 let casalState={config:{...DEFAULT_CASAL_CONFIG},aportes:[]};
+let livreState={disponiveis:[],entradas:[],contas:[],fechamentos:[]};
 const _agora=new Date();
 let competencia=`${_agora.getFullYear()}-${String(_agora.getMonth()+1).padStart(2,'0')}`;
+let livreCompetencia=competencia;
 
 function parseMes(s){const [y,m]=s.split('-').map(Number);return new Date(y,m-1,1,12)}
 function mesIndex(s){const [y,m]=s.split('-').map(Number);return y*12+(m-1)}
@@ -529,15 +643,15 @@ function planoInfo(mes=competencia){const i=mesIndex(mes)-mesIndex(state.config.
 function paths(uid){return{config:doc(firestore,'users',uid,'config','main'),horas:collection(firestore,'users',uid,'horas'),gastos:collection(firestore,'users',uid,'gastos'),fechamentos:collection(firestore,'users',uid,'fechamentos'),dividas:collection(firestore,'users',uid,'dividas'),antecipacoes:collection(firestore,'users',uid,'antecipacoes'),aportes:collection(firestore,'users',uid,'aportes')}}
 function clearListeners(){unsubs.forEach(fn=>fn());unsubs=[]}
 async function seedDividasSeNecessario(uid){const p=paths(uid),snap=await getDocs(p.dividas);if(snap.empty){await Promise.all(DIVIDAS_PADRAO.map(d=>setDoc(doc(p.dividas,d.id),{...d,createdAt:new Date().toISOString()})))}}
-function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus').textContent='Sincronizando…';
+function startSync(user,zerado=false){clearListeners();modoPessoalZero=!!zerado;const p=paths(user.uid),baseConfig=zerado?DEFAULT_CONFIG_ZERO:DEFAULT_CONFIG;$('syncStatus').textContent='Sincronizando…';
  unsubs.push(onSnapshot(p.config,async s=>{
    if(s.exists()){
-     state.config={...DEFAULT_CONFIG,...s.data()};
-     if(Math.abs((Number(state.config.salario)||0)-3644)<0.005){
+     state.config={...baseConfig,...s.data()};
+     if(!zerado && Math.abs((Number(state.config.salario)||0)-3644)<0.005){
        state.config.salario=3644.10;
        await setDoc(p.config,{salario:3644.10,updatedAt:serverTimestamp()},{merge:true});
      }
-   }else await setDoc(p.config,{...DEFAULT_CONFIG,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   }else await setDoc(p.config,{...baseConfig,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
    render()
  }));
  unsubs.push(onSnapshot(p.horas,s=>{state.hes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
@@ -546,7 +660,7 @@ function startSync(user){clearListeners();const p=paths(user.uid);$('syncStatus'
  unsubs.push(onSnapshot(p.dividas,s=>{state.dividas=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
  unsubs.push(onSnapshot(p.antecipacoes,s=>{state.antecipacoes=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
  unsubs.push(onSnapshot(p.aportes,s=>{state.aportes=s.docs.map(d=>({id:d.id,...d.data()}));render();$('syncStatus').textContent='✓ Sincronizado'}));
- seedDividasSeNecessario(user.uid).catch(console.error);
+ if(!zerado)seedDividasSeNecessario(user.uid).catch(console.error);
 }
 function render(){if(!$('app'))return;const c=calcMes(),p=planoInfo();
  $('mesPainel').value=competencia;$('periodoAtual').textContent=`Competência selecionada: ${fmtMes(competencia)} • Plano oficial desde janeiro/2027`;$('tagCompetencia').textContent=fmtMes(competencia);
@@ -680,15 +794,45 @@ function renderCasal(){if(!$('casalApp'))return;const cfg=casalState.config,mes=
 function abrirCasal(){$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='block';areaAtiva='CASAL';renderCasal()}
 async function addCasalAporte(){if(!currentUser||areaAtiva!=='CASAL')return;const valor=Number($('casalValor').value),data=$('casalData').value,obs=$('casalObs').value.trim();if(!valor||valor<=0||!data)return alert('Informe valor e data.');const id=uuid();await setDoc(doc(casalPaths(currentUser.uid).aportes,id),{valor,data,obs,createdAt:new Date().toISOString()});$('casalValor').value='';$('casalObs').value=''}
 
+
+
+function livrePaths(uid){return{disponiveis:collection(firestore,'users',uid,'livreDisponiveis'),entradas:collection(firestore,'users',uid,'livreEntradas'),contas:collection(firestore,'users',uid,'livreContas'),fechamentos:collection(firestore,'users',uid,'livreFechamentos')}}
+function startLivreSync(user){clearListeners();const p=livrePaths(user.uid);$('livreSyncStatus').textContent='Sincronizando…';
+ unsubs.push(onSnapshot(p.disponiveis,s=>{livreState.disponiveis=s.docs.map(d=>({id:d.id,...d.data()}));renderLivre()}));
+ unsubs.push(onSnapshot(p.entradas,s=>{livreState.entradas=s.docs.map(d=>({id:d.id,...d.data()}));renderLivre()}));
+ unsubs.push(onSnapshot(p.contas,s=>{livreState.contas=s.docs.map(d=>({id:d.id,...d.data()}));renderLivre()}));
+ unsubs.push(onSnapshot(p.fechamentos,s=>{livreState.fechamentos=s.docs.map(d=>({id:d.id,...d.data()}));renderLivre();$('livreSyncStatus').textContent='✓ Sincronizado'}));
+}
+function livreDisponivelMes(mes=livreCompetencia){const reg=livreState.disponiveis.filter(x=>x.mes===mes).sort((a,b)=>(b.updatedAtLocal||'').localeCompare(a.updatedAtLocal||''))[0];return Number(reg?.valor||0)}
+function livreEntradasMes(mes=livreCompetencia){return livreState.entradas.filter(x=>mesDaData(x.data)===mes)}
+function livreContasAtivasMes(mes=livreCompetencia){return livreState.contas.filter(c=>c.ativo!==false && (!c.inicio||c.inicio<=mes))}
+function calcLivre(mes=livreCompetencia){const inicial=livreDisponivelMes(mes),entradas=livreEntradasMes(mes),recebido=entradas.reduce((s,x)=>s+Number(x.valor||0),0),contas=livreContasAtivasMes(mes),totalContas=contas.reduce((s,x)=>s+Number(x.valor||0),0),saldo=inicial+recebido-totalContas;return{inicial,entradas,recebido,contas,totalContas,saldo}}
+function renderLivre(){if(!$('livreApp'))return;const c=calcLivre();$('livreMesPainel').value=livreCompetencia;$('livrePeriodo').textContent=`Controle mensal • ${fmtMes(livreCompetencia)} • sem vínculo CLT`;
+ $('livreInicial').textContent=BRL.format(c.inicial);$('livreRecebido').textContent=BRL.format(c.recebido);$('livreContas').textContent=BRL.format(c.totalContas);$('livreSaldo').textContent=BRL.format(c.saldo);$('livreSaldo').className='value '+(c.saldo>=0?'good':'bad');
+ $('livreResumoInicial').textContent=BRL.format(c.inicial);$('livreResumoEntradas').textContent='+ '+BRL.format(c.recebido);$('livreResumoContas').textContent='− '+BRL.format(c.totalContas);$('livreResumoSaldo').textContent=BRL.format(c.saldo);$('livreResumoSaldo').className=c.saldo>=0?'good':'bad';
+ const situ=$('livreSituacao');if(c.saldo<0){situ.className='warn';situ.innerHTML=`As contas deste mês ultrapassam o dinheiro disponível em <strong>${BRL.format(Math.abs(c.saldo))}</strong>.`}else if(c.saldo===0){situ.className='info';situ.innerHTML='O mês está exatamente zerado após as contas previstas.'}else{situ.className='success';situ.innerHTML=`Depois das contas previstas, permanecem <strong>${BRL.format(c.saldo)}</strong> disponíveis.`}
+ $('livreContasResumo').innerHTML=!c.contas.length?'<p class="small">Nenhuma conta mensal ativa nesta competência.</p>':'<table><tr><th>Conta</th><th>Vencimento</th><th>Valor</th></tr>'+c.contas.slice().sort((a,b)=>(Number(a.dia)||99)-(Number(b.dia)||99)).map(x=>`<tr><td>${escapeHtml(x.nome)}</td><td>${x.dia?`Dia ${x.dia}`:'—'}</td><td>${BRL.format(x.valor)}</td></tr>`).join('')+`<tr><th>Total</th><th></th><th>${BRL.format(c.totalContas)}</th></tr></table>`;
+ const entradas=livreState.entradas.slice().sort((a,b)=>(b.data||'').localeCompare(a.data||''));$('livreEntradasLista').innerHTML=!entradas.length?'<p class="small">Nenhuma entrada registrada.</p>':'<table><tr><th>Data</th><th>Descrição</th><th>Valor</th><th></th></tr>'+entradas.map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td>${escapeHtml(x.desc||'')}</td><td>${BRL.format(x.valor)}</td><td><button class="btn-danger btn-sm" data-livre-delentrada="${x.id}">Excluir</button></td></tr>`).join('')+'</table>';
+ const contas=livreState.contas.slice().sort((a,b)=>(Number(a.dia)||99)-(Number(b.dia)||99));$('livreContasLista').innerHTML=!contas.length?'<p class="small">Nenhuma conta mensal cadastrada.</p>':'<table><tr><th>Conta</th><th>Valor</th><th>Venc.</th><th>Desde</th><th>Status</th><th></th></tr>'+contas.map(x=>`<tr><td>${escapeHtml(x.nome)}</td><td>${BRL.format(x.valor)}</td><td>${x.dia?`Dia ${x.dia}`:'—'}</td><td>${x.inicio?fmtMes(x.inicio):'—'}</td><td>${x.ativo===false?'Pausada':'Ativa'}</td><td><button class="btn-light btn-sm" data-livre-toggleconta="${x.id}">${x.ativo===false?'Ativar':'Pausar'}</button> <button class="btn-danger btn-sm" data-livre-delconta="${x.id}">Excluir</button></td></tr>`).join('')+'</table>';
+ const fech=livreState.fechamentos.slice().sort((a,b)=>(b.mes||'').localeCompare(a.mes||''));$('livreHistorico').innerHTML=!fech.length?'<p class="small">Nenhum fechamento salvo.</p>':'<table><tr><th>Mês</th><th>Disponível inicial</th><th>Entradas</th><th>Contas</th><th>Saldo</th><th></th></tr>'+fech.map(x=>`<tr><td>${fmtMes(x.mes)}</td><td>${BRL.format(x.inicial)}</td><td>${BRL.format(x.recebido)}</td><td>${BRL.format(x.totalContas)}</td><td class="${Number(x.saldo)>=0?'good':'bad'}">${BRL.format(x.saldo)}</td><td><button class="btn-danger btn-sm" data-livre-delfech="${x.id}">Excluir</button></td></tr>`).join('')+'</table>';
+ $('livreCfgDisponivel').value=c.inicial||'';const reg=livreState.disponiveis.find(x=>x.mes===livreCompetencia);$('livreCfgObs').value=reg?.obs||'';
+}
+function abrirLivre(){$('authScreen').classList.add('hidden');$('app').style.display='none';$('casalApp').style.display='none';$('livreApp').style.display='block';areaAtiva='LIVRE';renderLivre()}
+
 async function sha256(texto){const bytes=new TextEncoder().encode(texto),hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
-function abrirApp(){$('authScreen').classList.add('hidden');$('casalApp').style.display='none';$('app').style.display='block';areaAtiva='PESSOAL';render()}
-function mostrarLogin(msg=''){$('app').style.display='none';$('casalApp').style.display='none';$('authScreen').classList.remove('hidden');areaAtiva=null;if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
-function bloquearApp(){desbloqueado=false;casalDesbloqueado=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
-async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{const hash=await sha256(senha);let email,modo;if(hash===HASH_SENHA_CORRETA){email=EMAIL_FIXO;modo='PESSOAL'}else if(hash===HASH_SENHA_CASAL){email=EMAIL_CASAL;modo='CASAL'}else{$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,email,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,email,senha)}else throw e}currentUser=cred.user;clearListeners();if(modo==='PESSOAL'){desbloqueado=true;casalDesbloqueado=false;sessionStorage.setItem('planoFinanceiroDesbloqueado','1');sessionStorage.removeItem('planoCasalDesbloqueado');startSync(currentUser);abrirApp()}else{casalDesbloqueado=true;desbloqueado=false;sessionStorage.setItem('planoCasalDesbloqueado','1');sessionStorage.removeItem('planoFinanceiroDesbloqueado');startCasalSync(currentUser);abrirCasal()}$('loginSenha').value='';$('authMsg').textContent=''}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
-$('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;$('btnCasalSair').onclick=bloquearApp;
-onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO&&desbloqueado){startSync(user);abrirApp()}else if(user&&user.email===EMAIL_CASAL&&casalDesbloqueado){startCasalSync(user);abrirCasal()}else mostrarLogin('')});
+function abrirApp(zerado=false){modoPessoalZero=!!zerado;$('authScreen').classList.add('hidden');$('casalApp').style.display='none';$('livreApp').style.display='none';$('app').style.display='block';areaAtiva=zerado?'PESSOAL_ZERO':'PESSOAL';const titulo=document.querySelector('#app .topbar h1');if(titulo)titulo.textContent=zerado?'Meu Plano Financeiro — Novo':'Meu Plano Financeiro';render()}
+function mostrarLogin(msg=''){$('app').style.display='none';$('casalApp').style.display='none';$('livreApp').style.display='none';$('authScreen').classList.remove('hidden');areaAtiva=null;if(!loginEmAndamento)$('authMsg').textContent=msg;setTimeout(()=>$('loginSenha').focus(),50)}
+function bloquearApp(){desbloqueado=false;pessoalZeroDesbloqueado=false;casalDesbloqueado=false;livreDesbloqueado=false;modoPessoalZero=false;sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoFinanceiroZeroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');sessionStorage.removeItem('planoLivreDesbloqueado');clearListeners();mostrarLogin('');$('loginSenha').value=''}
+async function entrar(){if(loginEmAndamento)return;const senha=$('loginSenha').value.trim();if(!senha){$('authMsg').textContent='Digite sua senha.';return}loginEmAndamento=true;$('btnEntrar').disabled=true;$('authMsg').textContent='Conectando…';try{const hash=await sha256(senha);let email,modo;if(hash===HASH_SENHA_CORRETA){email=EMAIL_FIXO;modo='PESSOAL'}else if(hash===HASH_SENHA_PESSOAL_ZERO){email=EMAIL_PESSOAL_ZERO;modo='PESSOAL_ZERO'}else if(hash===HASH_SENHA_CASAL){email=EMAIL_CASAL;modo='CASAL'}else if(hash===HASH_SENHA_LIVRE){email=EMAIL_LIVRE;modo='LIVRE'}else{$('authMsg').textContent='Senha incorreta.';return}let cred;try{cred=await signInWithEmailAndPassword(auth,email,senha)}catch(e){if(e.code==='auth/invalid-credential'||e.code==='auth/user-not-found'){cred=await createUserWithEmailAndPassword(auth,email,senha)}else throw e}currentUser=cred.user;clearListeners();desbloqueado=modo==='PESSOAL';pessoalZeroDesbloqueado=modo==='PESSOAL_ZERO';casalDesbloqueado=modo==='CASAL';livreDesbloqueado=modo==='LIVRE';sessionStorage.removeItem('planoFinanceiroDesbloqueado');sessionStorage.removeItem('planoFinanceiroZeroDesbloqueado');sessionStorage.removeItem('planoCasalDesbloqueado');sessionStorage.removeItem('planoLivreDesbloqueado');state={config:{...(modo==='PESSOAL_ZERO'?DEFAULT_CONFIG_ZERO:DEFAULT_CONFIG)},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};if(modo==='PESSOAL'){sessionStorage.setItem('planoFinanceiroDesbloqueado','1');startSync(currentUser,false);abrirApp(false)}else if(modo==='PESSOAL_ZERO'){sessionStorage.setItem('planoFinanceiroZeroDesbloqueado','1');startSync(currentUser,true);abrirApp(true)}else if(modo==='CASAL'){sessionStorage.setItem('planoCasalDesbloqueado','1');startCasalSync(currentUser);abrirCasal()}else{sessionStorage.setItem('planoLivreDesbloqueado','1');startLivreSync(currentUser);abrirLivre()}$('loginSenha').value='';$('authMsg').textContent=''}catch(e){console.error(e);$('authMsg').textContent='Não foi possível acessar seus dados agora.'}finally{loginEmAndamento=false;$('btnEntrar').disabled=false}}
+$('btnEntrar').onclick=entrar;$('loginSenha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});$('btnSair').onclick=bloquearApp;$('btnCasalSair').onclick=bloquearApp;$('btnLivreSair').onclick=bloquearApp;
+onAuthStateChanged(auth,user=>{if(loginEmAndamento)return;currentUser=user;if(user&&user.email===EMAIL_FIXO&&desbloqueado){state={config:{...DEFAULT_CONFIG},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};startSync(user,false);abrirApp(false)}else if(user&&user.email===EMAIL_PESSOAL_ZERO&&pessoalZeroDesbloqueado){state={config:{...DEFAULT_CONFIG_ZERO},hes:[],gastos:[],fechamentos:[],dividas:[],antecipacoes:[],aportes:[]};startSync(user,true);abrirApp(true)}else if(user&&user.email===EMAIL_CASAL&&casalDesbloqueado){startCasalSync(user);abrirCasal()}else if(user&&user.email===EMAIL_LIVRE&&livreDesbloqueado){startLivreSync(user);abrirLivre()}else mostrarLogin('')});
 
 document.addEventListener('click',async e=>{
+ const livreNav=e.target.closest('[data-livre-view]');if(livreNav){document.querySelectorAll('.livre-nav').forEach(x=>x.classList.toggle('active',x===livreNav));document.querySelectorAll('.livre-view').forEach(x=>x.classList.remove('active'));$('view-'+livreNav.dataset.livreView)?.classList.add('active');sessionStorage.setItem('planoLivreView',livreNav.dataset.livreView);return}
+ const livreDelEntrada=e.target.closest('[data-livre-delentrada]');if(livreDelEntrada&&currentUser&&areaAtiva==='LIVRE'){if(confirm('Excluir esta entrada?'))await deleteDoc(doc(livrePaths(currentUser.uid).entradas,livreDelEntrada.dataset.livreDelentrada));return}
+ const livreDelConta=e.target.closest('[data-livre-delconta]');if(livreDelConta&&currentUser&&areaAtiva==='LIVRE'){if(confirm('Excluir esta conta mensal?'))await deleteDoc(doc(livrePaths(currentUser.uid).contas,livreDelConta.dataset.livreDelconta));return}
+ const livreToggle=e.target.closest('[data-livre-toggleconta]');if(livreToggle&&currentUser&&areaAtiva==='LIVRE'){const c=livreState.contas.find(x=>x.id===livreToggle.dataset.livreToggleconta);if(c)await setDoc(doc(livrePaths(currentUser.uid).contas,c.id),{ativo:c.ativo===false,updatedAt:serverTimestamp()},{merge:true});return}
+ const livreDelFech=e.target.closest('[data-livre-delfech]');if(livreDelFech&&currentUser&&areaAtiva==='LIVRE'){if(confirm('Excluir este fechamento?'))await deleteDoc(doc(livrePaths(currentUser.uid).fechamentos,livreDelFech.dataset.livreDelfech));return}
  const casalNav=e.target.closest('[data-casal-view]');if(casalNav){document.querySelectorAll('.casal-nav').forEach(x=>x.classList.toggle('active',x===casalNav));document.querySelectorAll('.casal-view').forEach(x=>x.classList.remove('active'));$('view-'+casalNav.dataset.casalView)?.classList.add('active');sessionStorage.setItem('planoCasalView',casalNav.dataset.casalView);return}
  const casalDel=e.target.closest('[data-casal-delaporte]');if(casalDel&&currentUser&&areaAtiva==='CASAL'){if(confirm('Excluir este aporte do fundo conjunto?'))await deleteDoc(doc(casalPaths(currentUser.uid).aportes,casalDel.dataset.casalDelaporte));return}
  const nav=e.target.closest('[data-view]');if(nav){document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===nav));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+nav.dataset.view)?.classList.add('active');sessionStorage.setItem('planoFinanceiroView',nav.dataset.view);return}
@@ -706,11 +850,19 @@ $('btnAddDivida').onclick=async()=>{if(!currentUser)return;const nome=$('dNome')
 $('btnSalvarConfig').onclick=async()=>{if(!currentUser)return;const cfg={salario:Number($('cfgSalario').value)||0,jornada:Number($('cfgJornada').value)||0,valePct:Number($('cfgValePct').value)||0,outrosDescontos:Number($('cfgOutrosDescontos').value)||0,farmacia:Number($('cfgFarmacia').value)||0,cesta:Number($('cfgCesta').value)||0,mae:Number($('cfgMae').value)||0,carro:Number($('cfgCarro').value)||0,planoInicio:'2027-01',planoMeses:24,configurado:true,updatedAt:serverTimestamp()};await setDoc(paths(currentUser.uid).config,cfg,{merge:true});alert('Configurações salvas.')};
 $('btnFechar').onclick=async()=>{if(!currentUser)return;const c=calcMes(),id=uuid(),dividaFutura=saldoTipo('CLT')+saldoTipo('BANCARIO')+saldoTipo('OUTRO');await setDoc(doc(paths(currentUser.uid).fechamentos,id),{competencia,renda:c.renda,compromissos:c.comp,dividaFutura,livre:c.livre,criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
 
+
+$('livreMesPainel').onchange=e=>{if(e.target.value){livreCompetencia=e.target.value;renderLivre()}};
+$('btnLivreMesAtual').onclick=()=>{const d=new Date();livreCompetencia=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;renderLivre()};
+$('btnLivreAddEntrada').onclick=async()=>{if(!currentUser||areaAtiva!=='LIVRE')return;const data=$('livreEntradaData').value,valor=Number($('livreEntradaValor').value),desc=$('livreEntradaDesc').value.trim();if(!data||!valor||valor<=0)return alert('Informe data e valor.');const id=uuid();await setDoc(doc(livrePaths(currentUser.uid).entradas,id),{data,valor,desc,createdAt:new Date().toISOString()});$('livreEntradaValor').value='';$('livreEntradaDesc').value=''};
+$('btnLivreAddConta').onclick=async()=>{if(!currentUser||areaAtiva!=='LIVRE')return;const nome=$('livreContaNome').value.trim(),valor=Number($('livreContaValor').value),dia=Number($('livreContaDia').value)||0,inicio=$('livreContaInicio').value;if(!nome||!valor||valor<=0||!inicio)return alert('Preencha nome, valor e mês inicial.');if(dia<0||dia>31)return alert('Dia de vencimento inválido.');const id=uuid();await setDoc(doc(livrePaths(currentUser.uid).contas,id),{nome,valor,dia,inicio,ativo:true,createdAt:new Date().toISOString()});['livreContaNome','livreContaValor','livreContaDia','livreContaInicio'].forEach(id=>$(id).value='')};
+$('btnLivreSalvarConfig').onclick=async()=>{if(!currentUser||areaAtiva!=='LIVRE')return;const valor=Number($('livreCfgDisponivel').value)||0,obs=$('livreCfgObs').value.trim(),id=livreCompetencia;await setDoc(doc(livrePaths(currentUser.uid).disponiveis,id),{mes:livreCompetencia,valor,obs,updatedAtLocal:new Date().toISOString(),updatedAt:serverTimestamp()},{merge:true});alert('Valor disponível do mês salvo.')};
+$('btnLivreFechar').onclick=async()=>{if(!currentUser||areaAtiva!=='LIVRE')return;const c=calcLivre(),id=uuid();await setDoc(doc(livrePaths(currentUser.uid).fechamentos,id),{mes:livreCompetencia,inicial:c.inicial,recebido:c.recebido,totalContas:c.totalContas,saldo:c.saldo,criadoEm:new Date().toISOString()});alert('Fechamento salvo.')};
+
 $('btnCasalAporte').onclick=()=>addCasalAporte();
 $('btnCasalSalvarConfig').onclick=async()=>{if(!currentUser||areaAtiva!=='CASAL')return;const cfg={saldoInicialConjunto:Number($('casalCfgInicial').value)||0,metaCasa:Number($('casalCfgMetaCasa').value)||0,configurado:true,updatedAt:serverTimestamp()};await setDoc(casalPaths(currentUser.uid).config,cfg,{merge:true});alert('Configurações do fundo salvas.')};
 
-const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','casalData'].forEach(id=>$(id).value=hojeIso);
-const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const casalViewSalva=sessionStorage.getItem('planoCasalView');if(casalViewSalva){const btn=document.querySelector(`[data-casal-view="${casalViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
+const hoje=new Date(),hojeIso=new Date(hoje.getTime()-hoje.getTimezoneOffset()*60000).toISOString().slice(0,10);['heData','gData','casalData','livreEntradaData'].forEach(id=>$(id).value=hojeIso);$('livreContaInicio').value=livreCompetencia;
+const viewSalva=sessionStorage.getItem('planoFinanceiroView');if(viewSalva){const btn=document.querySelector(`[data-view="${viewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const casalViewSalva=sessionStorage.getItem('planoCasalView');if(casalViewSalva){const btn=document.querySelector(`[data-casal-view="${casalViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}const livreViewSalva=sessionStorage.getItem('planoLivreView');if(livreViewSalva){const btn=document.querySelector(`[data-livre-view="${livreViewSalva}"]`);if(btn)setTimeout(()=>btn.click(),0)}
 </script>
 </body>
 </html>
