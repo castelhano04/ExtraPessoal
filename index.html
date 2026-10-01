@@ -184,29 +184,52 @@ input[type="number"]{font-variant-numeric:tabular-nums}
       <section id="view-fluxo" class="view">
         <div class="two">
           <div class="card">
-            <h2>1ª entrada — Vale</h2><p class="sub">Adiantamento de 40% do salário. Não é renda adicional: será descontado no pagamento.</p>
-            <div class="rowline"><span>Vale estimado</span><strong id="valeEstimado"></strong></div>
-            <div class="rowline"><span>Empréstimo bancário</span><strong id="valeBanco"></strong></div>
-            <hr><div class="rowline"><span><strong>Sobra estimada do vale</strong></span><strong id="valeSobra"></strong></div>
+            <h2>1ª entrada — Vale</h2>
+            <p class="sub">O vale é apenas um adiantamento do próprio salário. O empréstimo bancário é pago aqui e não será descontado novamente no pagamento principal.</p>
+            <div class="rowline"><span>Vale estimado (40%)</span><strong id="valeEstimado"></strong></div>
+            <div class="rowline"><span>Empréstimo bancário pago com o vale</span><strong id="valeBanco"></strong></div>
+            <hr>
+            <div class="rowline"><span><strong>Sobra do vale em mãos</strong></span><strong id="valeSobra"></strong></div>
+            <div class="small">A empresa desconta o vale completo na folha. Para o seu caixa, porém, parte dele já foi usada para quitar o bancário.</div>
           </div>
+
           <div class="card">
-            <h2>2ª entrada — Pagamento</h2><p class="sub">O vale é abatido da folha. Aqui entram os demais descontos e compromissos.</p>
+            <h2>2ª entrada — Pagamento principal</h2>
+            <p class="sub">Aqui o vale completo é compensado porque já foi recebido antes. O bancário não aparece de novo.</p>
             <div class="rowline"><span>Salário bruto base</span><strong id="pagBruto"></strong></div>
             <div class="rowline"><span>Hora extra considerada</span><strong id="pagHE"></strong></div>
-            <div class="rowline"><span>Vale já recebido</span><strong id="pagVale"></strong></div>
+            <div class="rowline"><span>INSS estimado</span><strong id="pagINSS"></strong></div>
+            <div class="rowline"><span>Vale completo já recebido</span><strong id="pagVale"></strong></div>
             <div class="rowline"><span>Empréstimos CLT</span><strong id="pagCLT"></strong></div>
             <div class="rowline"><span>Cartão farmácia</span><strong id="pagFarmacia"></strong></div>
             <div class="rowline"><span>Cesta básica</span><strong id="pagCesta"></strong></div>
-            <div class="rowline"><span>Ajuda em casa</span><strong id="pagMae"></strong></div>
-            <div class="rowline"><span>Carro / gasolina</span><strong id="pagCarro"></strong></div>
-            <div class="rowline"><span>Parcela adicional</span><strong id="pagOutro"></strong></div>
-            <div class="rowline"><span>INSS estimado — tabela 2026</span><strong id="pagINSS"></strong></div>
             <div class="rowline"><span>Outros descontos da folha (sem INSS)</span><strong id="pagDescontos"></strong></div>
-            <div class="rowline"><span>Gastos variáveis lançados</span><strong id="pagVariaveis"></strong></div>
-            <hr><div class="rowline"><span><strong>Disponível após o pagamento principal*</strong></span><strong id="pagDisponivel"></strong></div>
-            <div class="rowline"><span><strong>Livre total estimado no mês</strong></span><strong id="pagDisponivelTotal"></strong></div>
-            <div class="small">*O total do mês soma a sobra do vale com o que resta do pagamento principal. Estimativa financeira; o líquido real depende da folha oficial.</div>
+            <hr>
+            <div class="rowline"><span><strong>Pagamento principal estimado</strong></span><strong id="pagDisponivel"></strong></div>
+            <div class="small">Este valor não desconta novamente o empréstimo bancário, pois ele já saiu do vale.</div>
           </div>
+        </div>
+
+        <div class="section card">
+          <h2>Fechamento real do mês</h2>
+          <p class="sub">Reconcilia o que sobrou do vale com o pagamento principal e depois desconta os gastos que acontecem fora da folha.</p>
+          <div class="two">
+            <div>
+              <div class="rowline"><span>Sobra do vale</span><strong id="fluxoSobraVale"></strong></div>
+              <div class="rowline"><span>Pagamento principal estimado</span><strong id="fluxoPagamento"></strong></div>
+              <hr>
+              <div class="rowline"><span><strong>Dinheiro disponível após as duas entradas</strong></span><strong id="fluxoEntradas"></strong></div>
+            </div>
+            <div>
+              <div class="rowline"><span>Ajuda em casa</span><strong id="pagMae"></strong></div>
+              <div class="rowline"><span>Carro / gasolina</span><strong id="pagCarro"></strong></div>
+              <div class="rowline"><span>Parcela adicional</span><strong id="pagOutro"></strong></div>
+              <div class="rowline"><span>Gastos variáveis lançados</span><strong id="pagVariaveis"></strong></div>
+              <hr>
+              <div class="rowline"><span><strong>Saldo final estimado do mês</strong></span><strong id="pagDisponivelTotal"></strong></div>
+            </div>
+          </div>
+          <div class="info" style="margin-top:14px"><strong>Sem duplicidade:</strong> o bancário é descontado somente do vale. O vale completo é abatido somente para calcular o pagamento principal. O saldo final junta os dois fluxos e desconta cada compromisso uma única vez.</div>
         </div>
       </section>
 
@@ -508,12 +531,60 @@ function renderDividas(){if(!state.dividas.length){$('listaDividas').innerHTML='
  }).join('')}
 
 function renderFluxo(c){
+ const farmacia=Number(state.config.farmacia)||0;
+ const cesta=Number(state.config.cesta)||0;
+ const mae=Number(state.config.mae)||0;
+ const carro=Number(state.config.carro)||0;
+ const outrosDescontos=Number(state.config.outrosDescontos)||0;
+
+ // 1) VALE: o bancário sai exclusivamente daqui.
  const sobraVale=c.vale-c.banco;
- $('valeEstimado').textContent=BRL.format(c.vale);$('valeBanco').textContent='− '+BRL.format(c.banco);$('valeSobra').textContent=BRL.format(sobraVale);$('valeSobra').className=sobraVale>=0?'good':'bad';
- $('pagBruto').textContent=BRL.format(c.sal);$('pagHE').textContent=c.he>0?'+ '+BRL.format(c.he):BRL.format(0);$('pagVale').textContent='− '+BRL.format(c.vale);$('pagCLT').textContent='− '+BRL.format(c.clt);$('pagFarmacia').textContent='− '+BRL.format(Number(state.config.farmacia)||0);$('pagCesta').textContent='− '+BRL.format(Number(state.config.cesta)||0);$('pagMae').textContent='− '+BRL.format(Number(state.config.mae)||0);$('pagCarro').textContent='− '+BRL.format(Number(state.config.carro)||0);$('pagOutro').textContent='− '+BRL.format(c.outro);$('pagINSS').textContent='− '+BRL.format(c.inss);$('pagDescontos').textContent='− '+BRL.format(Number(state.config.outrosDescontos)||0);$('pagVariaveis').textContent='− '+BRL.format(c.variaveis);
- const dispPagamento=c.sal+c.he-c.vale-c.clt-c.outro-c.inss-(Number(state.config.farmacia)||0)-(Number(state.config.cesta)||0)-(Number(state.config.mae)||0)-(Number(state.config.carro)||0)-(Number(state.config.outrosDescontos)||0)-c.variaveis;
- $('pagDisponivel').textContent=BRL.format(dispPagamento);$('pagDisponivel').className=dispPagamento>=0?'good':'bad';
- $('pagDisponivelTotal').textContent=BRL.format(c.livre);$('pagDisponivelTotal').className=c.livre>=0?'good':'bad';
+
+ // 2) PAGAMENTO PRINCIPAL: desconta o vale completo porque ele já foi adiantado.
+ // O bancário NÃO entra novamente nesta conta.
+ const pagamentoPrincipal=c.sal+c.he-c.inss-c.vale-c.clt-farmacia-cesta-outrosDescontos;
+
+ // 3) RECONCILIAÇÃO: soma o que sobrou do vale com o pagamento principal.
+ const disponivelAposEntradas=sobraVale+pagamentoPrincipal;
+
+ // 4) DESPESAS FORA DA FOLHA.
+ const saidasDepois=mae+carro+c.outro+c.variaveis;
+ const saldoFinal=disponivelAposEntradas-saidasDepois;
+
+ $('valeEstimado').textContent=BRL.format(c.vale);
+ $('valeBanco').textContent='− '+BRL.format(c.banco);
+ $('valeSobra').textContent=BRL.format(sobraVale);
+ $('valeSobra').className=sobraVale>=0?'good':'bad';
+
+ $('pagBruto').textContent=BRL.format(c.sal);
+ $('pagHE').textContent=c.he>0?'+ '+BRL.format(c.he):BRL.format(0);
+ $('pagINSS').textContent='− '+BRL.format(c.inss);
+ $('pagVale').textContent='− '+BRL.format(c.vale);
+ $('pagCLT').textContent='− '+BRL.format(c.clt);
+ $('pagFarmacia').textContent='− '+BRL.format(farmacia);
+ $('pagCesta').textContent='− '+BRL.format(cesta);
+ $('pagDescontos').textContent='− '+BRL.format(outrosDescontos);
+
+ $('pagDisponivel').textContent=BRL.format(pagamentoPrincipal);
+ $('pagDisponivel').className=pagamentoPrincipal>=0?'good':'bad';
+
+ $('fluxoSobraVale').textContent=BRL.format(sobraVale);
+ $('fluxoSobraVale').className=sobraVale>=0?'good':'bad';
+ $('fluxoPagamento').textContent=BRL.format(pagamentoPrincipal);
+ $('fluxoPagamento').className=pagamentoPrincipal>=0?'good':'bad';
+ $('fluxoEntradas').textContent=BRL.format(disponivelAposEntradas);
+ $('fluxoEntradas').className=disponivelAposEntradas>=0?'good':'bad';
+
+ $('pagMae').textContent='− '+BRL.format(mae);
+ $('pagCarro').textContent='− '+BRL.format(carro);
+ $('pagOutro').textContent='− '+BRL.format(c.outro);
+ $('pagVariaveis').textContent='− '+BRL.format(c.variaveis);
+
+ // Deve ser matematicamente idêntico ao saldo geral calculado em calcMes().
+ // Usamos c.livre como fonte final e apenas validamos a reconciliação visual.
+ const saldoExibido=Math.abs(saldoFinal-c.livre)<0.01?c.livre:saldoFinal;
+ $('pagDisponivelTotal').textContent=BRL.format(saldoExibido);
+ $('pagDisponivelTotal').className=saldoExibido>=0?'good':'bad';
 }
 function renderHE(){const arr=hesMes();const calc=calcHE();if(arr.length&&!calc.jornadaOk){$('heLista').innerHTML='<div class="warn" style="margin-top:12px"><strong>Atenção:</strong> informe sua jornada mensal em Configurações para calcular o valor financeiro da HE.</div>';}else $('heLista').innerHTML=!arr.length?'<p class="small">Nenhuma HE lançada nesta competência.</p>':'<table><tr><th>Data</th><th>Tipo</th><th>Horas</th><th>Obs.</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td><span class="pill">${x.tipo}%</span></td><td>${fmtHorasDecimal(x.horas)}</td><td>${escapeHtml(x.obs||'')}</td><td><button class="btn-danger btn-sm" data-delhe="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
 function renderGastos(){const arr=gastosMes();$('gLista').innerHTML=!arr.length?'<p class="small">Nenhum gasto variável nesta competência.</p>':'<table><tr><th>Data</th><th>Categoria</th><th>Valor</th><th>Descrição</th><th></th></tr>'+arr.slice().sort((a,b)=>a.data.localeCompare(b.data)).map(x=>`<tr><td>${fmtDataIso(x.data)}</td><td>${escapeHtml(x.cat)}</td><td>${BRL.format(x.valor)}</td><td>${escapeHtml(x.desc||'')}</td><td><button class="btn-danger btn-sm" data-delgasto="${x.id}">Excluir</button></td></tr>`).join('')+'</table>'}
